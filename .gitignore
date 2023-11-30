@@ -6,4 +6,4 @@
 16.2.0/
 node_modules/
 /.angular/cache
-teacher-interface/src/environments
+src/environments/
