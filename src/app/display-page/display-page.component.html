@@ -1,0 +1,98 @@
+<div class="page-header-container flex-parent">
+    <div class="instruction-container flex-child">
+        Drag-and-drop your experiences where you want them in your lesson plan.
+        You can also use the CTRL (or CMD) + C keys on your keyboard to copy
+        text from experiences and paste them in your lesson plan using CTRL (or
+        CMD) + V keys. You can edit any parts of your lesson plan as needed.
+    </div>
+    <div class="buttons-container flex-child">
+        <div class="navigate-experiences-container">
+            <button routerLink="/experience">Browse Experiences</button>
+        </div>
+        <div class="finalize-lesson-plan-container">
+            <button>Finalize Lesson Plan</button>
+        </div>
+    </div>
+</div>
+<!-- <div class="navigate-experiences-container">
+    <button routerLink="/experience">Browse Experiences</button>
+</div> -->
+<div class="parent-container flex-parent">
+    <div class="content-container flex-child">
+        <div class="info" *ngFor="let field of editableFields" >
+            <div class="section" *ngFor="let field of editableFields">
+                <label>{{ field.name }}:</label>
+                <div *ngIf="!field.editing">
+                    <p (click)="enableEditing(field)">{{ pdfData[field.key] }}</p>
+                </div>
+                <div *ngIf="field.editing">
+                    <textarea class="editField" [(ngModel)]="field.editValue"></textarea>
+                    <button (click)="submitEdit(field)">Submit</button>
+                </div>
+            </div>            
+        </div>        
+    </div>
+    <div class="exp-container flex-child">
+        <mat-card
+            class="exp-card mb-3"
+            *ngFor="let experience of integratedExperiences"
+        >
+            <mat-card-header>
+                <mat-card-title style="font-size: 18px">{{
+                    experience.experience_title
+                }}</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content *ngIf="experience.collapsed">
+                <p>{{ experience.experience_description }}</p>
+                <div class="d-flex align-items-center">
+                    <div class="flex align-self-stretch">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-2 me-2">
+                        <p>{{ experience.contributed_by }}</p>
+                    </div>
+                    <div class="flex align-self-stretch">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-2 me-2">
+                        <p>{{ experience.date | date }}</p>
+                    </div>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <button
+                    mat-button
+                    (click)="experience.collapsed = !experience.collapsed"
+                >
+                    {{ experience.collapsed ? "Show Less" : "Show More" }}
+                </button>
+                <!-- <button mat-button (click)="experience.collapsed = true">
+                    Uncollapse
+                </button> -->
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>
+<div>
+    <div class="info-div">
+        <div class="download-view" *ngIf="fileDownloadURL">
+            <button (click)="openFile()">View Uploaded File</button>
+        </div>
+    </div>
+    <div class="file-display">
+        <object
+            [data]="safeDownloadURL"
+            type="application/pdf"
+            width="100%"
+            height="600px"
+        >
+            <p>
+                It appears you don't have a PDF plugin for this browser. You can
+                <a [href]="fileDownloadURL" download
+                    >click here to download the PDF file.</a
+                >
+            </p>
+        </object>
+    </div>
+</div>

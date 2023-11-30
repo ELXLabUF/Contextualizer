@@ -1,0 +1,61 @@
+html, body {
+    height: 100%;
+}
+
+.experience-container {
+    margin: 20px;
+}
+
+button {
+    background-color: #FFD700;
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    width: max-content;
+    margin:10px auto;
+}
+
+.upload-csv-file {
+    max-width: fit-content;
+    background-color: #EEE;
+    padding: 20px;
+    gap: 20px; /* Spacing between input and button */
+    border-radius: 10px; /* rounded corners */
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center children horizontally */
+    justify-content: center;
+}
+
+.upload-csv-file button:hover{
+    background-color: #FFD700;
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+    width: max-content;
+    margin: 10px auto;
+}
+
+.file-input-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px; /* Adjust this for padding around the label text */
+    background-color: #F3F3F3; /* Slight gray background for visual feedback */
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.file-input-label input[type="file"] {
+    display: none; /* Hide the default input */
+}
+
+::ng-deep .cdk-overlay-container {
+    z-index: 2000;
+}
