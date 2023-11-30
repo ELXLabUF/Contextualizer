@@ -1,12 +1,13 @@
 export const environment = {
-    firebase: {
-        projectId: "exp-page-filter-project",
-        appId: "1:975138568454:web:5726df88c6f8a2d144c687",
-        storageBucket: "exp-page-filter-project.appspot.com",
-        locationId: "us-central",
-        apiKey: "AIzaSyBuwMz4r20palw5Pse9Y-iLF0VEfObcfos",
-        authDomain: "exp-page-filter-project.firebaseapp.com",
-        messagingSenderId: "975138568454",
-    },
+  firebase: {
+    projectId: 'contextualizer-e57ed',
+    appId: '1:829469841315:web:84a34218c225df8a46ec16',
+    storageBucket: 'contextualizer-e57ed.appspot.com',
+    locationId: 'us-central',
+    apiKey: 'AIzaSyC7DfNKsu4LQ5CvR_moSGOnwfQcCqwaQxM',
+    authDomain: 'contextualizer-e57ed.firebaseapp.com',
+    messagingSenderId: '829469841315',
+    measurementId: 'G-C2R3Q3FL14',
+  },
     production: false,
 };

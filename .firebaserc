@@ -6,9 +6,16 @@
           "pdf-upload-92862"
         ]
       }
+    },
+    "contextualizer-e57ed": {
+      "hosting": {
+        "pdf-upload": [
+          "contextualizer-e57ed"
+        ]
+      }
     }
   },
   "projects": {
-    "default": "pdf-upload-92862"
+    "default": "contextualizer-e57ed"
   }
 }

@@ -8,6 +8,11 @@
   },
   "hosting": [
     {
+      "target": "Contextualizer",
+      "source": ".",
+      "frameworksBackend": {}
+    },
+    {
       "target": "pdf-upload",
       "source": ".",
       "frameworksBackend": {}

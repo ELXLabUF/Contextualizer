@@ -21,7 +21,7 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
-    "firebase": "^10.2.0",
+    "firebase": "^10.7.0",
     "font-awesome": "^4.7.0",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.1",
