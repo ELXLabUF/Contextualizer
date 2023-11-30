@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "pdf-upload-92862": {
+      "hosting": {
+        "pdf-upload": [
+          "pdf-upload-92862"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "pdf-upload-92862"
+  }
+}

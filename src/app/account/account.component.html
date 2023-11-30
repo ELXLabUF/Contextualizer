@@ -1,0 +1,51 @@
+<div class="account-container">
+    <p style="font-size: 30px; font-weight: 900; color: #47141c; padding: 10px">
+        Account Settings
+    </p>
+    <p style="font-size: 20px">Username: {{ currentUsername }}</p>
+
+    <button (click)="showForm = !showForm">Update Password</button>
+
+    <div class="password-form" *ngIf="showForm">
+        <label>Current Password: </label>
+        <input type="password" [(ngModel)]="currentPassword" />
+
+        <label> New Password:</label>
+        <input type="password" [(ngModel)]="newPassword" />
+
+        <ul class="password-requirements">
+            <li [class.valid]="newPassword && newPassword.length > 8">
+                More than 8 characters
+            </li>
+            <li
+                [class.valid]="
+                    newPassword && (newPassword | passwordPattern : '[A-Z]')
+                "
+            >
+                At least one uppercase letter
+            </li>
+            <li
+                [class.valid]="
+                    newPassword && (newPassword | passwordPattern : '[0-9]')
+                "
+            >
+                At least one number
+            </li>
+            <li
+                [class.valid]="
+                    newPassword &&
+                    (newPassword | passwordPattern : '[!@#$%^&*]')
+                "
+            >
+                At least one special character
+            </li>
+        </ul>
+        <label>
+            Confirm New Password:
+            <input type="password" [(ngModel)]="confirmPassword" />
+        </label>
+        <button (click)="changePassword()">Submit</button>
+    </div>
+
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+</div>

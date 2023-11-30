@@ -1,0 +1,62 @@
+<div class="lesson-container">
+    <app-dot-navigation></app-dot-navigation>
+
+    <div class="upload-file-container">
+        <h3>Upload your lesson plan below</h3>
+
+        <!-- Main Topic Dropdown -->
+        <select
+            [(ngModel)]="selectedMainTopic"
+            class="dropdown-select"
+            (click)="onMainTopicDropdownClick()"
+        >
+            <option value="" disabled>Select a science unit</option>
+            <option *ngFor="let mainTopic of mainTopics" [value]="mainTopic">
+                {{ mainTopic }}
+            </option>
+        </select>
+
+        <!-- Sub-Topic Dropdown -->
+        <select
+            [(ngModel)]="selectedSubTopic"
+            class="dropdown-select"
+            (click)="onSubTopicDropdownClick()"
+        >
+            <option value="" disabled>Select a sub-topic</option>
+            <option
+                *ngFor="let subTopic of subTopics[selectedMainTopic]"
+                [value]="subTopic"
+            >
+                {{ subTopic }}
+            </option>
+        </select>
+
+        <!-- File Upload -->
+        <!-- <label class="file-input-label">
+            {{ labelText }}
+            <input type="file" (change)="onFileSelected($event)" />
+        </label> -->
+
+        <!-- <input
+            (change)="onFileSelected($event)"
+            class="form-control"
+            type="file"
+            id="formFile"
+        /> -->
+
+        <div class="file-input">
+            <input
+                class="choose-file"
+                type="text"
+                placeholder="{{ labelText }}"
+                disabled
+            />
+            <label class="file-label">
+                Browse Files...
+                <input type="file" (change)="onFileSelected($event)" />
+            </label>
+        </div>
+
+        <button (click)="onUpload()">Upload</button>
+    </div>
+</div>

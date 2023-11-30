@@ -1,0 +1,33 @@
+.mat-dialog-title {
+    font-size: 20px;
+}
+
+.mat-dialog-content {
+    font-size: 20px;
+}
+
+/* Center aligning the buttons */
+.mat-dialog-actions {
+    justify-content: center;
+}
+
+/* No Button Styling */
+button[mat-button]:not([mat-dialog-close="true"]) {
+    background-color: #555;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    margin: 5px;
+    align-items: center;
+}
+
+button[mat-button]:not([mat-dialog-close="true"]):hover {
+    background-color: #47141C;
+}
+.mat-dialog-container {
+    border: 1px solid #888;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,295 @@
+@import "~font-awesome/css/font-awesome.css";
+
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+.display-page {
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.page-header-container {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.instruction-container {
+    padding: 0px 20px;
+    width: 75%;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
+
+.instruction-container p {
+    font-size: 20px;
+    line-height: 25px;
+}
+
+.buttons-container {
+    padding: 10px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons-container button {
+    background-color: #47141C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 20px 20px;
+    font-size: 25px;
+    cursor: pointer;
+    width: max-content;
+    margin: 10px;
+}
+
+button {
+    background-color: #47141C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 25px;
+    font-size: 20px;
+    cursor: pointer;
+    width: max-content;
+    margin-left: 50%;
+}
+
+.parent-container.flex-parent {
+    display: flex;   
+    flex-direction: row; 
+    height: 100%;
+    flex-grow: 1; 
+    overflow: visible;
+}
+
+.content-container {
+    flex: 0 0 75%;   
+    overflow-y: auto; 
+    height: calc(100% - 40px);
+}
+
+.exp-container {
+    flex: 0 0 25%;   
+    overflow-y: auto;  
+    height: calc(100% - 40px); 
+    padding: 20px 20px 20px 0px;
+}
+
+.section {
+    /* margin-bottom: 20px; */
+    padding: 10px;
+    background-color: #FFFFFF;
+    border: 1px solid #E1E1E1;
+    border-radius: 5px;
+}
+
+.section label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.section p, .section ul {
+    text-indent: 20px;
+    margin-top: 0;
+}
+
+.section ul {
+    list-style-type: disc;
+}
+
+.section ul li {
+    margin-bottom: 10px;
+}
+
+.mat-accordion .mat-expansion-panel {
+    background-color: #FAB9A1;
+    margin-left: 15px;
+    margin-right: 5px;
+    margin-bottom: 20px;
+}
+
+.exp-title {
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 28px;
+    padding: 20px auto;
+}
+
+.mat-accordion .mat-expansion-panel p {
+    font-size: 16px;
+    line-height: 20px;
+    word-wrap: break-word;
+}
+
+.meta-data p {
+    font-weight: 500;
+}
+
+.meta-data i {
+    font-size: 20px;
+}
+
+.info-div {
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #F4F4F4;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.info, .additional-container{
+    border: 1px solid #555555;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 20px;
+}
+
+label {
+    font-weight: 900;
+    font-size: 22px;
+}
+
+.info p {
+    font-size: 18px;
+}
+
+li {
+    font-size: 18px;
+}
+
+.file-display {
+    border: 1px solid #E0E0E0;
+}
+
+.editField {
+    width: 100%;
+    height: 100%; /* or specify a fixed height if preferred */
+}
+
+/* Style for the custom drag preview */
+/* Add this to make sure the dragged item is visible outside its parent container */
+.display-page {
+    overflow: initial;
+}
+
+.parent-container.flex-parent {
+    overflow: initial;
+}
+
+.content-container {
+    overflow: initial;
+}
+
+.exp-container {
+    overflow: initial;
+}
+
+/* Styles for the translucent copy being dragged */
+.custom-preview {
+    border: 1px solid #E0E0E0;
+    background-color: rgba(255, 255, 255, 0.6); /* Adjust opacity as needed */
+    padding: 10px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transform: scale(0.9);
+}
+
+.highlighted {
+    background-color:#FF0000;
+}
+
+/* When a draggable item is hovering over a drop zone, change the background color */
+.cdk-drop-list-dragging .cdk-drop-list .info:not(.cdk-drag-placeholder):not(.cdk-drag-preview) {
+    background-color: #FF0000;
+}
+
+.fas.fa-trash {
+    font-size: 16px;
+    padding: 10px;
+    margin-left: 98%;
+    position: relative;
+    cursor: pointer;
+    color: #FF0000;
+}
+
+.fas.fa-trash:hover {
+    opacity: 0.7;
+}
+
+/* Container that gives the appearance of a single box */
+.edit-box-container {
+    border: 1px solid #D1D1D1; /* Adjust as needed */
+    padding: 15px; /* Adjust as needed */
+    border-radius: 5px; /* Adjust as needed */
+    position: relative;
+}
+
+/* No visible styles for editable elements */
+.wrapper-box {
+    border: 2px solid #333333;  /* The outer box around each content and its experiences */
+    padding: 10px;
+    position: relative;
+}
+
+.editable-element {
+    padding: 10px;
+    margin: 5px 0;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.editable-element:hover {
+    background-color: #F5F5F5; /* Highlight the individual element when hovered */
+}
+
+.editField {
+    width: 100%;            
+    height: max-content;           
+    background-color: #F9F9F9; 
+    font-size: 16px;        
+    font-family: inherit;   
+    padding: 0;             
+}
+.editField:focus {
+    border: 1px solid #CCCCCC; 
+    background-color: #F9F9F9; 
+}
+
+.wrapper-box {
+    position: relative;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.delete-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10; /* Adjust as necessary */
+    cursor: pointer;
+}

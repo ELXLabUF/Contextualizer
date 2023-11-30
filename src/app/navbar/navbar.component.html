@@ -1,0 +1,25 @@
+<nav>
+    <div class="nav-wrapper">
+        <!-- Logo on the left -->
+        <div class="logo">
+            <a class="logo-image" (click)="onLogoClick()">
+                <img src="../../assets/WebsiteLogo.png" alt="Website Logo" />
+            </a>
+        </div>
+
+        <!-- About link on the right -->
+        <div class="nav-links">
+            <a
+                *ngIf="(authService.currentUser | async) !== null"
+                (click)="onLogout()"
+                >Log Out</a
+            >
+            <a
+                *ngIf="(authService.currentUser | async) !== null"
+                (click)="onAccountClick()"
+                >Account</a
+            >
+            <a (click)="onAboutClick()">About</a>
+        </div>
+    </div>
+</nav>

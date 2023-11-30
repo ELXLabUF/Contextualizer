@@ -1,0 +1,39 @@
+/* Add styles in styles.css (or styles.scss) */
+
+.delete-dialog-container .mat-dialog-title {
+    font-size: 20px;
+}
+
+.delete-dialog-container .mat-dialog-content {
+    font-size: 20px;
+}
+
+.delete-dialog-container .mat-dialog-actions {
+    justify-content: center;
+}
+
+.delete-dialog-container button[mat-button][mat-dialog-close="true"] {
+    background-color: #47141C;
+    color: white;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.delete-dialog-container button[mat-button][mat-dialog-close="true"]:hover {
+    background-color: #3c1210;
+}
+
+.delete-dialog-container button[mat-button]:not([mat-dialog-close="true"]) {
+    background-color: #555;
+    color: white;
+    font-weight: bold;
+}
+
+.delete-dialog-container button[mat-button]:not([mat-dialog-close="true"]):hover {
+    background-color: #444;
+}
+
+.delete-dialog-container .mat-dialog-container {
+    border: 1px solid #888;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

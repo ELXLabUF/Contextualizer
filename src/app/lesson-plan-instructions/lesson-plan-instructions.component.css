@@ -1,0 +1,108 @@
+html, body {
+    height: 100vh;
+}
+
+/* Centering everything in the lesson-instructions-container */
+.lesson-instructions-container {
+    display: flex;
+    flex-direction: column; /* Stack child elements vertically */
+    align-items: center;    /* Center children horizontally */
+    justify-content: center;/* Center children vertically */
+    height: max-content;
+}
+
+.instructions-container {
+    display: flex;
+    flex-direction: column; /* Stack child elements vertically */
+    align-items: center;    /* Center children horizontally */
+    justify-content: center;/* Center children vertically */
+    margin-top: 45px;
+}
+
+.instruction-div {
+    width: 70%;
+    font-size: 25px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.horizontal-line {
+    width: 85%;
+    margin-top: 15px;
+}
+
+.mat-divider {
+    border-top-color: #47141C;
+    border-top-width: 8px;
+}
+
+/* Aligning paragraph and download button vertically */
+.content-group {
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    margin: 10px;
+    gap: 30px; /* Spacing between paragraph and button */
+    align-items: center; /* Center children horizontally */
+}
+
+.paragraph-box {
+    background-color: #FAB9A1;
+    padding: 25px;
+    border-radius: 10px; /* Rounded corners */
+    width: 55%;
+}
+
+.paragraph-box h3 {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.paragraph-box p {
+    font-size: 22px;
+    word-wrap: break-word;
+    line-height: 25px;
+}
+
+.paragraph-box li {
+    font-size: 18px;
+    line-height: 22px;
+    margin-left: -15px;
+}
+
+.vertical-separator {
+    margin: 0px 15px;
+    margin-top: 50px;
+}
+
+.vertical-separator p {
+    font-size: 60px;
+    font-weight: bolder;
+}
+
+.download-section {
+    display: flex;
+    flex-direction: column;   /* Stack children (h3 and button) vertically */
+    align-items: center;      /* Center them horizontally */
+}
+
+.download-section h3 {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #47141C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 25px;
+    font-size: 25px;
+    cursor: pointer;
+    width: 90%;
+    margin: 10px auto;
+    word-wrap: break-word;
+    line-height: 30px;
+}

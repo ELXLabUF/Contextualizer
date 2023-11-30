@@ -1,0 +1,498 @@
+<div class="experiences-container">
+    <!-- DO NOT DELETE!
+    <div class="page-header-container">
+        <button
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#addExperienceModal"
+        >
+            Create a new experience
+        </button>
+
+        <div class="upload-csv-file mb-3">
+            <label class="file-input-label">
+                {{ labelText }}
+                <input
+                    type="file"
+                    class="form-control"
+                    (change)="onFileSelect($event)"
+                />
+            </label>
+            <button (click)="onFileUpload()">Upload</button>
+        </div>
+    </div>
+    DO NOT DELETE! -->
+
+    <app-dot-navigation></app-dot-navigation>
+
+    <div class="parent-container flex-parent">
+        <div class="exp-display-container flex-child">
+            <p style="font-size: 25px; text-align: left; margin-bottom: 25px">
+                Select students' experiences to integrate into your lesson plan.
+            </p>
+            <div
+                style="margin-bottom: 15px"
+                *ngFor="let experience of experiences"
+            >
+                <div class="card card-body">
+                    <div class="card-text-body">
+                        <div class="experience-data">
+                            <h3>{{ experience.experience_title }}</h3>
+                            <p>
+                                {{ experience.experience_description }}
+                            </p>
+                        </div>
+                        <div class="experience-details">
+                            <div class="student-name">
+                                <!-- <div class="flex align-self-stretch">
+                                    <i class="bi bi-person"></i>
+                                </div> -->
+                                <!-- <div class="flex-grow-1 mx-2"> -->
+                                <p>Student: {{ experience.contributed_by }}</p>
+                                <!-- </div> -->
+                            </div>
+                            <div class="date-uploaded">
+                                <!-- <div class="flex align-self-stretch">
+                                    <i class="bi bi-calendar3"></i>
+                                </div> -->
+                                <!-- <div class="flex-grow-1 mx-2"> -->
+                                <p>Date: {{ experience.date | date }}</p>
+                                <!-- </div> -->
+                            </div>
+                        </div>
+                        <!-- <div class="d-flex justify-content-center">
+                            <button
+                                class="me-4"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editExperienceModal"
+                                (click)="getExperienceDetails(experience)"
+                            >
+                                Edit experience
+                            </button>
+                            <button
+                                class="mx-4"
+                                (click)="deleteExperience(experience)"
+                            >
+                                Delete experience
+                            </button>
+                            <button
+                                class="ms-4"
+                                (click)="integrateExperience(experience)"
+                            >
+                                Integrate experience
+                            </button>
+                        </div> -->
+                    </div>
+                    <div class="card-checkbox">
+                        <span
+                            class="checkbox"
+                            (click)="addRemoveMultipleExp(experience)"
+                            [attr.data-checked]="
+                                checkCandidacy(experience) ? true : false
+                            "
+                        ></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 options-container flex-child">
+            <div class="search-student">
+                <!-- <mat-form-field appearance="outline" class="search-student">
+                    <mat-label>Search student</mat-label>
+                    <input
+                        matInput
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="studentSearchTerm"
+                        (input)="filterExperiencesByStudent()"
+                    />
+                </mat-form-field> -->
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="studentSearchTerm"
+                    (input)="filterExperiencesByStudent()"
+                    (click)="onFilterByStudentClick()"
+                    placeholder="Search student"
+                />
+            </div>
+
+            <div class="search-keyword">
+                <!-- <mat-form-field appearance="outline" class="search-keyword">
+                    <mat-label>Search experience</mat-label>
+                    <input
+                        type="text"
+                        matInput
+                        class="form-control"
+                        [(ngModel)]="keywordSearchTerm"
+                        (input)="filterExperiencesByKeyword()"
+                    />
+                </mat-form-field> -->
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="keywordSearchTerm"
+                    (input)="filterExperiencesByKeyword()"
+                    (click)="onFilterByKeywordClick()"
+                    placeholder="Search keyword"
+                />
+            </div>
+
+            <div class="search-date">
+                <!-- <mat-form-field appearance="outline" class="search-date">
+                    <mat-label>Search date</mat-label>
+                    <input
+                        matInput
+                        class="form-control"
+                        id="date-filter"
+                        [matDatepicker]="picker"
+                        [(ngModel)]="dateSearchTerm"
+                        (dateInput)="filterExperiencesByDate()"
+                    />
+                    <mat-datepicker-toggle
+                        matIconSuffix
+                        [for]="picker"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field> -->
+                <input
+                    type="date"
+                    class="form-control"
+                    [(ngModel)]="dateSearchTerm"
+                    (input)="filterExperiencesByDate()"
+                    (click)="onFilterByDateClick()"
+                    placeholder="Search date"
+                />
+            </div>
+
+            <div>
+                <mat-form-field appearance="outline" class="search-date-range">
+                    <mat-label>Search date range</mat-label>
+                    <mat-date-range-input [rangePicker]="rangePicker">
+                        <input
+                            matStartDate
+                            placeholder="Start date"
+                            [(ngModel)]="startDateSearchTerm"
+                        />
+                        <input
+                            matEndDate
+                            placeholder="End date"
+                            [(ngModel)]="endDateSearchTerm"
+                            (dateInput)="filterExperiencesByDateRange()"
+                        />
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle
+                        matIconSuffix
+                        [for]="rangePicker"
+                    ></mat-datepicker-toggle>
+                    <mat-date-range-picker #rangePicker></mat-date-range-picker>
+                </mat-form-field>
+            </div>
+
+            <div class="sort-experiences">
+                <!-- <mat-form-field appearance="outline" class="sort-experiences">
+                    <mat-label>Sort By</mat-label>
+                    <mat-select (valueChange)="sortExperiences($event)">
+                        <mat-option value="timeOldest"
+                            >Time (Oldest to Newest)</mat-option
+                        >
+                        <mat-option value="timeNewest"
+                            >Time (Newest to Oldest)</mat-option
+                        >
+                        <mat-option value="titleLowest">
+                            Title Number (Lowest to Highest)
+                        </mat-option>
+                        <mat-option value="titleHighest">
+                            Title Number (Highest to Lowest)
+                        </mat-option>
+                        <mat-option value="studentLowest">
+                            Student (Lowest to Highest)
+                        </mat-option>
+                        <mat-option value="studentHighest">
+                            Student (Highest to Lowest)
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field> -->
+                <select class="form-select" (change)="sortExperiences($event)">
+                    <option value="" disabled selected>Sort By</option>
+                    <option value="timeOldest">Time (Oldest to Newest)</option>
+                    <option value="timeNewest">Time (Newest to Oldest)</option>
+                    <option value="titleLowest">
+                        Title Number (Lowest to Highest)
+                    </option>
+                    <option value="titleHighest">
+                        Title Number (Highest to Lowest)
+                    </option>
+                    <option value="studentLowest">
+                        Student (Lowest to Highest)
+                    </option>
+                    <option value="studentHighest">
+                        Student (Highest to Lowest)
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <button
+                    class="integrate-all-button"
+                    *ngIf="!this.startNavigationFromExperiences"
+                    (click)="integrateMultipleExp()"
+                >
+                    Integrate all selected
+                </button>
+                <button
+                    class="integrate-all-alt-button"
+                    *ngIf="this.startNavigationFromExperiences"
+                    (click)="integrateMultipleExp()"
+                >
+                    Upload lesson plan to Integrate all selected
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add experience modal -->
+    <div
+        class="modal fade"
+        id="addExperienceModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title" id="exampleModalLabel">
+                        New experience
+                    </h1>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="experienceForm">
+                        <div class="row">
+                            <mat-form-field appearance="outline">
+                                <mat-label
+                                    for="experience-title"
+                                    class="col-form-label"
+                                    >Experience Title:</mat-label
+                                >
+                                <input
+                                    matInput
+                                    type="text"
+                                    class="form-control"
+                                    id="experience-title"
+                                    formControlName="title"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field appearance="outline">
+                                <mat-label
+                                    for="experience-description"
+                                    class="form-label"
+                                    >Experience Description:</mat-label
+                                >
+                                <textarea
+                                    matInput
+                                    class="form-control"
+                                    id="experience-description"
+                                    formControlName="description"
+                                ></textarea>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field appearance="outline">
+                                <mat-label
+                                    for="contributed-by"
+                                    class="col-form-label"
+                                    >Contributed By:</mat-label
+                                >
+                                <input
+                                    matInput
+                                    type="text"
+                                    class="form-control"
+                                    id="contributed-by"
+                                    formControlName="contributed_by"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field appearance="outline">
+                                <mat-label for="date" class="col-form-label"
+                                    >Date:</mat-label
+                                >
+                                <input
+                                    matInput
+                                    formControlName="date"
+                                    id="date"
+                                    [matDatepicker]="releasedAtPicker"
+                                    (click)="releasedAtPicker.open()"
+                                />
+                                <mat-datepicker-toggle
+                                    matSuffix
+                                    [for]="releasedAtPicker"
+                                    [disabled]="false"
+                                ></mat-datepicker-toggle>
+                                <mat-datepicker
+                                    #releasedAtPicker
+                                    [disabled]="false"
+                                ></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Close
+                    </button>
+                    <button
+                        type="button"
+                        (click)="addExperience()"
+                        [disabled]="experienceForm.invalid"
+                    >
+                        Add experience
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit experience modal -->
+    <div
+        class="modal fade"
+        id="editExperienceModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title" id="exampleModalLabel">
+                        Update experience
+                    </h1>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="editForm">
+                        <div class="row">
+                            <mat-form-field appearance="outline">
+                                <mat-label
+                                    for="edit-experience-title"
+                                    class="col-form-label"
+                                    >Experience Title:</mat-label
+                                >
+                                <input
+                                    matInput
+                                    type="text"
+                                    class="form-control"
+                                    id="edit-experience-title"
+                                    formControlName="edited_title"
+                                    [value]="
+                                        experienceDetails?.experience_title
+                                    "
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field appearance="outline">
+                                <mat-label
+                                    for="edit-experience-description"
+                                    class="form-label"
+                                    >Experience Description:</mat-label
+                                >
+                                <textarea
+                                    matInput
+                                    class="form-control"
+                                    id="edit-experience-description"
+                                    formControlName="edited_description"
+                                    [value]="
+                                        experienceDetails?.experience_description
+                                    "
+                                ></textarea>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field appearance="outline">
+                                <mat-label
+                                    for="edit-contributed-by"
+                                    class="col-form-label"
+                                    >Contributed By:</mat-label
+                                >
+                                <input
+                                    matInput
+                                    type="text"
+                                    class="form-control"
+                                    id="edit-contributed-by"
+                                    formControlName="edited_contributed_by"
+                                    [value]="experienceDetails?.contributed_by"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <mat-form-field appearance="outline">
+                                <mat-label
+                                    for="edit-date"
+                                    class="col-form-label"
+                                    >Date:</mat-label
+                                >
+                                <input
+                                    matInput
+                                    formControlName="edited_date"
+                                    class="form-control"
+                                    id="edit-date"
+                                    [value]="
+                                        experienceDetails?.date
+                                            | date : 'yyyy-MM-dd'
+                                    "
+                                    [matDatepicker]="updateReleasedAtPicker"
+                                    (click)="updateReleasedAtPicker.open()"
+                                />
+                                <mat-datepicker-toggle
+                                    matSuffix
+                                    [for]="updateReleasedAtPicker"
+                                    [disabled]="false"
+                                ></mat-datepicker-toggle>
+                                <mat-datepicker
+                                    #updateReleasedAtPicker
+                                    [disabled]="false"
+                                ></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Close
+                    </button>
+                    <button
+                        type="button"
+                        (click)="updateExperience(experienceDetails)"
+                        [disabled]="editForm.invalid"
+                    >
+                        Update experience
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

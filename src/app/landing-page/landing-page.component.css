@@ -1,0 +1,30 @@
+/* This will ensure that the entire view height is occupied by the landing-container */
+html, body {
+    height: 100vh;
+}
+
+/* Centering everything in the landing-container */
+.landing-container {
+    display: flex;
+    align-items: center;     /* Center children horizontally */
+    justify-content: center; /* Center children vertically */
+    height: 60vh;
+}
+
+/* Aligning buttons in a column */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 50px; /* Spacing between buttons, adjust as needed */
+}
+
+button {
+    background-color: #47141C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 30px 30px;
+    font-size: 45px;
+    font-weight: bold;
+    cursor: pointer;
+}

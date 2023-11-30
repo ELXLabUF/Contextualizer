@@ -1,0 +1,27 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+.dot-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #47141C; /* Hollow dot border */
+    border-radius: 50%;
+    margin: 10px;
+    margin-right: 35px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+.dot.active {
+    background-color: #47141C; /* Solid dot color for the active page */
+}

@@ -1,0 +1,67 @@
+<div class="finalize-lesson-plan-container">
+    <app-dot-navigation></app-dot-navigation>
+
+    <div class="finalize-parent-container">
+        <div class="finalize-container">
+            <p style="font-size: 25px; line-height: 30px; margin-bottom: 30px">
+                Review your contextualized lesson plan. If you are satisfied,
+                download your lesson plan.
+            </p>
+
+            <div class="finalize-data-container" id="lessonPlan">
+                <div *ngFor="let field of fields">
+                    <div class="info">
+                        <h3 *ngIf="pdfData[field.key]?.title">
+                            {{ pdfData[field.key]?.title }}:
+                        </h3>
+                        <p>
+                            {{ pdfData[field.key]?.content }}
+                        </p>
+                        <div
+                            class="int-exp"
+                            *ngIf="
+                                pdfData[field.key]?.integrated_experiences
+                                    ?.length
+                            "
+                        >
+                            <ul>
+                                <li
+                                    *ngFor="
+                                        let exp of pdfData[field.key]
+                                            ?.integrated_experiences
+                                    "
+                                >
+                                    {{ exp }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div
+                        class="info"
+                        *ngFor="
+                            let key of getAdditionalContainerKeysForField(field)
+                        "
+                    >
+                        <h3>{{ key }}:</h3>
+                        <ul>
+                            <li
+                                *ngFor="
+                                    let item of pdfData[field.key][key]?.list
+                                "
+                                style="font-size: 20px"
+                            >
+                                {{ item }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons-container">
+            <button (click)="htmlToPDF()">Download Lesson Plan</button>
+            <button (click)="onBackClick()">Back</button>
+            <button (click)="onHomeClick()">Home</button>
+        </div>
+    </div>
+</div>

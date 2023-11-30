@@ -1,0 +1,65 @@
+html, body {
+    height: 100vh;
+}
+
+.finalize-lesson-plan-container {
+    display: flex;
+    flex-direction: column;  /* Stack child elements vertically */
+    align-items: center;     /* Center children horizontally */
+    justify-content: center; /* Center children vertically */
+    height: max-content;
+}
+
+.finalize-parent-container {
+    display: flex;
+    margin: 20px;
+    width: 75%;
+}
+
+.finalize-container {
+    width: 80%;
+    margin: 30px;
+}
+
+.finalize-data-container {
+    padding: 30px;
+    border: 2px solid #000000;
+}
+
+.info h3 {
+    font-size: 25px;
+    font-weight: bold;
+    line-height: 30px;
+}
+
+.info p {
+    font-size: 20px;
+    line-height: 25px;
+}
+
+.int-exp li {
+    font-size: 20px;
+    line-height: 25px;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 90px;
+    width: 20%;
+    gap: 40px;
+}
+
+.buttons-container button {
+    background-color: #47141C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 20px 20px;
+    font-size: 25px;
+    line-height: 30px;
+    cursor: pointer;
+    width: 225px;
+}

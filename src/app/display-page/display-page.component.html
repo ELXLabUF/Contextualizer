@@ -1,0 +1,273 @@
+<div class="display-page">
+    <app-dot-navigation></app-dot-navigation>
+
+    <div class="page-header-container flex-parent">
+        <div class="instruction-container flex-child">
+            <p>
+                Drag-and-drop your experiences where you want them in your
+                lesson plan. You can also use the CTRL (or CMD) + C keys on your
+                keyboard to copy text from experiences and paste them in your
+                lesson plan using CTRL (or CMD) + V keys. You can edit any parts
+                of your lesson plan as needed.
+            </p>
+        </div>
+        <div class="buttons-container flex-child">
+            <button (click)="onBrowseExpClick()">Browse Experiences</button>
+            <button (click)="onFinalizeLPClick()">Finalize Lesson Plan</button>
+        </div>
+    </div>
+
+    <div class="parent-container flex-parent">
+        <div class="content-container flex-child">
+            <div *ngFor="let field of editableFields">
+                <!-- Wrapper Box for entire content and integrated_experiences -->
+                <div class="wrapper-box" *ngIf="pdfData[field.key]">
+                    <!-- Main Container -->
+                    <div
+                        class="inner-content"
+                        cdkDropList
+                        (mouseenter)="onMouseEnter(field)"
+                        (mouseleave)="onMouseLeave(field)"
+                        (drop)="onDrop($event, field)"
+                        (dragover)="allowDrop($event)"
+                    >
+                        <div class="content-header">
+                            <div
+                                *ngIf="!field.labelEditing"
+                                (click)="enableLabelEditing(field)"
+                            >
+                                <p
+                                    class="editable-element"
+                                    style="font-size: 22px; font-weight: bold"
+                                >
+                                    {{ pdfData[field.key]?.title }}:
+                                </p>
+                            </div>
+                            <div class="content-controls">
+                                <i
+                                    class="fas fa-arrow-up"
+                                    (click)="moveContainer(field, 'up')"
+                                    title="Move Up"
+                                ></i>
+                                <i
+                                    class="fas fa-arrow-down"
+                                    (click)="moveContainer(field, 'down')"
+                                    title="Move Down"
+                                ></i>
+                            </div>
+                        </div>
+                        <input
+                            *ngIf="field.labelEditing"
+                            [(ngModel)]="field.labelEditValue"
+                            (blur)="submitLabelEdit(field)"
+                            class="editable-element"
+                        />
+
+                        <div
+                            *ngIf="!field.editing"
+                            (click)="enableEditing(field)"
+                        >
+                            <p class="editable-element" style="font-size: 18px">
+                                {{ pdfData[field.key]?.content }}
+                            </p>
+                        </div>
+
+                        <textarea
+                            *ngIf="field.editing"
+                            class="editField"
+                            [(ngModel)]="field.editValue"
+                            (blur)="submitEdit(field)"
+                        ></textarea>
+                    </div>
+
+                    <!-- Integrated Experiences -->
+                    <div
+                        class="integrated-experiences"
+                        *ngIf="
+                            pdfData[field.key]?.integrated_experiences?.length
+                        "
+                    >
+                        <ul>
+                            <li
+                                *ngFor="
+                                    let exp of pdfData[field.key]
+                                        ?.integrated_experiences;
+                                    let idx = index
+                                "
+                            >
+                                <div
+                                    *ngIf="
+                                        field.experiencesEditingIndex !== idx
+                                    "
+                                    class="editable-element"
+                                    (click)="
+                                        enableExperienceEditing(field, idx)
+                                    "
+                                >
+                                    {{ exp }}
+                                </div>
+                                <textarea
+                                    *ngIf="
+                                        field.experiencesEditingIndex === idx
+                                    "
+                                    [(ngModel)]="
+                                        pdfData[field.key]
+                                            ?.integrated_experiences[idx]
+                                    "
+                                    (blur)="submitExperienceEdit(field)"
+                                    class="editField"
+                                ></textarea>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <i
+                        class="fas fa-trash delete-icon"
+                        (click)="deleteContainer(field)"
+                        title="Delete"
+                    ></i>
+                </div>
+
+                <!-- Button below the Main Container -->
+                <button
+                    *ngIf="pdfData[field.key]"
+                    class="add-experience-btn"
+                    (click)="addContainer(field)"
+                >
+                    +
+                </button>
+
+                <!-- Additional Containers -->
+                <div
+                    *ngFor="
+                        let key of getAdditionalContainerKeysForField(field)
+                    "
+                >
+                    <div
+                        *ngIf="pdfData[field.key] && pdfData[field.key][key]"
+                        class="edit-box-container additional-container"
+                        cdkDropList
+                        (mouseenter)="onMouseEnter(field)"
+                        (mouseleave)="onMouseLeave(field)"
+                        (drop)="
+                            onDropForAdditionalContainer($event, field, key)
+                        "
+                        (dragover)="allowDrop($event)"
+                    >
+                        <label class="editable-element">{{ key }}:</label>
+                        <div *ngIf="!isEditingField(field.key, key)">
+                            <ul>
+                                <li
+                                    *ngFor="
+                                        let item of pdfData[field.key][key].list
+                                    "
+                                    (click)="
+                                        enableEditingForAdditionalContainer(
+                                            field.key,
+                                            key
+                                        )
+                                    "
+                                    class="editable-element"
+                                >
+                                    {{ item }}
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div *ngIf="isEditingField(field.key, key)">
+                            <ul>
+                                <li
+                                    *ngFor="
+                                        let item of pdfData[field.key][key]
+                                            .list;
+                                        let idx = index;
+                                        trackBy: trackByFn
+                                    "
+                                >
+                                    <input
+                                        [(ngModel)]="
+                                            pdfData[field.key][key].list[idx]
+                                        "
+                                        class="editField"
+                                    />
+                                </li>
+                            </ul>
+                            <button
+                                (click)="
+                                    submitEditForAdditionalContainer(
+                                        field.key,
+                                        key
+                                    )
+                                "
+                            >
+                                Submit
+                            </button>
+                        </div>
+
+                        <i
+                            class="fas fa-trash"
+                            (click)="deleteAdditionalContainer(field, key)"
+                            title="Delete"
+                        ></i>
+                    </div>
+
+                    <!-- Button below the Additional Container -->
+                    <button
+                        *ngIf="pdfData[field.key] && pdfData[field.key][key]"
+                        class="add-experience-btn"
+                        (click)="addContainer(field)"
+                    >
+                        +
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div
+            id
+            class="exp-container flex-child"
+            cdkDropList
+            #expList="cdkDropList"
+            connectedTo="contentList"
+            cdkDropListSortingDisabled
+        >
+            <mat-accordion
+                class="exp-accordion mb-3"
+                *ngFor="let experience of integratedExperiences"
+            >
+                <mat-expansion-panel
+                    hideToggle
+                    draggable="true"
+                    (dragstart)="
+                        onDragStart(
+                            $event,
+                            experience.experience_title,
+                            experience.experience_description
+                        )
+                    "
+                >
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="exp-title">
+                            {{ experience.experience_title }}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <p>{{ experience.experience_description }}</p>
+                    <div class="meta-data d-flex align-items-center">
+                        <div class="flex align-self-stretch">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-2 me-2">
+                            <p>{{ experience.contributed_by }}</p>
+                        </div>
+                        <div class="flex align-self-stretch">
+                            <i class="bi bi-calendar3"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-2 me-2">
+                            <p>{{ experience.date | date }}</p>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>

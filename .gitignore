@@ -1,0 +1,9 @@
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json
+.angular
+16.2.0/
+node_modules/
+/.angular/cache
+teacher-interface/src/environments

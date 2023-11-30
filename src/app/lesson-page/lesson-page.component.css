@@ -1,0 +1,116 @@
+/* This ensures that the entire view height is occupied by the lesson-container */
+html, body {
+    height: 100vh;
+}
+
+/* Centering everything in the lesson-container */
+.lesson-container {
+    display: flex;
+    flex-direction: column; /* Stack child elements vertically */
+    align-items: center;    /* Center children horizontally */
+    justify-content: center;/* Center children vertically */
+    height: max-content;
+}
+
+.upload-file-container {
+    display: flex;
+    flex-direction: column; /* Stack child elements vertically */
+    align-items: center;    /* Center children horizontally */
+    justify-content: center;/* Center children vertically */
+    margin-top: 50px;
+}
+
+h3 {
+    font-size: 30px;
+    margin-bottom: 40px;
+}
+
+.dropdown-select {
+    background-color: #D9D9D9;
+    border: 2px solid #787878;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    width: 600px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 10px 15px;
+}
+
+.file-input-label {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    background-color: #D9D9D9;
+    border: 2px solid #787878;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 600px;
+    height: 60px;
+    margin-bottom: 25px;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 10px 15px;
+}
+
+.file-input-label input[type="file"] {
+    display: none; /* Hide the default input */
+}
+
+input {
+    margin-bottom: 25px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 25px;
+    background-color: #D9D9D9;
+    border: 2px solid #787878;
+    border-radius: 10px;
+}
+
+input[type="text"][disabled] {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 400;
+ }
+
+.choose-file {
+    background-color: #D9D9D9;
+    border: 2px solid #787878;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 400px;
+    height: 50px;
+    margin-bottom: 25px;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 10px 15px;
+}
+
+.file-label {
+    text-align: center;
+    background-color: #47141C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 15px;
+    font-size: 20px;
+    cursor: pointer;
+    width: 200px;
+    height: 50px;
+}
+
+.file-label input[type="file"] {
+    display: none; /* Hide the default input */
+}
+
+button {
+    background-color: #47141C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 20px 25px;
+    font-size: 25px;
+    cursor: pointer;
+    width: max-content;
+    margin-top: 25px;
+}

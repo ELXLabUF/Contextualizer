@@ -1,0 +1,63 @@
+<div
+    class="dot-navigation"
+    *ngIf="this.startNavigationFromExperiences === false"
+>
+    <div
+        class="dot"
+        style="margin-left: 35px"
+        [class.active]="this.instructionsDot === true"
+        (click)="navigateToInstructions()"
+    ></div>
+    <div
+        class="dot"
+        [class.active]="this.uploadFileDot === true"
+        (click)="navigateToUploadFile()"
+    ></div>
+    <div
+        class="dot"
+        [class.active]="this.experiencesDot === true"
+        (click)="navigateToExperiences()"
+    ></div>
+    <div
+        class="dot"
+        [class.active]="this.displayPageDot === true"
+        (click)="navigateToDisplayPage()"
+    ></div>
+    <div
+        class="dot"
+        [class.active]="this.finalizePageDot === true"
+        (click)="navigateToFinalizePage()"
+    ></div>
+</div>
+
+<div
+    class="dot-navigation"
+    *ngIf="this.startNavigationFromExperiences === true"
+>
+    <div
+        class="dot"
+        style="margin-left: 35px"
+        [class.active]="this.experiencesDot === true"
+        (click)="navigateToExperiences()"
+    ></div>
+    <div
+        class="dot"
+        [class.active]="this.instructionsDot === true"
+        (click)="navigateToInstructions()"
+    ></div>
+    <div
+        class="dot"
+        [class.active]="this.uploadFileDot === true"
+        (click)="navigateToUploadFile()"
+    ></div>
+    <div
+        class="dot"
+        [class.active]="this.displayPageDot === true"
+        (click)="navigateToDisplayPage()"
+    ></div>
+    <div
+        class="dot"
+        [class.active]="this.finalizePageDot === true"
+        (click)="navigateToFinalizePage()"
+    ></div>
+</div>
