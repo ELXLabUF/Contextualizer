@@ -721,7 +721,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                     {
                         Action: "Clicked",
                         Target: "'Yes, Confirm' button on dialog box",
-                        Result: "To add box with title " + containerName,
+                        Result: "Add box with title " + containerName,
                         Time: time.toLocaleString(),
                     }
                     // "Clicked 'Yes, Confirm' to add box with title " +
@@ -1075,7 +1075,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             {
                 Action: "Added",
                 Target: "Experience with title number " + match,
-                Result: "To box with title " + field.name,
+                Result: "Box with title " + field.name,
                 Time: time.toLocaleString(),
             }
             // "Added experience with title number " +
@@ -1111,7 +1111,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             {
                 Action: "Added",
                 Target: "Experience with title number " + match,
-                Result: "To box with title " + containerKey,
+                Result: "Box with title " + containerKey,
                 Time: time.toLocaleString(),
             }
             // "Added experience with title number " +
@@ -1265,7 +1265,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                         {
                             Action: "Clicked",
                             Target: "'No, Go Back' button on dialog box ",
-                            Result: "Deny deletion of box with title" + key,
+                            Result: "Deny deletion of box with title " + key,
                             Time: time.toLocaleString(),
                         }
                         // "Clicked 'No, Go Back' to undo delete box with title " +
