@@ -3,10 +3,6 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DatePipe } from "@angular/common";
 import { Router } from "@angular/router";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
-import { arrayUnion } from "firebase/firestore";
-import { take } from "rxjs/operators";
-import { DocumentData } from "../documentData";
-
 import {
     Storage,
     getDownloadURL,
@@ -16,16 +12,16 @@ import {
 
 import { ExperienceLessonPlanService } from "../experience-lesson-plan-service/experience-lesson-plan.service";
 import { ExperienceService } from "../experience-service/experience-service.service";
+import { DocumentData } from "../documentData";
 import { Experience } from "../experience";
 import { Student } from "../student";
-
-import { Papa } from "ngx-papaparse";
-import { Subscription } from "rxjs";
 
 import { MatDialog } from "@angular/material/dialog";
 import { AlertDialogComponent } from "../alert-dialog/alert-dialog.component";
 import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 import { Observable } from "rxjs";
+import { take } from "rxjs/operators";
+import { Papa } from "ngx-papaparse";
 
 @Component({
     selector: "app-experience-page",
@@ -38,6 +34,28 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     experienceDetails: any;
     experiences: any = [];
+    filteredExp: any = [];
+    multipleIntegrate: any = [];
+
+    clickedExperience: Experience = {
+        id: "",
+        experience_title: "",
+        experience_description: "",
+        student_name: "",
+        date: "",
+        student_data: {
+            id: "",
+            student_name: "",
+            student_gender: "",
+            student_last_test_grade: "",
+            student_table: "",
+            student_overall_performance: "",
+            student_learning_disability: "",
+            student_race_ethnicity: "",
+            student_attendance: "",
+            student_class_participation: "",
+        },
+    };
 
     selectedExperienceFile: File | null = null;
     selectStudentFile: File | null = null;
@@ -55,9 +73,6 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     startDateTerm!: string;
     endDateSearchTerm!: Date;
     endDateTerm!: string;
-
-    filteredExp: any = [];
-    multipleIntegrate: any = [];
 
     startNavigationFromExperiences: boolean = false;
 
@@ -206,29 +221,6 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
     }
 
-    addExperience() {
-        const { value } = this.experienceForm;
-        console.log(value);
-
-        this.experienceObject.id = "";
-        this.experienceObject.experience_title = value.title;
-        this.experienceObject.experience_description = value.description;
-        this.experienceObject.student_name = value.student_name;
-        this.experienceObject.date = this.datePipe.transform(
-            value.date,
-            "yyyy-MM-dd"
-        ) as string; // format it as you need
-        console.log(this.experienceObject);
-        this.experience_service
-            .addExperience(this.experienceObject)
-            .then((experience) => {
-                if (experience) {
-                    alert("Experience Added Successfully");
-                    this.experienceForm.reset();
-                }
-            });
-    }
-
     getAllExperiences() {
         this.experience_service
             .getExperience()
@@ -238,70 +230,376 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             });
     }
 
-    deleteExperience(experience: Experience) {
-        let decision = confirm(
-            "Are you sure you want to delete this experience?"
-        );
+    // addExperience() {
+    //     const { value } = this.experienceForm;
+    //     console.log(value);
 
-        if (decision === true) {
-            this.experience_service.deleteExperience(experience);
-        }
+    //     this.experienceObject.id = "";
+    //     this.experienceObject.experience_title = value.title;
+    //     this.experienceObject.experience_description = value.description;
+    //     this.experienceObject.student_name = value.student_name;
+    //     this.experienceObject.date = this.datePipe.transform(
+    //         value.date,
+    //         "yyyy-MM-dd"
+    //     ) as string; // format it as you need
+    //     console.log(this.experienceObject);
+    //     this.experience_service
+    //         .addExperience(this.experienceObject)
+    //         .then((experience) => {
+    //             if (experience) {
+    //                 alert("Experience Added Successfully");
+    //                 this.experienceForm.reset();
+    //             }
+    //         });
+    // }
+
+    // deleteExperience(experience: Experience) {
+    //     let decision = confirm(
+    //         "Are you sure you want to delete this experience?"
+    //     );
+
+    //     if (decision === true) {
+    //         this.experience_service.deleteExperience(experience);
+    //     }
+    // }
+
+    // updateExperience(experience: Experience) {
+    //     const { value } = this.editForm;
+    //     console.log(value);
+
+    //     this.experienceObject.id = experience.id;
+    //     this.experienceObject.experience_title = value.edited_title;
+    //     this.experienceObject.experience_description = value.edited_description;
+    //     this.experienceObject.student_name = value.edited_student_name;
+    //     this.experienceObject.date = this.datePipe.transform(
+    //         value.edited_date,
+    //         "yyyy-MM-dd"
+    //     ) as string;
+
+    //     this.experience_service
+    //         .updateExperience(experience, this.experienceObject)
+    //         .then(() => {
+    //             alert("Experience Updated Successfully");
+    //         });
+
+    //     this.editForm.reset();
+    // }
+
+    // getExperienceDetails(experience: Experience) {
+    //     this.experienceDetails = experience;
+    //     console.log(this.experienceDetails);
+    // }
+
+    // integrateExperience(expToIntegrate: Experience) {
+    //     let decision = confirm(
+    //         "Are you sure you want to integrate this experience with your lesson plan?"
+    //     );
+
+    //     if (decision === true) {
+    //         // First, get the document ID.
+    //         console.log("Clicked OK");
+    //         this.expLessonPlanService.currentDocumentId
+    //             .pipe(take(1))
+    //             .subscribe((id) => {
+    //                 console.log("Inside subscribe callback");
+    //                 if (id) {
+    //                     this.id = id;
+    //                     console.log("Document ID:", this.id);
+    //                     console.log("Experience to integrate:", expToIntegrate);
+    //                     // Now, we have the ID, so let's try to update Firestore.
+    //                     this.firestore
+    //                         .collection("Documents")
+    //                         .doc(this.id)
+    //                         .get()
+    //                         .toPromise()
+    //                         .then((doc) => {
+    //                             if (doc && doc.exists) {
+    //                                 const data = doc.data() as DocumentData;
+    //                                 const existingExperiences =
+    //                                     data.integrated_experiences || [];
+    //                                 existingExperiences.push(expToIntegrate);
+    //                                 return this.firestore
+    //                                     .collection("Documents")
+    //                                     .doc(this.id)
+    //                                     .update({
+    //                                         integrated_experiences:
+    //                                             existingExperiences,
+    //                                     });
+    //                             } else {
+    //                                 throw new Error("Document doesn't exist");
+    //                             }
+    //                         })
+    //                         .then(() => {
+    //                             this.expLessonPlanService.changeExperience(
+    //                                 expToIntegrate
+    //                             );
+    //                             this.router.navigate(["/display"]);
+    //                         })
+    //                         .catch((err: any) => {
+    //                             console.error(
+    //                                 "Error integrating experience: ",
+    //                                 err
+    //                             );
+    //                         });
+    //                 }
+    //             });
+    //     }
+    // }
+
+    resetUploadState() {
+        this.selectedExperienceFile = null;
+        this.experienceLabelText = "Choose a file";
+        this.studentLabelText = "Choose a file";
     }
 
-    integrateExperience(expToIntegrate: Experience) {
-        let decision = confirm(
-            "Are you sure you want to integrate this experience with your lesson plan?"
+    onExperienceFileSelect(event: any) {
+        this.selectedExperienceFile = event.target.files[0];
+        this.experienceLabelText = this.selectedExperienceFile
+            ? this.selectedExperienceFile.name
+            : "Choose a File";
+
+        if (!this.selectedExperienceFile || !this.selectedExperienceFile.name) {
+            alert("No file selected or file name is not valid.");
+            return;
+        }
+
+        const fileExtension = this.selectedExperienceFile.name
+            .split(".")
+            .pop()
+            ?.toLowerCase();
+
+        if (fileExtension !== "csv") {
+            alert(
+                "The selected file format is not supported. Please upload a CSV."
+            );
+            this.resetUploadState();
+            return;
+        }
+
+        console.log(this.selectedExperienceFile);
+        console.log(this.experienceLabelText);
+    }
+
+    onExperienceFileUpload() {
+        if (!this.selectedExperienceFile) {
+            alert("No file selected.");
+            return;
+        } else if (this.selectedExperienceFile) {
+            alert(
+                this.selectedExperienceFile.name + " was successfully uploaded."
+            );
+            console.log(
+                this.selectedExperienceFile.name + " was successfully uploaded."
+            );
+        }
+
+        const storageRef = ref(
+            this.storage,
+            `experience_files/${this.selectedExperienceFile.name}`
+        );
+        const uploadTask = uploadBytesResumable(
+            storageRef,
+            this.selectedExperienceFile
         );
 
-        if (decision === true) {
-            // First, get the document ID.
-            console.log("Clicked OK");
-            this.expLessonPlanService.currentDocumentId
-                .pipe(take(1))
-                .subscribe((id) => {
-                    console.log("Inside subscribe callback");
-                    if (id) {
-                        this.id = id;
-                        console.log("Document ID:", this.id);
-                        console.log("Experience to integrate:", expToIntegrate);
-                        // Now, we have the ID, so let's try to update Firestore.
-                        this.firestore
-                            .collection("Documents")
-                            .doc(this.id)
-                            .get()
-                            .toPromise()
-                            .then((doc) => {
-                                if (doc && doc.exists) {
-                                    const data = doc.data() as DocumentData;
-                                    const existingExperiences =
-                                        data.integrated_experiences || [];
-                                    existingExperiences.push(expToIntegrate);
-                                    return this.firestore
-                                        .collection("Documents")
-                                        .doc(this.id)
-                                        .update({
-                                            integrated_experiences:
-                                                existingExperiences,
-                                        });
-                                } else {
-                                    throw new Error("Document doesn't exist");
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+            },
+            (error) => {
+                console.log(error.message);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log("File available at", downloadURL);
+                });
+                this.resetUploadState();
+            }
+        );
+
+        this.parseExperienceCSVContent(this.selectedExperienceFile);
+    }
+
+    parseExperienceCSVContent(file: File) {
+        this.papa.parse(file, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (result) => {
+                if (result.data) {
+                    for (let experience of result.data) {
+                        this.experienceObject.id = "";
+                        this.experienceObject.experience_title = Object.values(
+                            experience
+                        )[0] as string;
+                        this.experienceObject.student_name = Object.values(
+                            experience
+                        )[1] as string;
+                        this.experienceObject.experience_description =
+                            Object.values(experience)[2] as string;
+                        this.experienceObject.date = this.datePipe.transform(
+                            Object.values(experience)[3] as string,
+                            "yyyy-MM-dd"
+                        ) as string;
+                        this.experienceObject.student_data.student_name =
+                            Object.values(experience)[1] as string;
+                        this.experienceObject.student_data.student_gender =
+                            Object.values(experience)[4] as string;
+                        this.experienceObject.student_data.student_last_test_grade =
+                            Object.values(experience)[5] as string;
+                        this.experienceObject.student_data.student_table =
+                            Object.values(experience)[6] as string;
+                        this.experienceObject.student_data.student_overall_performance =
+                            Object.values(experience)[7] as string;
+                        this.experienceObject.student_data.student_learning_disability =
+                            Object.values(experience)[8] as string;
+                        this.experienceObject.student_data.student_race_ethnicity =
+                            Object.values(experience)[9] as string;
+                        this.experienceObject.student_data.student_attendance =
+                            Object.values(experience)[10] as string;
+                        this.experienceObject.student_data.student_class_participation =
+                            Object.values(experience)[11] as string;
+
+                        this.experience_service
+                            .parseExperienceCSVContent(this.experienceObject)
+                            .then((experience) => {
+                                if (experience) {
+                                    console.log(
+                                        "Experience with title " +
+                                            Object.values(experience)[0] +
+                                            " was added successfully!"
+                                    );
                                 }
-                            })
-                            .then(() => {
-                                this.expLessonPlanService.changeExperience(
-                                    expToIntegrate
-                                );
-                                this.router.navigate(["/display"]);
-                            })
-                            .catch((err: any) => {
-                                console.error(
-                                    "Error integrating experience: ",
-                                    err
-                                );
                             });
                     }
-                });
+                }
+            },
+            error: (error) => {
+                console.error("Error parsing CSV:", error);
+            },
+        });
+    }
+
+    onStudentFileSelect(event: any) {
+        this.selectStudentFile = event.target.files[0];
+        this.studentLabelText = this.selectStudentFile
+            ? this.selectStudentFile.name
+            : "Choose a File";
+
+        if (!this.selectStudentFile || !this.selectStudentFile.name) {
+            alert("No file selected or file name is not valid.");
+            return;
         }
+
+        const fileExtension = this.selectStudentFile.name
+            .split(".")
+            .pop()
+            ?.toLowerCase();
+
+        if (fileExtension !== "csv") {
+            alert(
+                "The selected file format is not supported. Please upload a CSV."
+            );
+            this.resetUploadState();
+            return;
+        }
+
+        console.log(this.selectStudentFile);
+        console.log(this.studentLabelText);
+    }
+
+    onStudentFileUpload() {
+        if (!this.selectStudentFile) {
+            alert("No file selected.");
+            return;
+        } else if (this.selectStudentFile) {
+            alert(this.selectStudentFile.name + " was successfully uploaded.");
+            console.log(
+                this.selectStudentFile.name + " was successfully uploaded."
+            );
+        }
+
+        const storageRef = ref(
+            this.storage,
+            `student_files/${this.selectStudentFile.name}`
+        );
+        const uploadTask = uploadBytesResumable(
+            storageRef,
+            this.selectStudentFile
+        );
+
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+            },
+            (error) => {
+                console.log(error.message);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log("File available at", downloadURL);
+                });
+                this.resetUploadState();
+            }
+        );
+
+        this.parseStudentCSVContent(this.selectStudentFile);
+    }
+
+    parseStudentCSVContent(file: File) {
+        this.papa.parse(file, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (result) => {
+                if (result.data) {
+                    for (let student of result.data) {
+                        this.studentObject.id = "";
+                        this.studentObject.student_name = Object.values(
+                            student
+                        )[0] as string;
+                        this.studentObject.student_gender = Object.values(
+                            student
+                        )[1] as string;
+                        this.studentObject.student_last_test_grade =
+                            Object.values(student)[2] as string;
+                        this.studentObject.student_table = Object.values(
+                            student
+                        )[3] as string;
+                        this.studentObject.student_overall_performance =
+                            Object.values(student)[4] as string;
+                        this.studentObject.student_learning_disability =
+                            Object.values(student)[5] as string;
+                        this.studentObject.student_race_ethnicity =
+                            Object.values(student)[6] as string;
+                        this.studentObject.student_attendance = Object.values(
+                            student
+                        )[7] as string;
+                        this.studentObject.student_class_participation =
+                            Object.values(student)[8] as string;
+
+                        this.experience_service
+                            .parseStudentCSVContent(this.studentObject)
+                            .then((student) => {
+                                if (student) {
+                                    console.log(
+                                        "Student with name " +
+                                            Object.values(student)[0] +
+                                            " was added successfully!"
+                                    );
+                                }
+                            });
+                    }
+                }
+            },
+            error: (error) => {
+                console.error("Error parsing CSV:", error);
+            },
+        });
     }
 
     // Add multiple experiences
@@ -530,287 +828,9 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         });
     }
 
-    getExperienceDetails(experience: Experience) {
-        this.experienceDetails = experience;
-        console.log(this.experienceDetails);
-    }
-
-    updateExperience(experience: Experience) {
-        const { value } = this.editForm;
-        console.log(value);
-
-        this.experienceObject.id = experience.id;
-        this.experienceObject.experience_title = value.edited_title;
-        this.experienceObject.experience_description = value.edited_description;
-        this.experienceObject.student_name = value.edited_student_name;
-        this.experienceObject.date = this.datePipe.transform(
-            value.edited_date,
-            "yyyy-MM-dd"
-        ) as string;
-
-        this.experience_service
-            .updateExperience(experience, this.experienceObject)
-            .then(() => {
-                alert("Experience Updated Successfully");
-            });
-
-        this.editForm.reset();
-    }
-
-    onExperienceFileSelect(event: any) {
-        this.selectedExperienceFile = event.target.files[0];
-        this.experienceLabelText = this.selectedExperienceFile
-            ? this.selectedExperienceFile.name
-            : "Choose a File";
-
-        if (!this.selectedExperienceFile || !this.selectedExperienceFile.name) {
-            alert("No file selected or file name is not valid.");
-            return;
-        }
-
-        const fileExtension = this.selectedExperienceFile.name
-            .split(".")
-            .pop()
-            ?.toLowerCase();
-
-        if (fileExtension !== "csv") {
-            alert(
-                "The selected file format is not supported. Please upload a CSV."
-            );
-            this.resetUploadState();
-            return;
-        }
-
-        console.log(this.selectedExperienceFile);
-        console.log(this.experienceLabelText);
-    }
-
-    resetUploadState() {
-        this.selectedExperienceFile = null;
-        this.experienceLabelText = "Choose a file";
-        this.studentLabelText = "Choose a file";
-    }
-
-    onExperienceFileUpload() {
-        if (!this.selectedExperienceFile) {
-            alert("No file selected.");
-            return;
-        } else if (this.selectedExperienceFile) {
-            alert(
-                this.selectedExperienceFile.name + " was successfully uploaded."
-            );
-            console.log(
-                this.selectedExperienceFile.name + " was successfully uploaded."
-            );
-        }
-
-        const storageRef = ref(
-            this.storage,
-            `experience_files/${this.selectedExperienceFile.name}`
-        );
-        const uploadTask = uploadBytesResumable(
-            storageRef,
-            this.selectedExperienceFile
-        );
-
-        uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-                const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log("Upload is " + progress + "% done");
-            },
-            (error) => {
-                console.log(error.message);
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log("File available at", downloadURL);
-                });
-                this.resetUploadState();
-            }
-        );
-
-        this.parseExperienceCSVContent(this.selectedExperienceFile);
-    }
-
-    parseExperienceCSVContent(file: File) {
-        this.papa.parse(file, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (result) => {
-                if (result.data) {
-                    for (let experience of result.data) {
-                        this.experienceObject.id = "";
-                        this.experienceObject.experience_title = Object.values(
-                            experience
-                        )[0] as string;
-                        this.experienceObject.student_name = Object.values(
-                            experience
-                        )[1] as string;
-                        this.experienceObject.experience_description =
-                            Object.values(experience)[2] as string;
-                        this.experienceObject.date = this.datePipe.transform(
-                            Object.values(experience)[3] as string,
-                            "yyyy-MM-dd"
-                        ) as string;
-                        this.experienceObject.student_data.student_name =
-                            Object.values(experience)[1] as string;
-                        this.experienceObject.student_data.student_gender =
-                            Object.values(experience)[4] as string;
-                        this.experienceObject.student_data.student_last_test_grade =
-                            Object.values(experience)[5] as string;
-                        this.experienceObject.student_data.student_table =
-                            Object.values(experience)[6] as string;
-                        this.experienceObject.student_data.student_overall_performance =
-                            Object.values(experience)[7] as string;
-                        this.experienceObject.student_data.student_learning_disability =
-                            Object.values(experience)[8] as string;
-                        this.experienceObject.student_data.student_race_ethnicity =
-                            Object.values(experience)[9] as string;
-                        this.experienceObject.student_data.student_attendance =
-                            Object.values(experience)[10] as string;
-                        this.experienceObject.student_data.student_class_participation =
-                            Object.values(experience)[11] as string;
-
-                        this.experience_service
-                            .parseExperienceCSVContent(this.experienceObject)
-                            .then((experience) => {
-                                if (experience) {
-                                    console.log(
-                                        "Experience with title " +
-                                            Object.values(experience)[0] +
-                                            " was added successfully!"
-                                    );
-                                }
-                            });
-                    }
-                }
-            },
-            error: (error) => {
-                console.error("Error parsing CSV:", error);
-            },
-        });
-    }
-
-    onStudentFileSelect(event: any) {
-        this.selectStudentFile = event.target.files[0];
-        this.studentLabelText = this.selectStudentFile
-            ? this.selectStudentFile.name
-            : "Choose a File";
-
-        if (!this.selectStudentFile || !this.selectStudentFile.name) {
-            alert("No file selected or file name is not valid.");
-            return;
-        }
-
-        const fileExtension = this.selectStudentFile.name
-            .split(".")
-            .pop()
-            ?.toLowerCase();
-
-        if (fileExtension !== "csv") {
-            alert(
-                "The selected file format is not supported. Please upload a CSV."
-            );
-            this.resetUploadState();
-            return;
-        }
-
-        console.log(this.selectStudentFile);
-        console.log(this.studentLabelText);
-    }
-
-    onStudentFileUpload() {
-        if (!this.selectStudentFile) {
-            alert("No file selected.");
-            return;
-        } else if (this.selectStudentFile) {
-            alert(this.selectStudentFile.name + " was successfully uploaded.");
-            console.log(
-                this.selectStudentFile.name + " was successfully uploaded."
-            );
-        }
-
-        const storageRef = ref(
-            this.storage,
-            `student_files/${this.selectStudentFile.name}`
-        );
-        const uploadTask = uploadBytesResumable(
-            storageRef,
-            this.selectStudentFile
-        );
-
-        uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-                const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log("Upload is " + progress + "% done");
-            },
-            (error) => {
-                console.log(error.message);
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log("File available at", downloadURL);
-                });
-                this.resetUploadState();
-            }
-        );
-
-        this.parseStudentCSVContent(this.selectStudentFile);
-    }
-
-    parseStudentCSVContent(file: File) {
-        this.papa.parse(file, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (result) => {
-                if (result.data) {
-                    for (let student of result.data) {
-                        this.studentObject.id = "";
-                        this.studentObject.student_name = Object.values(
-                            student
-                        )[0] as string;
-                        this.studentObject.student_gender = Object.values(
-                            student
-                        )[1] as string;
-                        this.studentObject.student_last_test_grade =
-                            Object.values(student)[2] as string;
-                        this.studentObject.student_table = Object.values(
-                            student
-                        )[3] as string;
-                        this.studentObject.student_overall_performance =
-                            Object.values(student)[4] as string;
-                        this.studentObject.student_learning_disability =
-                            Object.values(student)[5] as string;
-                        this.studentObject.student_race_ethnicity =
-                            Object.values(student)[6] as string;
-                        this.studentObject.student_attendance = Object.values(
-                            student
-                        )[7] as string;
-                        this.studentObject.student_class_participation =
-                            Object.values(student)[8] as string;
-
-                        this.experience_service
-                            .parseStudentCSVContent(this.studentObject)
-                            .then((student) => {
-                                if (student) {
-                                    console.log(
-                                        "Student with name " +
-                                            Object.values(student)[0] +
-                                            " was added successfully!"
-                                    );
-                                }
-                            });
-                    }
-                }
-            },
-            error: (error) => {
-                console.error("Error parsing CSV:", error);
-            },
-        });
+    displayStudentData(event: any, experience: Experience) {
+        this.clickedExperience = experience;
+        event.target.click();
     }
 
     onFilterByStudentClick() {

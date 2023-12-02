@@ -63,7 +63,20 @@
                                     <i class="bi bi-person"></i>
                                 </div> -->
                                 <!-- <div class="flex-grow-1 mx-2"> -->
-                                <p>Student: {{ experience.student_name }}</p>
+                                <p>
+                                    Student:
+                                    <a
+                                        (mouseover)="
+                                            displayStudentData(
+                                                $event,
+                                                experience
+                                            )
+                                        "
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#studentModal"
+                                        >{{ experience.student_name }}</a
+                                    >
+                                </p>
                                 <!-- </div> -->
                             </div>
                             <div class="date-uploaded">
@@ -445,8 +458,102 @@
         </div>
     </div>
 
-    <!-- Add experience modal -->
+    <!-- Student modal -->
     <div
+        class="modal fade"
+        id="studentModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title" id="exampleModalLabel">
+                        {{ clickedExperience.student_data.student_name }}
+                    </h1>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <p class="col">
+                            <strong>Gender:</strong>
+                            {{ clickedExperience.student_data.student_gender }}
+                        </p>
+                        <p class="col">
+                            <strong>Race/Ethnicity:</strong>
+                            {{
+                                clickedExperience.student_data
+                                    .student_race_ethnicity
+                            }}
+                        </p>
+                    </div>
+                    <div class="row">
+                        <p class="col">
+                            <strong>Last Test Grade:</strong>
+                            {{
+                                clickedExperience.student_data
+                                    .student_last_test_grade
+                            }}
+                        </p>
+                        <p class="col">
+                            <strong>Overall Performance:</strong>
+                            {{
+                                clickedExperience.student_data
+                                    .student_overall_performance
+                            }}
+                        </p>
+                    </div>
+                    <div class="row">
+                        <p class="col">
+                            <strong>Attendance:</strong>
+                            {{
+                                clickedExperience.student_data
+                                    .student_attendance
+                            }}
+                        </p>
+                        <p class="col">
+                            <strong>In Class Participation:</strong>
+                            {{
+                                clickedExperience.student_data
+                                    .student_class_participation
+                            }}
+                        </p>
+                    </div>
+                    <div class="row">
+                        <p class="col">
+                            <strong>Table:</strong>
+                            {{ clickedExperience.student_data.student_table }}
+                        </p>
+                        <p class="col">
+                            <strong>Learning Disability:</strong>
+                            {{
+                                clickedExperience.student_data
+                                    .student_learning_disability
+                            }}
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add experience modal -->
+    <!-- <div
         class="modal fade"
         id="addExperienceModal"
         tabindex="-1"
@@ -558,10 +665,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Edit experience modal -->
-    <div
+    <!-- <div
         class="modal fade"
         id="editExperienceModal"
         tabindex="-1"
@@ -687,5 +794,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
