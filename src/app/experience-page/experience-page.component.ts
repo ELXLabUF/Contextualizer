@@ -41,7 +41,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     selectedExperienceFile: File | null = null;
     selectStudentFile: File | null = null;
-    labelText: string = "Choose a file";
+    experienceLabelText: string = "Choose a file";
+    studentLabelText: string = "Choose a file";
 
     id: string = "";
 
@@ -558,7 +559,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     onExperienceFileSelect(event: any) {
         this.selectedExperienceFile = event.target.files[0];
-        this.labelText = this.selectedExperienceFile
+        this.experienceLabelText = this.selectedExperienceFile
             ? this.selectedExperienceFile.name
             : "Choose a File";
 
@@ -581,12 +582,13 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         }
 
         console.log(this.selectedExperienceFile);
-        console.log(this.labelText);
+        console.log(this.experienceLabelText);
     }
 
     resetUploadState() {
         this.selectedExperienceFile = null;
-        this.labelText = "Choose a file";
+        this.experienceLabelText = "Choose a file";
+        this.studentLabelText = "Choose a file";
     }
 
     onExperienceFileUpload() {
@@ -652,6 +654,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                             Object.values(experience)[3] as string,
                             "yyyy-MM-dd"
                         ) as string;
+                        this.experienceObject.student_data.student_name =
+                            Object.values(experience)[1] as string;
                         this.experienceObject.student_data.student_gender =
                             Object.values(experience)[4] as string;
                         this.experienceObject.student_data.student_last_test_grade =
@@ -691,7 +695,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     onStudentFileSelect(event: any) {
         this.selectStudentFile = event.target.files[0];
-        this.labelText = this.selectStudentFile
+        this.studentLabelText = this.selectStudentFile
             ? this.selectStudentFile.name
             : "Choose a File";
 
@@ -714,7 +718,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         }
 
         console.log(this.selectStudentFile);
-        console.log(this.labelText);
+        console.log(this.studentLabelText);
     }
 
     onStudentFileUpload() {
