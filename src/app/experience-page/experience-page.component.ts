@@ -342,26 +342,6 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 "Integration Error",
                 "Please select experiences to integrate."
             );
-
-            let userIntData: any = [];
-            let time = new Date();
-            userIntData = JSON.parse(
-                sessionStorage.getItem("userInteractionData") || "[]"
-            );
-            userIntData.push(
-                {
-                    Action: "Clicked",
-                    Target: "'Ok' button",
-                    Result: "Close alert dialog box",
-                    Time: time.toLocaleString(),
-                }
-                // "Clicked 'Ok' at " + time.toLocaleString()
-            );
-            sessionStorage.setItem(
-                "userInteractionData",
-                JSON.stringify(userIntData)
-            );
-
             return;
         }
 

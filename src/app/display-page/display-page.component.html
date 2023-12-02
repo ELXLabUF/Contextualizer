@@ -19,7 +19,7 @@
 
     <div class="parent-container flex-parent">
         <div class="content-container flex-child">
-            <div *ngFor="let field of editableFields">
+            <div *ngFor="let field of editableFields; trackBy: trackByField">
                 <!-- Wrapper Box for entire content and integrated_experiences -->
                 <div class="wrapper-box" *ngIf="pdfData[field.key]">
                     <!-- Main Container -->
@@ -136,90 +136,6 @@
                 >
                     +
                 </button>
-
-                <!-- Additional Containers -->
-                <div
-                    *ngFor="
-                        let key of getAdditionalContainerKeysForField(field)
-                    "
-                >
-                    <div
-                        *ngIf="pdfData[field.key] && pdfData[field.key][key]"
-                        class="edit-box-container additional-container"
-                        cdkDropList
-                        (mouseenter)="onMouseEnter(field)"
-                        (mouseleave)="onMouseLeave(field)"
-                        (drop)="
-                            onDropForAdditionalContainer($event, field, key)
-                        "
-                        (dragover)="allowDrop($event)"
-                    >
-                        <label class="editable-element">{{ key }}:</label>
-                        <div *ngIf="!isEditingField(field.key, key)">
-                            <ul>
-                                <li
-                                    *ngFor="
-                                        let item of pdfData[field.key][key].list
-                                    "
-                                    (click)="
-                                        enableEditingForAdditionalContainer(
-                                            field.key,
-                                            key
-                                        )
-                                    "
-                                    class="editable-element"
-                                >
-                                    {{ item }}
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div *ngIf="isEditingField(field.key, key)">
-                            <ul>
-                                <li
-                                    *ngFor="
-                                        let item of pdfData[field.key][key]
-                                            .list;
-                                        let idx = index;
-                                        trackBy: trackByFn
-                                    "
-                                >
-                                    <input
-                                        [(ngModel)]="
-                                            pdfData[field.key][key].list[idx]
-                                        "
-                                        class="editField"
-                                    />
-                                </li>
-                            </ul>
-                            <button
-                                (click)="
-                                    submitEditForAdditionalContainer(
-                                        field.key,
-                                        key
-                                    )
-                                "
-                            >
-                                Submit
-                            </button>
-                        </div>
-
-                        <i
-                            class="fas fa-trash"
-                            (click)="deleteAdditionalContainer(field, key)"
-                            title="Delete"
-                        ></i>
-                    </div>
-
-                    <!-- Button below the Additional Container -->
-                    <button
-                        *ngIf="pdfData[field.key] && pdfData[field.key][key]"
-                        class="add-experience-btn"
-                        (click)="addContainer(field)"
-                    >
-                        +
-                    </button>
-                </div>
             </div>
         </div>
 
