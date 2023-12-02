@@ -1,8 +1,8 @@
-import { PasswordPatternPipe } from './password-pattern.pipe';
+import { PasswordPatternPipe } from "./password-pattern.pipe";
 
-describe('PasswordPatternPipe', () => {
-  it('create an instance', () => {
-    const pipe = new PasswordPatternPipe();
-    expect(pipe).toBeTruthy();
-  });
+describe("PasswordPatternPipe", () => {
+    it("create an instance", () => {
+        const pipe = new PasswordPatternPipe();
+        expect(pipe).toBeTruthy();
+    });
 });

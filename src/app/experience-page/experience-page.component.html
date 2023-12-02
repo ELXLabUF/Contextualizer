@@ -1,27 +1,42 @@
 <div class="experiences-container">
-    <!-- DO NOT DELETE!
-    <div class="page-header-container">
-        <button
-            type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#addExperienceModal"
-        >
-            Create a new experience
-        </button>
+    <!-- DO NOT DELETE! -->
+    <!-- <div class="page-header-container">
+        <div>
+            <button
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#addExperienceModal"
+            >
+                Create a new experience
+            </button>
 
-        <div class="upload-csv-file mb-3">
-            <label class="file-input-label">
-                {{ labelText }}
-                <input
-                    type="file"
-                    class="form-control"
-                    (change)="onFileSelect($event)"
-                />
-            </label>
-            <button (click)="onFileUpload()">Upload</button>
+            <div class="upload-csv-file mb-3">
+                <label class="file-input-label">
+                    {{ labelText }}
+                    <input
+                        type="file"
+                        class="form-control"
+                        (change)="onExperienceFileSelect($event)"
+                    />
+                </label>
+                <button (click)="onExperienceFileUpload()">Upload</button>
+            </div>
         </div>
-    </div>
-    DO NOT DELETE! -->
+        <div>
+            <div class="upload-csv-file mb-3">
+                <label class="file-input-label">
+                    {{ labelText }}
+                    <input
+                        type="file"
+                        class="form-control"
+                        (change)="onStudentFileSelect($event)"
+                    />
+                </label>
+                <button (click)="onStudentFileUpload()">Upload</button>
+            </div>
+        </div>
+    </div> -->
+    <!-- DO NOT DELETE! -->
 
     <app-dot-navigation></app-dot-navigation>
 
@@ -48,7 +63,7 @@
                                     <i class="bi bi-person"></i>
                                 </div> -->
                                 <!-- <div class="flex-grow-1 mx-2"> -->
-                                <p>Student: {{ experience.contributed_by }}</p>
+                                <p>Student: {{ experience.student_name }}</p>
                                 <!-- </div> -->
                             </div>
                             <div class="date-uploaded">
@@ -98,7 +113,7 @@
 
         <div class="mb-3 options-container flex-child">
             <div class="search-student">
-                <!-- <mat-form-field appearance="outline" class="search-student">
+                <mat-form-field appearance="outline" class="search-student">
                     <mat-label>Search student</mat-label>
                     <input
                         matInput
@@ -106,20 +121,21 @@
                         class="form-control"
                         [(ngModel)]="studentSearchTerm"
                         (input)="filterExperiencesByStudent()"
+                        (click)="onFilterByStudentClick()"
                     />
-                </mat-form-field> -->
-                <input
+                </mat-form-field>
+                <!-- <input
                     type="text"
                     class="form-control"
                     [(ngModel)]="studentSearchTerm"
                     (input)="filterExperiencesByStudent()"
                     (click)="onFilterByStudentClick()"
-                    placeholder="Search student"
-                />
+                    placeholder="Search student name"
+                /> -->
             </div>
 
             <div class="search-keyword">
-                <!-- <mat-form-field appearance="outline" class="search-keyword">
+                <mat-form-field appearance="outline" class="search-keyword">
                     <mat-label>Search experience</mat-label>
                     <input
                         type="text"
@@ -127,20 +143,21 @@
                         class="form-control"
                         [(ngModel)]="keywordSearchTerm"
                         (input)="filterExperiencesByKeyword()"
+                        (click)="onFilterByKeywordClick()"
                     />
-                </mat-form-field> -->
-                <input
+                </mat-form-field>
+                <!-- <input
                     type="text"
                     class="form-control"
                     [(ngModel)]="keywordSearchTerm"
                     (input)="filterExperiencesByKeyword()"
                     (click)="onFilterByKeywordClick()"
                     placeholder="Search keyword"
-                />
+                /> -->
             </div>
 
             <div class="search-date">
-                <!-- <mat-form-field appearance="outline" class="search-date">
+                <mat-form-field appearance="outline" class="search-date">
                     <mat-label>Search date</mat-label>
                     <input
                         matInput
@@ -149,21 +166,22 @@
                         [matDatepicker]="picker"
                         [(ngModel)]="dateSearchTerm"
                         (dateInput)="filterExperiencesByDate()"
+                        (click)="onFilterByDateClick()"
                     />
                     <mat-datepicker-toggle
                         matIconSuffix
                         [for]="picker"
                     ></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field> -->
-                <input
+                </mat-form-field>
+                <!-- <input
                     type="date"
                     class="form-control"
                     [(ngModel)]="dateSearchTerm"
                     (input)="filterExperiencesByDate()"
                     (click)="onFilterByDateClick()"
                     placeholder="Search date"
-                />
+                /> -->
             </div>
 
             <div>
@@ -190,8 +208,183 @@
                 </mat-form-field>
             </div>
 
+            <div class="search-student-gender">
+                <mat-form-field
+                    appearance="outline"
+                    class="search-student-gender"
+                >
+                    <mat-label>Search student gender</mat-label>
+                    <mat-select
+                        (valueChange)="filterExperiencesByStudentGender($event)"
+                        multiple
+                    >
+                        <mat-option value="female">Female</mat-option>
+                        <mat-option value="male">Male</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!-- <select
+                    class="form-select"
+                    (change)="filterExperiencesByStudentGender($event)"
+                    multiple
+                >
+                    <option value="" disabled selected>
+                        Search student gender
+                    </option>
+                    <option value="female">Female</option>
+                    <option value="male">Male</option>
+                </select> -->
+            </div>
+
+            <div class="search-student-last-test-grade">
+                <mat-form-field
+                    appearance="outline"
+                    class="search-student-last-test-grade"
+                >
+                    <mat-label>Search student last test grade</mat-label>
+                    <mat-select
+                        (valueChange)="
+                            filterExperiencesByStudentLastTestGrade($event)
+                        "
+                        multiple
+                    >
+                        <mat-option value="gradeA">A</mat-option>
+                        <mat-option value="gradeB">B</mat-option>
+                        <mat-option value="gradeC">C</mat-option>
+                        <mat-option value="gradeD">D</mat-option>
+                        <mat-option value="gradeF">F</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="search-student-table">
+                <mat-form-field
+                    appearance="outline"
+                    class="search-student-table"
+                >
+                    <mat-label>Search student table</mat-label>
+                    <mat-select
+                        (valueChange)="filterExperiencesByStudentTable($event)"
+                        multiple
+                    >
+                        <mat-option value="blue">Blue</mat-option>
+                        <mat-option value="green">Green</mat-option>
+                        <mat-option value="orange">Orange</mat-option>
+                        <mat-option value="pink">Pink</mat-option>
+                        <mat-option value="purple">Purple</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="search-student-overall-performance">
+                <mat-form-field
+                    appearance="outline"
+                    class="search-student-overall-performance"
+                >
+                    <mat-label>Search student overall performance</mat-label>
+                    <mat-select
+                        (valueChange)="
+                            filterExperiencesByStudentOverallPerformance($event)
+                        "
+                        multiple
+                    >
+                        <mat-option value="gradeA">A</mat-option>
+                        <mat-option value="gradeB">B</mat-option>
+                        <mat-option value="gradeC">C</mat-option>
+                        <mat-option value="gradeD">D</mat-option>
+                        <mat-option value="gradeF">F</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="search-student-learning-disability">
+                <mat-form-field
+                    appearance="outline"
+                    class="search-student-learning-disability"
+                >
+                    <mat-label>Search student learning disability</mat-label>
+                    <mat-select
+                        (valueChange)="
+                            filterExperiencesByStudentLearningDisability($event)
+                        "
+                        multiple
+                    >
+                        <mat-option value="adhd">ADHD</mat-option>
+                        <mat-option value="autism">Autism</mat-option>
+                        <mat-option value="dyslexia">Dyslexia</mat-option>
+                        <mat-option value="dyscalculia">Dyscalculia</mat-option>
+                        <mat-option value="none">None Reported</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="search-student-race-ethnicity">
+                <mat-form-field
+                    appearance="outline"
+                    class="search-student-race-ethnicity"
+                >
+                    <mat-label>Search student race/ethnicity</mat-label>
+                    <mat-select
+                        (valueChange)="
+                            filterExperiencesByStudentRaceOrEthnicity($event)
+                        "
+                        multiple
+                    >
+                        <mat-option value="african-american"
+                            >African-American</mat-option
+                        >
+                        <mat-option value="asian">Asian</mat-option>
+                        <mat-option value="hispanic">Hispanic</mat-option>
+                        <mat-option value="white">White</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="search-student-attendance">
+                <mat-form-field
+                    appearance="outline"
+                    class="search-student-attendance"
+                >
+                    <mat-label>Search student attendance</mat-label>
+                    <mat-select
+                        (valueChange)="
+                            filterExperiencesByStudentAttendance($event)
+                        "
+                        multiple
+                    >
+                        <mat-option value="80-84">80% - 84%</mat-option>
+                        <mat-option value="above80">> 80%</mat-option>
+                        <mat-option value="85-89">85% - 89%</mat-option>
+                        <mat-option value="above85">> 85%</mat-option>
+                        <mat-option value="90-94">90% - 94%</mat-option>
+                        <mat-option value="above90">> 90%</mat-option>
+                        <mat-option value="95-99">95% - 99%</mat-option>
+                        <mat-option value="above95">> 95%</mat-option>
+                        <mat-option value="100">100%</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="search-student-class-participation">
+                <mat-form-field
+                    appearance="outline"
+                    class="search-student-class-participation"
+                >
+                    <mat-label>Search student in-class participation</mat-label>
+                    <mat-select
+                        (valueChange)="
+                            filterExperiencesByStudentClassParticipation($event)
+                        "
+                        multiple
+                    >
+                        <mat-option value="low">Low</mat-option>
+                        <mat-option value="mid">Mid</mat-option>
+                        <mat-option value="high">High</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
             <div class="sort-experiences">
-                <!-- <mat-form-field appearance="outline" class="sort-experiences">
+                <mat-form-field appearance="outline" class="sort-experiences">
                     <mat-label>Sort By</mat-label>
                     <mat-select (valueChange)="sortExperiences($event)">
                         <mat-option value="timeOldest"
@@ -200,7 +393,7 @@
                         <mat-option value="timeNewest"
                             >Time (Newest to Oldest)</mat-option
                         >
-                        <mat-option value="titleLowest">
+                        <!-- <mat-option value="titleLowest">
                             Title Number (Lowest to Highest)
                         </mat-option>
                         <mat-option value="titleHighest">
@@ -211,10 +404,10 @@
                         </mat-option>
                         <mat-option value="studentHighest">
                             Student (Highest to Lowest)
-                        </mat-option>
+                        </mat-option> -->
                     </mat-select>
-                </mat-form-field> -->
-                <select class="form-select" (change)="sortExperiences($event)">
+                </mat-form-field>
+                <!-- <select class="form-select" (change)="sortExperiences($event)">
                     <option value="" disabled selected>Sort By</option>
                     <option value="timeOldest">Time (Oldest to Newest)</option>
                     <option value="timeNewest">Time (Newest to Oldest)</option>
@@ -230,7 +423,7 @@
                     <option value="studentHighest">
                         Student (Highest to Lowest)
                     </option>
-                </select>
+                </select> -->
             </div>
 
             <div>
@@ -318,7 +511,7 @@
                                     type="text"
                                     class="form-control"
                                     id="contributed-by"
-                                    formControlName="contributed_by"
+                                    formControlName="student_name"
                                 />
                             </mat-form-field>
                         </div>
@@ -439,8 +632,8 @@
                                     type="text"
                                     class="form-control"
                                     id="edit-contributed-by"
-                                    formControlName="edited_contributed_by"
-                                    [value]="experienceDetails?.contributed_by"
+                                    formControlName="edited_student_name"
+                                    [value]="experienceDetails?.student_name"
                                 />
                             </mat-form-field>
                         </div>

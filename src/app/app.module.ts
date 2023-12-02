@@ -15,7 +15,7 @@ import { ExperiencePageComponent } from "./experience-page/experience-page.compo
 import { DisplayPageComponent } from "./display-page/display-page.component";
 import { FinalizeLpPageComponent } from "./finalize-lp-page/finalize-lp-page.component";
 import { AboutComponent } from "./about/about.component";
-import { AccountComponent } from './account/account.component';
+import { AccountComponent } from "./account/account.component";
 
 import { environment } from "../environments/environment";
 import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
@@ -56,11 +56,10 @@ import { DatePipe } from "@angular/common";
 
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { PasswordPatternPipe } from "./password-pattern.pipe";
-import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
-import { MatDialogModule } from '@angular/material/dialog';
-import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
-import { InputDialogComponent } from './input-dialog/input-dialog.component';
-
+import { ConfirmationDialogComponent } from "./confirmation-dialog/confirmation-dialog.component";
+import { MatDialogModule } from "@angular/material/dialog";
+import { AlertDialogComponent } from "./alert-dialog/alert-dialog.component";
+import { InputDialogComponent } from "./input-dialog/input-dialog.component";
 
 @NgModule({
     declarations: [
@@ -112,7 +111,7 @@ import { InputDialogComponent } from './input-dialog/input-dialog.component';
         MatInputModule,
         MatCardModule,
         DragDropModule,
-        MatDialogModule
+        MatDialogModule,
     ],
     providers: [ScreenTrackingService, UserTrackingService, DatePipe],
     bootstrap: [AppComponent],

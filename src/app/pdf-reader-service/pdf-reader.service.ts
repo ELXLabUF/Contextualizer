@@ -34,100 +34,210 @@ export class PdfReaderService {
         };
 
         return new Promise((resolve, reject) => {
-            this.http.post<PdfConversionResponse>(this.API_ENDPOINT, payload, { headers }).subscribe({
-                next: (response) => {
-                    if (response && !response.error) {
-                        this.http.get(response.url!, { responseType: "text" }).subscribe({
-                            next: (jsonData) => {
-                                // console.log('Received JSON:', jsonData);
-                                const transormedData = this.transformData(jsonData);
-                                const transformedJSONData = this.arrayToJSON(transormedData);
-                                if (transformedJSONData && "Content Area" in transformedJSONData) {
-                                    const result = {
-                                        "Content Area":{
-                                            title: "Content Area",
-                                            content: transformedJSONData["Content Area"],
-                                            integrated_experiences: []
-                                        },
-                                        "Grade Level":{
-                                            title: "Grade Level",
-                                            content: transformedJSONData["Grade Level"],
-                                            integrated_experiences: []
-                                        },
-                                        Topic: {
-                                            title: "Topic",
-                                            content: transformedJSONData["Topic"],
-                                            integrated_experiences: []
-                                        },
-                                        Duration:{
-                                            title: "Duration",
-                                            content:transformedJSONData["Duration"],
-                                            integrated_experiences: []
-                                        },
-                                        CCRSAE: {
-                                            title: "CCRSAE",
-                                            content:transformedJSONData["CCRSAE"],
-                                            integrated_experiences: []
-                                        },
-                                        "Instruction Shifts":{
-                                            title: "Instruction Shifts",
-                                            content:transformedJSONData["Instruction Shifts"].slice(1,transformedJSONData["Instruction Shifts"].length),
-                                            integrated_experiences: []
-                                        },
-                                        Objective: {
-                                            title: "Objective",
-                                            content:this.transformArray(transformedJSONData["Objective"].slice(2,transformedJSONData["Objective"].length)),
-                                            integrated_experiences: []
-                                        },
-                                        Assessment: {
-                                            title: "Assessment",
-                                            content:this.transformArray(transformedJSONData["Assessment"].slice(2,transformedJSONData["Assessment"].length)),
-                                            integrated_experiences: []
-                                        },
-                                        Materials: {
-                                            title: "Materials",
-                                            content:this.transformArray(transformedJSONData["Materials"].slice(1,transformedJSONData["Materials"].length)),
-                                            integrated_experiences: []
-                                        },
-                                        Instructions: {
-                                            title: "Instructions",
-                                            content:this.transformArray(transformedJSONData["Instructions"].slice(2,transformedJSONData["Instructions"].length)),
-                                            integrated_experiences: []
-                                        },
-                                        "Home Study": {
-                                            title: "Home Study",
-                                            content:transformedJSONData["Home Study"].slice(1,transformedJSONData["Home Study"].length),
-                                            integrated_experiences: []
-                                        },
-                                        Reflection: {
-                                            title: "Reflection",
-                                            content:transformedJSONData["Reflection"].slice(2,transformedJSONData["Reflection"].length),
-                                            integrated_experiences: []
+            this.http
+                .post<PdfConversionResponse>(this.API_ENDPOINT, payload, {
+                    headers,
+                })
+                .subscribe({
+                    next: (response) => {
+                        if (response && !response.error) {
+                            this.http
+                                .get(response.url!, { responseType: "text" })
+                                .subscribe({
+                                    next: (jsonData) => {
+                                        // console.log('Received JSON:', jsonData);
+                                        const transormedData =
+                                            this.transformData(jsonData);
+                                        const transformedJSONData =
+                                            this.arrayToJSON(transormedData);
+                                        if (
+                                            transformedJSONData &&
+                                            "Content Area" in
+                                                transformedJSONData
+                                        ) {
+                                            const result = {
+                                                "Content Area": {
+                                                    title: "Content Area",
+                                                    content:
+                                                        transformedJSONData[
+                                                            "Content Area"
+                                                        ],
+                                                    integrated_experiences: [],
+                                                },
+                                                "Grade Level": {
+                                                    title: "Grade Level",
+                                                    content:
+                                                        transformedJSONData[
+                                                            "Grade Level"
+                                                        ],
+                                                    integrated_experiences: [],
+                                                },
+                                                Topic: {
+                                                    title: "Topic",
+                                                    content:
+                                                        transformedJSONData[
+                                                            "Topic"
+                                                        ],
+                                                    integrated_experiences: [],
+                                                },
+                                                Duration: {
+                                                    title: "Duration",
+                                                    content:
+                                                        transformedJSONData[
+                                                            "Duration"
+                                                        ],
+                                                    integrated_experiences: [],
+                                                },
+                                                CCRSAE: {
+                                                    title: "CCRSAE",
+                                                    content:
+                                                        transformedJSONData[
+                                                            "CCRSAE"
+                                                        ],
+                                                    integrated_experiences: [],
+                                                },
+                                                "Instruction Shifts": {
+                                                    title: "Instruction Shifts",
+                                                    content:
+                                                        transformedJSONData[
+                                                            "Instruction Shifts"
+                                                        ].slice(
+                                                            1,
+                                                            transformedJSONData[
+                                                                "Instruction Shifts"
+                                                            ].length
+                                                        ),
+                                                    integrated_experiences: [],
+                                                },
+                                                Objective: {
+                                                    title: "Objective",
+                                                    content:
+                                                        this.transformArray(
+                                                            transformedJSONData[
+                                                                "Objective"
+                                                            ].slice(
+                                                                2,
+                                                                transformedJSONData[
+                                                                    "Objective"
+                                                                ].length
+                                                            )
+                                                        ),
+                                                    integrated_experiences: [],
+                                                },
+                                                Assessment: {
+                                                    title: "Assessment",
+                                                    content:
+                                                        this.transformArray(
+                                                            transformedJSONData[
+                                                                "Assessment"
+                                                            ].slice(
+                                                                2,
+                                                                transformedJSONData[
+                                                                    "Assessment"
+                                                                ].length
+                                                            )
+                                                        ),
+                                                    integrated_experiences: [],
+                                                },
+                                                Materials: {
+                                                    title: "Materials",
+                                                    content:
+                                                        this.transformArray(
+                                                            transformedJSONData[
+                                                                "Materials"
+                                                            ].slice(
+                                                                1,
+                                                                transformedJSONData[
+                                                                    "Materials"
+                                                                ].length
+                                                            )
+                                                        ),
+                                                    integrated_experiences: [],
+                                                },
+                                                Instructions: {
+                                                    title: "Instructions",
+                                                    content:
+                                                        this.transformArray(
+                                                            transformedJSONData[
+                                                                "Instructions"
+                                                            ].slice(
+                                                                2,
+                                                                transformedJSONData[
+                                                                    "Instructions"
+                                                                ].length
+                                                            )
+                                                        ),
+                                                    integrated_experiences: [],
+                                                },
+                                                "Home Study": {
+                                                    title: "Home Study",
+                                                    content:
+                                                        transformedJSONData[
+                                                            "Home Study"
+                                                        ].slice(
+                                                            1,
+                                                            transformedJSONData[
+                                                                "Home Study"
+                                                            ].length
+                                                        ),
+                                                    integrated_experiences: [],
+                                                },
+                                                Reflection: {
+                                                    title: "Reflection",
+                                                    content:
+                                                        transformedJSONData[
+                                                            "Reflection"
+                                                        ].slice(
+                                                            2,
+                                                            transformedJSONData[
+                                                                "Reflection"
+                                                            ].length
+                                                        ),
+                                                    integrated_experiences: [],
+                                                },
+                                            };
+                                            resolve(result);
+                                        } else {
+                                            console.error(
+                                                "Transformed JSON Data is invalid or missing required properties:",
+                                                transformedJSONData
+                                            );
+                                            reject(
+                                                "Transformed JSON Data is invalid or missing required properties."
+                                            );
                                         }
-                                        };
-                                        resolve(result);
-                                    }else {
-                                        console.error('Transformed JSON Data is invalid or missing required properties:', transformedJSONData);
-                                        reject('Transformed JSON Data is invalid or missing required properties.');
-                                    }
-                                },
-                                error: (error) => {
-                                    console.error('Error downloading the JSON data:', error);
-                                    reject('Error downloading the JSON data.');
-                                }
-                            });
+                                    },
+                                    error: (error) => {
+                                        console.error(
+                                            "Error downloading the JSON data:",
+                                            error
+                                        );
+                                        reject(
+                                            "Error downloading the JSON data."
+                                        );
+                                    },
+                                });
                         } else {
-                            console.error('Error making the conversion request, Response:', response);
-                            reject(response.message || 'Error making the conversion request.');
+                            console.error(
+                                "Error making the conversion request, Response:",
+                                response
+                            );
+                            reject(
+                                response.message ||
+                                    "Error making the conversion request."
+                            );
                         }
                     },
                     error: (error) => {
-                        console.error('Error making the conversion request:', error);
-                        reject('Error making the conversion request.');
-                    }
-                })
-            });
-        }
+                        console.error(
+                            "Error making the conversion request:",
+                            error
+                        );
+                        reject("Error making the conversion request.");
+                    },
+                });
+        });
+    }
 
     private transformArray(input: string[]): string[] {
         const output: string[] = [];

@@ -26,9 +26,11 @@ export class ExperienceLessonPlanService {
             this.setLatestDocumentId(storedId);
         }
     }
+
     get currentMainTopicValue(): string {
         return this.mainTopicSource.getValue();
     }
+
     get currentSubTopicValue(): string {
         return this.subTopicSource.getValue();
     }
@@ -41,6 +43,7 @@ export class ExperienceLessonPlanService {
         this.latestDocumentIdSource.next(id);
         console.log(id);
     }
+
     changeExperience(newExperience: Experience) {
         this.experiences.push(newExperience);
         this.experienceSource.next(this.experiences);

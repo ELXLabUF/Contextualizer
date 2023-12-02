@@ -9,7 +9,7 @@ import { LessonPlanInstructionsComponent } from "./lesson-plan-instructions/less
 import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
 import { FinalizeLpPageComponent } from "./finalize-lp-page/finalize-lp-page.component";
-import { AccountComponent } from './account/account.component';
+import { AccountComponent } from "./account/account.component";
 
 const routes: Routes = [
     { path: "", redirectTo: "/login", pathMatch: "full" },
@@ -22,7 +22,7 @@ const routes: Routes = [
     { path: "about", component: AboutComponent },
     { path: "display", component: DisplayPageComponent },
     { path: "finalize", component: FinalizeLpPageComponent },
-    {path: "account", component: AccountComponent},
+    { path: "account", component: AccountComponent },
 ];
 
 @NgModule({

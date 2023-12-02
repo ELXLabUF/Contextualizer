@@ -1,66 +1,68 @@
 .account-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #ccc;
-  padding: 20px;
-  width: 300px;
-  margin: 0 auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    padding: 20px;
+    width: 300px;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h2, h3, h4 {
-  margin-top: 0;
+    margin-top: 0;
 }
-label{
-  font-size: 20px;
-  padding: 10px;
+
+label {
+    font-size: 20px;
+    padding: 10px;
 }
-input{
-  border-radius: 5px;
-  padding: 5px;
+
+input {
+    border-radius: 5px;
+    padding: 5px;
 }
 
 button {
-  padding: 15px;
-  background-color: #47141C;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 20px;
-  margin-bottom: 30px;
-  font-size: 25px;
-  width: 250px;
+    padding: 15px;
+    background-color: #47141C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    font-size: 25px;
+    width: 250px;
 }
 
-.password-form{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.password-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .password-requirements {
-  margin-top: 10px;
-  list-style-type: none;
-  padding: 0;
+    margin-top: 10px;
+    list-style-type: none;
+    padding: 0;
 }
 
 .password-requirements li {
-  font-size: 16px;
-  line-height: 25px;
-  color: #888;
+    font-size: 16px;
+    line-height: 25px;
+    color: #888;
 }
 
 .password-requirements li.valid {
-  color: green;
+    color: green;
 }
 
 .error-message {
-  color: red;
-  font-size: 18px;
-  margin: 10px 0;
+    color: red;
+    font-size: 18px;
+    margin: 10px 0;
 }

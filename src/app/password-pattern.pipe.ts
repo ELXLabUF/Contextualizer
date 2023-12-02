@@ -1,13 +1,11 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
-  name: 'passwordPattern'
+    name: "passwordPattern",
 })
 export class PasswordPatternPipe implements PipeTransform {
-
-  transform(value: string, pattern: string): boolean {
-    const regex = new RegExp(pattern);
-    return regex.test(value);
-  }
-
+    transform(value: string, pattern: string): boolean {
+        const regex = new RegExp(pattern);
+        return regex.test(value);
+    }
 }

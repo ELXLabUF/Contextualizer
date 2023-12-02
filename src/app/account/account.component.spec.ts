@@ -1,21 +1,21 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AccountComponent } from './account.component';
+import { AccountComponent } from "./account.component";
 
-describe('AccountComponent', () => {
-  let component: AccountComponent;
-  let fixture: ComponentFixture<AccountComponent>;
+describe("AccountComponent", () => {
+    let component: AccountComponent;
+    let fixture: ComponentFixture<AccountComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [AccountComponent]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            declarations: [AccountComponent],
+        });
+        fixture = TestBed.createComponent(AccountComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
     });
-    fixture = TestBed.createComponent(AccountComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

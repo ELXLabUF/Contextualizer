@@ -9,6 +9,7 @@ import {
     updateDoc,
 } from "@angular/fire/firestore";
 import { Experience } from "../experience";
+import { Student } from "../student";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -49,12 +50,26 @@ export class ExperienceService {
         return updateDoc(docRef, experiences);
     }
 
-    // Parse CSV file to get experiences
-    parseCSVContent(experience: Experience) {
+    // Parse experience CSV file to get experiences
+    parseExperienceCSVContent(experience: Experience) {
         experience.id = doc(collection(this.angularFireStore, "id")).id;
         return addDoc(
             collection(this.angularFireStore, "Experiences"),
             experience
         );
+    }
+
+    // // Get all students
+    // getStudents(): Observable<Student[]> {
+    //     let studentReference = collection(this.angularFireStore, "Students");
+    //     return collectionData(studentReference, {
+    //         idField: "id",
+    //     }) as Observable<Student[]>;
+    // }
+
+    // Parse student CSV file to get experiences
+    parseStudentCSVContent(student: Student) {
+        student.id = doc(collection(this.angularFireStore, "id")).id;
+        return addDoc(collection(this.angularFireStore, "Students"), student);
     }
 }

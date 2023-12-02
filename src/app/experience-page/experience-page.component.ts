@@ -17,6 +17,7 @@ import {
 import { ExperienceLessonPlanService } from "../experience-lesson-plan-service/experience-lesson-plan.service";
 import { ExperienceService } from "../experience-service/experience-service.service";
 import { Experience } from "../experience";
+import { Student } from "../student";
 
 import { Papa } from "ngx-papaparse";
 import { Subscription } from "rxjs";
@@ -34,22 +35,31 @@ import { Observable } from "rxjs";
 export class ExperiencePageComponent implements OnInit, OnDestroy {
     experienceForm!: FormGroup;
     editForm!: FormGroup;
+
     experienceDetails: any;
     experiences: any = [];
-    selectedFile: File | null = null;
+
+    selectedExperienceFile: File | null = null;
+    selectStudentFile: File | null = null;
     labelText: string = "Choose a file";
+
     id: string = "";
+
     keywordSearchTerm!: string;
     studentSearchTerm!: string;
-    dateSearchTerm!: string;
-    // dateTerm!: string; // For mat-form-field mat-input mat-datepicker
+    // dateSearchTerm!: string;  // For normal HTML
+    dateSearchTerm!: Date; // For mat-form-field mat-input mat-datepicker
+    dateTerm!: string; // For mat-form-field mat-input mat-datepicker
     startDateSearchTerm!: Date;
     startDateTerm!: string;
     endDateSearchTerm!: Date;
     endDateTerm!: string;
+
     filteredExp: any = [];
     multipleIntegrate: any = [];
+
     startNavigationFromExperiences: boolean = false;
+
     timeStart!: Date;
     timeEnd!: Date;
 
@@ -57,8 +67,33 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         id: "",
         experience_title: "",
         experience_description: "",
-        contributed_by: "",
+        student_name: "",
         date: "",
+        student_data: {
+            id: "",
+            student_name: "",
+            student_gender: "",
+            student_last_test_grade: "",
+            student_table: "",
+            student_overall_performance: "",
+            student_learning_disability: "",
+            student_race_ethnicity: "",
+            student_attendance: "",
+            student_class_participation: "",
+        },
+    };
+
+    studentObject: Student = {
+        id: "",
+        student_name: "",
+        student_gender: "",
+        student_last_test_grade: "",
+        student_table: "",
+        student_overall_performance: "",
+        student_learning_disability: "",
+        student_race_ethnicity: "",
+        student_attendance: "",
+        student_class_participation: "",
     };
 
     constructor(
@@ -76,14 +111,14 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.experienceForm = this.formBuilder.group({
             title: ["", Validators.required],
             description: ["", Validators.required],
-            contributed_by: ["", Validators.required],
+            student_name: ["", Validators.required],
             date: ["", Validators.required],
         });
 
         this.editForm = this.formBuilder.group({
             edited_title: ["", Validators.required],
             edited_description: ["", Validators.required],
-            edited_contributed_by: ["", Validators.required],
+            edited_student_name: ["", Validators.required],
             edited_date: ["", Validators.required],
         });
     }
@@ -177,7 +212,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.experienceObject.id = "";
         this.experienceObject.experience_title = value.title;
         this.experienceObject.experience_description = value.description;
-        this.experienceObject.contributed_by = value.contributed_by;
+        this.experienceObject.student_name = value.student_name;
         this.experienceObject.date = this.datePipe.transform(
             value.date,
             "yyyy-MM-dd"
@@ -342,6 +377,26 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 "Integration Error",
                 "Please select experiences to integrate."
             );
+
+            let userIntData: any = [];
+            let time = new Date();
+            userIntData = JSON.parse(
+                sessionStorage.getItem("userInteractionData") || "[]"
+            );
+            userIntData.push(
+                {
+                    Action: "Clicked",
+                    Target: "'Ok' button",
+                    Result: "Close alert dialog box",
+                    Time: time.toLocaleString(),
+                }
+                // "Clicked 'Ok' at " + time.toLocaleString()
+            );
+            sessionStorage.setItem(
+                "userInteractionData",
+                JSON.stringify(userIntData)
+            );
+
             return;
         }
 
@@ -486,7 +541,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.experienceObject.id = experience.id;
         this.experienceObject.experience_title = value.edited_title;
         this.experienceObject.experience_description = value.edited_description;
-        this.experienceObject.contributed_by = value.edited_contributed_by;
+        this.experienceObject.student_name = value.edited_student_name;
         this.experienceObject.date = this.datePipe.transform(
             value.edited_date,
             "yyyy-MM-dd"
@@ -501,18 +556,18 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.editForm.reset();
     }
 
-    onFileSelect(event: any) {
-        this.selectedFile = event.target.files[0];
-        this.labelText = this.selectedFile
-            ? this.selectedFile.name
+    onExperienceFileSelect(event: any) {
+        this.selectedExperienceFile = event.target.files[0];
+        this.labelText = this.selectedExperienceFile
+            ? this.selectedExperienceFile.name
             : "Choose a File";
 
-        if (!this.selectedFile || !this.selectedFile.name) {
+        if (!this.selectedExperienceFile || !this.selectedExperienceFile.name) {
             alert("No file selected or file name is not valid.");
             return;
         }
 
-        const fileExtension = this.selectedFile.name
+        const fileExtension = this.selectedExperienceFile.name
             .split(".")
             .pop()
             ?.toLowerCase();
@@ -525,29 +580,36 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             return;
         }
 
-        console.log(this.selectedFile);
+        console.log(this.selectedExperienceFile);
         console.log(this.labelText);
     }
 
     resetUploadState() {
-        this.selectedFile = null;
+        this.selectedExperienceFile = null;
         this.labelText = "Choose a file";
     }
 
-    onFileUpload() {
-        if (!this.selectedFile) {
+    onExperienceFileUpload() {
+        if (!this.selectedExperienceFile) {
             alert("No file selected.");
             return;
-        } else if (this.selectedFile) {
-            alert(this.selectedFile.name + " was successfully uploaded.");
-            console.log(this.selectedFile.name + " was successfully uploaded.");
+        } else if (this.selectedExperienceFile) {
+            alert(
+                this.selectedExperienceFile.name + " was successfully uploaded."
+            );
+            console.log(
+                this.selectedExperienceFile.name + " was successfully uploaded."
+            );
         }
 
         const storageRef = ref(
             this.storage,
-            `experience_files/${this.selectedFile.name}`
+            `experience_files/${this.selectedExperienceFile.name}`
         );
-        const uploadTask = uploadBytesResumable(storageRef, this.selectedFile);
+        const uploadTask = uploadBytesResumable(
+            storageRef,
+            this.selectedExperienceFile
+        );
 
         uploadTask.on(
             "state_changed",
@@ -567,37 +629,173 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             }
         );
 
-        this.parseCSVContent(this.selectedFile);
+        this.parseExperienceCSVContent(this.selectedExperienceFile);
     }
 
-    parseCSVContent(file: File) {
+    parseExperienceCSVContent(file: File) {
         this.papa.parse(file, {
             header: true,
             skipEmptyLines: true,
             complete: (result) => {
                 if (result.data) {
-                    for (let story of result.data) {
+                    for (let experience of result.data) {
                         this.experienceObject.id = "";
                         this.experienceObject.experience_title = Object.values(
-                            story
+                            experience
                         )[0] as string;
+                        this.experienceObject.student_name = Object.values(
+                            experience
+                        )[1] as string;
                         this.experienceObject.experience_description =
-                            Object.values(story)[1] as string;
-                        this.experienceObject.contributed_by = Object.values(
-                            story
-                        )[2] as string;
+                            Object.values(experience)[2] as string;
                         this.experienceObject.date = this.datePipe.transform(
-                            Object.values(story)[3] as string,
+                            Object.values(experience)[3] as string,
                             "yyyy-MM-dd"
                         ) as string;
+                        this.experienceObject.student_data.student_gender =
+                            Object.values(experience)[4] as string;
+                        this.experienceObject.student_data.student_last_test_grade =
+                            Object.values(experience)[5] as string;
+                        this.experienceObject.student_data.student_table =
+                            Object.values(experience)[6] as string;
+                        this.experienceObject.student_data.student_overall_performance =
+                            Object.values(experience)[7] as string;
+                        this.experienceObject.student_data.student_learning_disability =
+                            Object.values(experience)[8] as string;
+                        this.experienceObject.student_data.student_race_ethnicity =
+                            Object.values(experience)[9] as string;
+                        this.experienceObject.student_data.student_attendance =
+                            Object.values(experience)[10] as string;
+                        this.experienceObject.student_data.student_class_participation =
+                            Object.values(experience)[11] as string;
 
                         this.experience_service
-                            .parseCSVContent(this.experienceObject)
+                            .parseExperienceCSVContent(this.experienceObject)
                             .then((experience) => {
                                 if (experience) {
                                     console.log(
                                         "Experience with title " +
-                                            Object.values(story)[0] +
+                                            Object.values(experience)[0] +
+                                            " was added successfully!"
+                                    );
+                                }
+                            });
+                    }
+                }
+            },
+            error: (error) => {
+                console.error("Error parsing CSV:", error);
+            },
+        });
+    }
+
+    onStudentFileSelect(event: any) {
+        this.selectStudentFile = event.target.files[0];
+        this.labelText = this.selectStudentFile
+            ? this.selectStudentFile.name
+            : "Choose a File";
+
+        if (!this.selectStudentFile || !this.selectStudentFile.name) {
+            alert("No file selected or file name is not valid.");
+            return;
+        }
+
+        const fileExtension = this.selectStudentFile.name
+            .split(".")
+            .pop()
+            ?.toLowerCase();
+
+        if (fileExtension !== "csv") {
+            alert(
+                "The selected file format is not supported. Please upload a CSV."
+            );
+            this.resetUploadState();
+            return;
+        }
+
+        console.log(this.selectStudentFile);
+        console.log(this.labelText);
+    }
+
+    onStudentFileUpload() {
+        if (!this.selectStudentFile) {
+            alert("No file selected.");
+            return;
+        } else if (this.selectStudentFile) {
+            alert(this.selectStudentFile.name + " was successfully uploaded.");
+            console.log(
+                this.selectStudentFile.name + " was successfully uploaded."
+            );
+        }
+
+        const storageRef = ref(
+            this.storage,
+            `student_files/${this.selectStudentFile.name}`
+        );
+        const uploadTask = uploadBytesResumable(
+            storageRef,
+            this.selectStudentFile
+        );
+
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+            },
+            (error) => {
+                console.log(error.message);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log("File available at", downloadURL);
+                });
+                this.resetUploadState();
+            }
+        );
+
+        this.parseStudentCSVContent(this.selectStudentFile);
+    }
+
+    parseStudentCSVContent(file: File) {
+        this.papa.parse(file, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (result) => {
+                if (result.data) {
+                    for (let student of result.data) {
+                        this.studentObject.id = "";
+                        this.studentObject.student_name = Object.values(
+                            student
+                        )[0] as string;
+                        this.studentObject.student_gender = Object.values(
+                            student
+                        )[1] as string;
+                        this.studentObject.student_last_test_grade =
+                            Object.values(student)[2] as string;
+                        this.studentObject.student_table = Object.values(
+                            student
+                        )[3] as string;
+                        this.studentObject.student_overall_performance =
+                            Object.values(student)[4] as string;
+                        this.studentObject.student_learning_disability =
+                            Object.values(student)[5] as string;
+                        this.studentObject.student_race_ethnicity =
+                            Object.values(student)[6] as string;
+                        this.studentObject.student_attendance = Object.values(
+                            student
+                        )[7] as string;
+                        this.studentObject.student_class_participation =
+                            Object.values(student)[8] as string;
+
+                        this.experience_service
+                            .parseStudentCSVContent(this.studentObject)
+                            .then((student) => {
+                                if (student) {
+                                    console.log(
+                                        "Student with name " +
+                                            Object.values(student)[0] +
                                             " was added successfully!"
                                     );
                                 }
@@ -661,13 +859,13 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
 
         this.experiences = this.filteredExp.filter((value: Experience) =>
-            value.contributed_by
+            value.student_name
                 .toLowerCase()
                 .includes(this.studentSearchTerm.toLowerCase())
         );
 
         this.experiences.forEach((experience: any) => {
-            console.log(experience.contributed_by);
+            console.log(experience.student_name);
         });
 
         this.cdr.detectChanges();
@@ -791,10 +989,10 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
 
-        // this.dateTerm = this.changeDateFormat(this.dateSearchTerm);  // For mat-form-field mat-input mat-datepicker
+        this.dateTerm = this.changeDateFormat(this.dateSearchTerm); // For mat-form-field mat-input mat-datepicker
 
         this.experiences = this.filteredExp.filter((value: Experience) =>
-            value.date.includes(this.dateSearchTerm)
+            value.date.includes(this.dateTerm)
         );
 
         this.experiences.forEach((experience: any) => {
@@ -838,6 +1036,289 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         return formattedDateTerm;
     }
 
+    filterExperiencesByStudentGender(event: any): void {
+        if (!event || event.length === 0) {
+            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            return;
+        }
+
+        // const criteria = (event.target as HTMLSelectElement).value;
+        const containsFemale = event.some(
+            (element: any) => element === "female"
+        );
+        const containsMale = event.some((element: any) => element === "male");
+
+        this.experiences = this.filteredExp.filter(
+            (value: Experience) =>
+                value.student_data.student_gender ===
+                    (containsFemale ? "F" : "") ||
+                value.student_data.student_gender === (containsMale ? "M" : "")
+        );
+        this.cdr.detectChanges();
+    }
+
+    filterExperiencesByStudentLastTestGrade(event: any): void {
+        if (!event || event.length === 0) {
+            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            return;
+        }
+
+        const containsGradeA = event.some(
+            (element: any) => element === "gradeA"
+        );
+        const containsGradeB = event.some(
+            (element: any) => element === "gradeB"
+        );
+        const containsGradeC = event.some(
+            (element: any) => element === "gradeC"
+        );
+        const containsGradeD = event.some(
+            (element: any) => element === "gradeD"
+        );
+        const containsGradeF = event.some(
+            (element: any) => element === "gradeF"
+        );
+
+        this.experiences = this.filteredExp.filter(
+            (value: Experience) =>
+                value.student_data.student_last_test_grade ===
+                    (containsGradeA ? "A" : "") ||
+                value.student_data.student_last_test_grade ===
+                    (containsGradeB ? "B" : "") ||
+                value.student_data.student_last_test_grade ===
+                    (containsGradeC ? "C" : "") ||
+                value.student_data.student_last_test_grade ===
+                    (containsGradeD ? "D" : "") ||
+                value.student_data.student_last_test_grade ===
+                    (containsGradeF ? "F" : "")
+        );
+        this.cdr.detectChanges();
+    }
+
+    filterExperiencesByStudentTable(event: any): void {
+        if (!event || event.length === 0) {
+            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            return;
+        }
+
+        const containsBlue = event.some((element: any) => element === "blue");
+        const containsGreen = event.some((element: any) => element === "green");
+        const containsOrange = event.some(
+            (element: any) => element === "orange"
+        );
+        const containsPink = event.some((element: any) => element === "pink");
+        const containsPurple = event.some(
+            (element: any) => element === "purple"
+        );
+
+        this.experiences = this.filteredExp.filter(
+            (value: Experience) =>
+                value.student_data.student_table ===
+                    (containsBlue ? "Blue" : "") ||
+                value.student_data.student_table ===
+                    (containsGreen ? "Green" : "") ||
+                value.student_data.student_table ===
+                    (containsOrange ? "Orange" : "") ||
+                value.student_data.student_table ===
+                    (containsPink ? "Pink" : "") ||
+                value.student_data.student_table ===
+                    (containsPurple ? "Purple" : "")
+        );
+        this.cdr.detectChanges();
+    }
+
+    filterExperiencesByStudentOverallPerformance(event: any): void {
+        if (!event || event.length === 0) {
+            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            return;
+        }
+
+        const containsGradeA = event.some(
+            (element: any) => element === "gradeA"
+        );
+        const containsGradeB = event.some(
+            (element: any) => element === "gradeB"
+        );
+        const containsGradeC = event.some(
+            (element: any) => element === "gradeC"
+        );
+        const containsGradeD = event.some(
+            (element: any) => element === "gradeD"
+        );
+        const containsGradeF = event.some(
+            (element: any) => element === "gradeF"
+        );
+
+        this.experiences = this.filteredExp.filter(
+            (value: Experience) =>
+                value.student_data.student_overall_performance ===
+                    (containsGradeA ? "A" : "") ||
+                value.student_data.student_overall_performance ===
+                    (containsGradeB ? "B" : "") ||
+                value.student_data.student_overall_performance ===
+                    (containsGradeC ? "C" : "") ||
+                value.student_data.student_overall_performance ===
+                    (containsGradeD ? "D" : "") ||
+                value.student_data.student_overall_performance ===
+                    (containsGradeF ? "F" : "")
+        );
+        this.cdr.detectChanges();
+    }
+
+    filterExperiencesByStudentLearningDisability(event: any): void {
+        if (!event || event.length === 0) {
+            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            return;
+        }
+
+        const containsADHD = event.some((element: any) => element === "adhd");
+        const containsAutism = event.some(
+            (element: any) => element === "autism"
+        );
+        const containsDyslexia = event.some(
+            (element: any) => element === "dyslexia"
+        );
+        const containsDyscalculiaD = event.some(
+            (element: any) => element === "dyscalculia"
+        );
+        const containsNone = event.some((element: any) => element === "none");
+
+        this.experiences = this.filteredExp.filter(
+            (value: Experience) =>
+                value.student_data.student_learning_disability ===
+                    (containsADHD ? "ADHD" : "") ||
+                value.student_data.student_learning_disability ===
+                    (containsAutism ? "Autism" : "") ||
+                value.student_data.student_learning_disability ===
+                    (containsDyslexia ? "Dyslexia" : "") ||
+                value.student_data.student_learning_disability ===
+                    (containsDyscalculiaD ? "Dyscalculia" : "") ||
+                value.student_data.student_learning_disability ===
+                    (containsNone ? "None reported" : "")
+        );
+        this.cdr.detectChanges();
+    }
+
+    filterExperiencesByStudentRaceOrEthnicity(event: any): void {
+        if (!event || event.length === 0) {
+            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            return;
+        }
+
+        const containsAfricanAmerican = event.some(
+            (element: any) => element === "african-american"
+        );
+        const containsAsian = event.some((element: any) => element === "asian");
+        const containsHispanic = event.some(
+            (element: any) => element === "hispanic"
+        );
+        const containsWhite = event.some((element: any) => element === "white");
+
+        this.experiences = this.filteredExp.filter(
+            (value: Experience) =>
+                value.student_data.student_race_ethnicity ===
+                    (containsAfricanAmerican ? "African-American" : "") ||
+                value.student_data.student_race_ethnicity ===
+                    (containsAsian ? "Asian" : "") ||
+                value.student_data.student_race_ethnicity ===
+                    (containsHispanic ? "Hispanic" : "") ||
+                value.student_data.student_race_ethnicity ===
+                    (containsWhite ? "White" : "")
+        );
+        this.cdr.detectChanges();
+    }
+
+    filterExperiencesByStudentAttendance(event: any): void {
+        if (!event || event.length === 0) {
+            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            return;
+        }
+
+        const contains80to84 = event.some(
+            (element: any) => element === "80-84"
+        );
+        const containsAbove80 = event.some(
+            (element: any) => element === "above80"
+        );
+        const contains85to89 = event.some(
+            (element: any) => element === "85-89"
+        );
+        const containsAbove85 = event.some(
+            (element: any) => element === "above85"
+        );
+        const contains90to94 = event.some(
+            (element: any) => element === "90-94"
+        );
+        const containsAbove90 = event.some(
+            (element: any) => element === "above90"
+        );
+        const contains95to99 = event.some(
+            (element: any) => element === "95-99"
+        );
+        const containsAbove95 = event.some(
+            (element: any) => element === "above95"
+        );
+        const contains100 = event.some((element: any) => element === "100");
+
+        this.experiences = this.filteredExp.filter(
+            (value: Experience) =>
+                (contains80to84
+                    ? parseInt(value.student_data.student_attendance) >= 80 &&
+                      parseInt(value.student_data.student_attendance) <= 84
+                    : null) ||
+                (containsAbove80
+                    ? parseInt(value.student_data.student_attendance) >= 80
+                    : null) ||
+                (contains85to89
+                    ? parseInt(value.student_data.student_attendance) >= 85 &&
+                      parseInt(value.student_data.student_attendance) <= 89
+                    : null) ||
+                (containsAbove85
+                    ? parseInt(value.student_data.student_attendance) >= 85
+                    : null) ||
+                (contains90to94
+                    ? parseInt(value.student_data.student_attendance) >= 90 &&
+                      parseInt(value.student_data.student_attendance) <= 94
+                    : null) ||
+                (containsAbove90
+                    ? parseInt(value.student_data.student_attendance) >= 90
+                    : null) ||
+                (contains95to99
+                    ? parseInt(value.student_data.student_attendance) >= 95 &&
+                      parseInt(value.student_data.student_attendance) <= 99
+                    : null) ||
+                (containsAbove95
+                    ? parseInt(value.student_data.student_attendance) >= 95
+                    : null) ||
+                (contains100
+                    ? parseInt(value.student_data.student_attendance) === 100
+                    : null)
+        );
+        this.cdr.detectChanges();
+    }
+
+    filterExperiencesByStudentClassParticipation(event: any): void {
+        if (!event || event.length === 0) {
+            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            return;
+        }
+
+        const containsLow = event.some((element: any) => element === "low");
+        const containsMid = event.some((element: any) => element === "mid");
+        const containsHigh = event.some((element: any) => element === "high");
+
+        this.experiences = this.filteredExp.filter(
+            (value: Experience) =>
+                value.student_data.student_class_participation ===
+                    (containsLow ? "Low" : "") ||
+                value.student_data.student_class_participation ===
+                    (containsMid ? "Mid" : "") ||
+                value.student_data.student_class_participation ===
+                    (containsHigh ? "High" : "")
+        );
+        this.cdr.detectChanges();
+    }
+
     sortExperiences(event: any): void {
         let userIntData: any = [];
         let time = new Date();
@@ -858,9 +1339,9 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
 
-        const criteria = (event.target as HTMLSelectElement).value;
+        // const criteria = (event.target as HTMLSelectElement).value;
 
-        switch (criteria) {
+        switch (event) {
             case "timeNewest":
                 this.experiences.sort(
                     (a: Experience, b: Experience) =>
@@ -875,37 +1356,37 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 );
                 break;
 
-            case "titleHighest":
-                this.experiences.sort(
-                    (a: Experience, b: Experience) =>
-                        this.getNumberFromTitle(b.experience_title) -
-                        this.getNumberFromTitle(a.experience_title)
-                );
-                break;
+            // case "titleHighest":
+            //     this.experiences.sort(
+            //         (a: Experience, b: Experience) =>
+            //             this.getNumberFromTitle(b.experience_title) -
+            //             this.getNumberFromTitle(a.experience_title)
+            //     );
+            //     break;
 
-            case "titleLowest":
-                this.experiences.sort(
-                    (a: Experience, b: Experience) =>
-                        this.getNumberFromTitle(a.experience_title) -
-                        this.getNumberFromTitle(b.experience_title)
-                );
-                break;
+            // case "titleLowest":
+            //     this.experiences.sort(
+            //         (a: Experience, b: Experience) =>
+            //             this.getNumberFromTitle(a.experience_title) -
+            //             this.getNumberFromTitle(b.experience_title)
+            //     );
+            //     break;
 
-            case "studentHighest":
-                this.experiences.sort(
-                    (a: Experience, b: Experience) =>
-                        this.getNumberFromTitle(b.contributed_by) -
-                        this.getNumberFromTitle(a.contributed_by)
-                );
-                break;
+            // case "studentHighest":
+            //     this.experiences.sort(
+            //         (a: Experience, b: Experience) =>
+            //             this.getNumberFromTitle(b.student_name) -
+            //             this.getNumberFromTitle(a.student_name)
+            //     );
+            //     break;
 
-            case "studentLowest":
-                this.experiences.sort(
-                    (a: Experience, b: Experience) =>
-                        this.getNumberFromTitle(a.contributed_by) -
-                        this.getNumberFromTitle(b.contributed_by)
-                );
-                break;
+            // case "studentLowest":
+            //     this.experiences.sort(
+            //         (a: Experience, b: Experience) =>
+            //             this.getNumberFromTitle(a.student_name) -
+            //             this.getNumberFromTitle(b.student_name)
+            //     );
+            //     break;
         }
     }
 

@@ -1,21 +1,21 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FinalizeLpPageComponent } from './finalize-lp-page.component';
+import { FinalizeLpPageComponent } from "./finalize-lp-page.component";
 
-describe('FinalizeLpPageComponent', () => {
-  let component: FinalizeLpPageComponent;
-  let fixture: ComponentFixture<FinalizeLpPageComponent>;
+describe("FinalizeLpPageComponent", () => {
+    let component: FinalizeLpPageComponent;
+    let fixture: ComponentFixture<FinalizeLpPageComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [FinalizeLpPageComponent]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            declarations: [FinalizeLpPageComponent],
+        });
+        fixture = TestBed.createComponent(FinalizeLpPageComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
     });
-    fixture = TestBed.createComponent(FinalizeLpPageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

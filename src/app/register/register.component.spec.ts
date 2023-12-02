@@ -1,21 +1,21 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { RegisterComponent } from './register.component';
+import { RegisterComponent } from "./register.component";
 
-describe('RegisterComponent', () => {
-  let component: RegisterComponent;
-  let fixture: ComponentFixture<RegisterComponent>;
+describe("RegisterComponent", () => {
+    let component: RegisterComponent;
+    let fixture: ComponentFixture<RegisterComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [RegisterComponent]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            declarations: [RegisterComponent],
+        });
+        fixture = TestBed.createComponent(RegisterComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
     });
-    fixture = TestBed.createComponent(RegisterComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

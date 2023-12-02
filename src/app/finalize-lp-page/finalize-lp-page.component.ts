@@ -4,7 +4,7 @@ import { Router } from "@angular/router";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 // import { saveAs } from 'file-saver';
-import { Document, Packer, Paragraph, HeadingLevel, SectionType } from 'docx';
+// import { Document, Packer, Paragraph, HeadingLevel, SectionType } from "docx";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
