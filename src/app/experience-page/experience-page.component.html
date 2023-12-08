@@ -205,11 +205,13 @@
                             matStartDate
                             placeholder="Start date"
                             [(ngModel)]="startDateSearchTerm"
+                            (click)="onFilterByDateRangeClick()"
                         />
                         <input
                             matEndDate
                             placeholder="End date"
                             [(ngModel)]="endDateSearchTerm"
+                            (click)="onFilterByDateRangeClick()"
                             (dateInput)="filterExperiencesByDateRange()"
                         />
                     </mat-date-range-input>

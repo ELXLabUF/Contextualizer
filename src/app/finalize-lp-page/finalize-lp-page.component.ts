@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { Router } from "@angular/router";
+
+import { Document, Packer, Paragraph, HeadingLevel } from "docx";
+import { saveAs } from "file-saver";
+
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-// import { saveAs } from 'file-saver';
-// import { Document, Packer, Paragraph, HeadingLevel, SectionType } from "docx";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -18,6 +20,7 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
     id: string = "";
     pdfData: any = null;
     data: any = null;
+    currFieldNum: number = 0;
 
     fields = [
         {
@@ -81,15 +84,12 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Visited",
-                Target: "Finalize LP page",
-                Result: "",
-                Time: this.timeStart.toLocaleString(),
-            }
-            // "Visited Finalize LP Page at " + this.timeStart.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Visited",
+            Target: "Finalize LP page",
+            Result: "",
+            Time: this.timeStart.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -130,24 +130,18 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Left",
-                Target: "Finalize LP page",
-                Result: "",
-                Time: this.timeEnd.toLocaleString(),
-            }
-            // "Left Finalize LP Page at " + this.timeEnd.toLocaleString()
-        );
-        userIntData.push(
-            {
-                Action: "Time spent",
-                Target: "Finalize LP page",
-                Result: "",
-                Time: duration + " seconds",
-            }
-            // "Time spent on Finalize LP Page: " + duration + " seconds"
-        );
+        userIntData.push({
+            Action: "Left",
+            Target: "Finalize LP page",
+            Result: "",
+            Time: this.timeEnd.toLocaleString(),
+        });
+        userIntData.push({
+            Action: "Time spent",
+            Target: "Finalize LP page",
+            Result: "",
+            Time: duration + " seconds",
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -212,6 +206,464 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
             });
     }
 
+    countNumberOfSections() {
+        let totalFieldCount = 0;
+
+        for (const field of this.fields) {
+            const fieldData = this.pdfData[field.key];
+            if (fieldData) {
+                totalFieldCount += 1;
+                for (const key in fieldData) {
+                    if (
+                        key !== "content" &&
+                        key !== "integrated_experiences" &&
+                        key !== "title" &&
+                        fieldData[key].list
+                    ) {
+                        totalFieldCount += 1;
+                    }
+                }
+            }
+        }
+        sessionStorage.setItem("totalFieldCount", totalFieldCount.toString());
+    }
+
+    generateSection(): Paragraph {
+        this.currFieldNum += 1;
+
+        if (
+            this.currFieldNum <=
+            parseInt(sessionStorage.getItem("totalFieldCount") || "0")
+        ) {
+            const fieldData =
+                this.pdfData[this.fields[this.currFieldNum - 1].key];
+            let hasTitle = fieldData.title ? true : false;
+            let hasContent = fieldData.content ? true : false;
+            let hasExperiences: boolean = false;
+            let isContentString =
+                typeof fieldData.content === "string" ? true : false;
+            let experiences = [];
+            let titleParagraph = new Paragraph("");
+            let contentParagraph = new Paragraph("");
+            let experiencesParagraph = new Paragraph("");
+
+            // Check if any experiences were integrated in the current section
+            if (
+                fieldData.integrated_experiences &&
+                fieldData.integrated_experiences.length
+            ) {
+                hasExperiences = true;
+                experiences = fieldData.integrated_experiences.map(
+                    (exp: any) => exp
+                );
+            }
+
+            // Generate the title paragraph a.k.a. the title of the current section
+            if (hasTitle) {
+                titleParagraph = new Paragraph({
+                    text: fieldData.title,
+                    heading: HeadingLevel.HEADING_1,
+                });
+            }
+
+            // Generate the content paragraph a.k.a. the content of the current section
+            if (hasContent) {
+                if (isContentString) {
+                    contentParagraph = new Paragraph(fieldData.content);
+                } else if (fieldData.content.length === 1) {
+                    contentParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: fieldData.content[0],
+                            }),
+                        ],
+                    });
+                } else if (fieldData.content.length === 2) {
+                    contentParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: fieldData.content[0],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[1],
+                            }),
+                        ],
+                    });
+                } else if (fieldData.content.length === 3) {
+                    contentParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: fieldData.content[0],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[1],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[2],
+                            }),
+                        ],
+                    });
+                } else if (fieldData.content.length === 4) {
+                    contentParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: fieldData.content[0],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[1],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[2],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[3],
+                            }),
+                        ],
+                    });
+                } else if (fieldData.content.length === 5) {
+                    contentParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: fieldData.content[0],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[1],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[2],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[3],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[4],
+                            }),
+                        ],
+                    });
+                } else if (fieldData.content.length === 6) {
+                    contentParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: fieldData.content[0],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[1],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[2],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[3],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[4],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[5],
+                            }),
+                        ],
+                    });
+                } else if (fieldData.content.length === 7) {
+                    contentParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: fieldData.content[0],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[1],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[2],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[3],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[4],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[5],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[6],
+                            }),
+                        ],
+                    });
+                } else if (fieldData.content.length === 8) {
+                    contentParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: fieldData.content[0],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[1],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[2],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[3],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[4],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[5],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[6],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[7],
+                            }),
+                        ],
+                    });
+                } else if (fieldData.content.length === 9) {
+                    contentParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: fieldData.content[0],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[1],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[2],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[3],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[4],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[5],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[6],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[7],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[8],
+                            }),
+                        ],
+                    });
+                } else if (fieldData.content.length === 10) {
+                    contentParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: fieldData.content[0],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[1],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[2],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[3],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[4],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[5],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[6],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[7],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[8],
+                            }),
+                            new Paragraph({
+                                text: fieldData.content[9],
+                            }),
+                        ],
+                    });
+                }
+            }
+
+            // Generate the experiences paragraph a.k.a. the integrated experiences of the current section
+            if (hasExperiences) {
+                if (experiences.length === 1) {
+                    experiencesParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: experiences[0],
+                                bullet: { level: 0 },
+                            }),
+                        ],
+                    });
+                } else if (experiences.length === 2) {
+                    experiencesParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: experiences[0],
+                                bullet: { level: 0 },
+                            }),
+                            new Paragraph({
+                                text: experiences[1],
+                                bullet: { level: 0 },
+                            }),
+                        ],
+                    });
+                } else if (experiences.length === 3) {
+                    experiencesParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: experiences[0],
+                                bullet: { level: 0 },
+                            }),
+                            new Paragraph({
+                                text: experiences[1],
+                                bullet: { level: 0 },
+                            }),
+                            new Paragraph({
+                                text: experiences[2],
+                                bullet: { level: 0 },
+                            }),
+                        ],
+                    });
+                } else if (experiences.length === 4) {
+                    experiencesParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: experiences[0],
+                                bullet: { level: 0 },
+                            }),
+                            new Paragraph({
+                                text: experiences[1],
+                                bullet: { level: 0 },
+                            }),
+                            new Paragraph({
+                                text: experiences[2],
+                                bullet: { level: 0 },
+                            }),
+                            new Paragraph({
+                                text: experiences[3],
+                                bullet: { level: 0 },
+                            }),
+                        ],
+                    });
+                } else if (experiences.length === 5) {
+                    experiencesParagraph = new Paragraph({
+                        children: [
+                            new Paragraph({
+                                text: experiences[0],
+                                bullet: { level: 0 },
+                            }),
+                            new Paragraph({
+                                text: experiences[1],
+                                bullet: { level: 0 },
+                            }),
+                            new Paragraph({
+                                text: experiences[2],
+                                bullet: { level: 0 },
+                            }),
+                            new Paragraph({
+                                text: experiences[3],
+                                bullet: { level: 0 },
+                            }),
+                            new Paragraph({
+                                text: experiences[4],
+                                bullet: { level: 0 },
+                            }),
+                        ],
+                    });
+                }
+            }
+
+            // Generate the entire current section of the document
+            if (hasTitle && hasContent && hasExperiences) {
+                return new Paragraph({
+                    children: [
+                        titleParagraph,
+                        contentParagraph,
+                        experiencesParagraph,
+                    ],
+                });
+            } else if (hasTitle && hasContent) {
+                return new Paragraph({
+                    children: [titleParagraph, contentParagraph],
+                });
+            } else if (hasTitle && hasExperiences) {
+                return new Paragraph({
+                    children: [titleParagraph, experiencesParagraph],
+                });
+            } else if (hasTitle) {
+                return titleParagraph;
+            } else {
+                return new Paragraph("");
+            }
+        } else {
+            return new Paragraph("");
+        }
+    }
+
+    htmlToDOCX() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Download Lesson Plan (as DOCX)' button",
+            Result: "Download DOCX finalized LP",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.countNumberOfSections();
+
+        const document = new Document({
+            sections: [
+                {
+                    children: [
+                        new Paragraph({
+                            text: "Lesson Plan",
+                            heading: HeadingLevel.TITLE,
+                        }),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                        this.generateSection(),
+                    ],
+                },
+            ],
+        });
+
+        Packer.toBlob(document).then((blob) => {
+            console.log(blob);
+            saveAs(blob, "Lesson_Plan_DOCX.docx");
+            console.log("Document created successfully");
+        });
+    }
+
     getDocumentDefinition() {
         const content = [];
 
@@ -265,22 +717,19 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Download Lesson Plan' button",
-                Result: "Download finalized LP",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Download Lesson Plan' at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Download Lesson Plan (as PDF)' button",
+            Result: "Download PDF finalized LP",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
         );
 
         const documentDefinition = this.getDocumentDefinition();
-        pdfMake.createPdf(documentDefinition).download("Lesson_Plan.pdf");
+        pdfMake.createPdf(documentDefinition).download("Lesson_Plan_PDF.pdf");
     }
 
     onBackClick() {
@@ -289,15 +738,12 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Back' button",
-                Result: "Navigate to Display LP page",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Back' at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Back' button",
+            Result: "Navigate to Display LP page",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -311,15 +757,12 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Home' button",
-                Result: "Navigate to Landing page to start new LP contextualization",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Home' at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Home' button",
+            Result: "Navigate to Landing page to start new LP contextualization",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)

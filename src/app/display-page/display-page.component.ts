@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { Router } from "@angular/router";
-import { ExperienceLessonPlanService } from "../experience-lesson-plan-service/experience-lesson-plan.service";
 import { IntegrateExperienceService } from "../integrate-experience-service/integrate-experience.service";
 import { PdfReaderService } from "../pdf-reader-service/pdf-reader.service";
 
@@ -222,7 +221,6 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         private sanitizer: DomSanitizer,
         private pdfReaderService: PdfReaderService,
         private integrateExpService: IntegrateExperienceService,
-        private expLessonPlanService: ExperienceLessonPlanService,
         private firestore: AngularFirestore,
         private router: Router,
         private cdRef: ChangeDetectorRef,
@@ -251,7 +249,9 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+
         sessionStorage.setItem("timeStart", this.timeStart.toString());
+
         this.fileDownloadURL = sessionStorage.getItem("fileURL");
         if (this.fileDownloadURL) {
             this.firestore
@@ -498,15 +498,12 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Finalize Lesson Plan' button",
-                Result: "Navigate to Finalize LP page",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Finalize Lesson Plan' at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Finalize Lesson Plan' button",
+            Result: "Navigate to Finalize LP page",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -762,22 +759,16 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         event.dataTransfer.setData("text/plain", experience_description);
     }
 
-    private getNumberFromTitle(title: string): number {
-        const match = title.match(/\d+/); // This regex finds numbers in a string
-        return match ? parseInt(match[0]) : 0; // Convert the matched number string to an integer
-    }
-
     onDrop(event: any, field: any) {
         let userIntData: any = [];
         let time = new Date();
-        let match = this.getNumberFromTitle(this.currentExperienceTitle);
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
         userIntData.push({
             Action: "Added",
-            Target: "Experience with title number " + match,
-            Result: "To box with title " + field.name,
+            Target: "Experience with title " + this.currentExperienceTitle,
+            Result: "Box with title " + field.name,
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(

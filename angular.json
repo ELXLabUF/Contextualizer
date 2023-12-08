@@ -40,7 +40,8 @@
               "html2canvas",
               "lodash",
               "pdfmake",
-              "vfs_fonts"
+              "vfs_fonts",
+              "file-saver"
             ]
           },
           "configurations": {

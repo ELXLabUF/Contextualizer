@@ -161,15 +161,12 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Visited",
-                Target: "Experiences page",
-                Result: "",
-                Time: this.timeStart.toLocaleString(),
-            }
-            // "Visited Experiences Page at " + this.timeStart.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Visited",
+            Target: "Experiences page",
+            Result: "",
+            Time: this.timeStart.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -197,24 +194,18 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Left",
-                Target: "Experiences page",
-                Result: "",
-                Time: this.timeEnd.toLocaleString(),
-            }
-            // "Left Experiences Page at " + this.timeEnd.toLocaleString()
-        );
-        userIntData.push(
-            {
-                Action: "Time spent",
-                Target: "Experiences page",
-                Result: "",
-                Time: duration + " seconds",
-            }
-            // "Time spent on Experiences Page: " + duration + " seconds"
-        );
+        userIntData.push({
+            Action: "Left",
+            Target: "Experiences page",
+            Result: "",
+            Time: this.timeEnd.toLocaleString(),
+        });
+        userIntData.push({
+            Action: "Time spent",
+            Target: "Experiences page",
+            Result: "",
+            Time: duration + " seconds",
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -610,20 +601,14 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             userIntData = JSON.parse(
                 sessionStorage.getItem("userInteractionData") || "[]"
             );
-            userIntData.push(
-                {
-                    Action: "Clicked",
-                    Target:
-                        "Checkbox for experience with title number " +
-                        this.getNumberFromTitle(exp.experience_title),
-                    Result: "De-select the experience",
-                    Time: time.toLocaleString(),
-                }
-                // "Clicked checkbox to de-select experience with title number " +
-                //     this.getNumberFromTitle(exp.experience_title) +
-                //     " at " +
-                //     time.toLocaleString()
-            );
+            userIntData.push({
+                Action: "Clicked",
+                Target:
+                    "Checkbox for experience with title " +
+                    exp.experience_title,
+                Result: "De-select the experience",
+                Time: time.toLocaleString(),
+            });
             sessionStorage.setItem(
                 "userInteractionData",
                 JSON.stringify(userIntData)
@@ -637,20 +622,14 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             userIntData = JSON.parse(
                 sessionStorage.getItem("userInteractionData") || "[]"
             );
-            userIntData.push(
-                {
-                    Action: "Clicked",
-                    Target:
-                        "Checkbox for experience with title number " +
-                        this.getNumberFromTitle(exp.experience_title),
-                    Result: "Select the experience",
-                    Time: time.toLocaleString(),
-                }
-                // "Clicked checkbox to select experience with title number " +
-                //     this.getNumberFromTitle(exp.experience_title) +
-                //     " at " +
-                //     time.toLocaleString()
-            );
+            userIntData.push({
+                Action: "Clicked",
+                Target:
+                    "Checkbox for experience with title " +
+                    exp.experience_title,
+                Result: "Select the experience",
+                Time: time.toLocaleString(),
+            });
             sessionStorage.setItem(
                 "userInteractionData",
                 JSON.stringify(userIntData)
@@ -682,15 +661,12 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             userIntData = JSON.parse(
                 sessionStorage.getItem("userInteractionData") || "[]"
             );
-            userIntData.push(
-                {
-                    Action: "Clicked",
-                    Target: "'Ok' button",
-                    Result: "Close alert dialog box",
-                    Time: time.toLocaleString(),
-                }
-                // "Clicked 'Ok' at " + time.toLocaleString()
-            );
+            userIntData.push({
+                Action: "Clicked",
+                Target: "'Ok' button",
+                Result: "Close alert dialog box",
+                Time: time.toLocaleString(),
+            });
             sessionStorage.setItem(
                 "userInteractionData",
                 JSON.stringify(userIntData)
@@ -709,15 +685,12 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 userIntData = JSON.parse(
                     sessionStorage.getItem("userInteractionData") || "[]"
                 );
-                userIntData.push(
-                    {
-                        Action: "Clicked",
-                        Target: "'Yes, Confirm' button",
-                        Result: "Integrate selected experiences with LP",
-                        Time: time.toLocaleString(),
-                    }
-                    // "Clicked 'Yes, Confirm' at " + time.toLocaleString()
-                );
+                userIntData.push({
+                    Action: "Clicked",
+                    Target: "'Yes, Confirm' button",
+                    Result: "Integrate selected experiences with LP",
+                    Time: time.toLocaleString(),
+                });
                 sessionStorage.setItem(
                     "userInteractionData",
                     JSON.stringify(userIntData)
@@ -811,15 +784,12 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 userIntData = JSON.parse(
                     sessionStorage.getItem("userInteractionData") || "[]"
                 );
-                userIntData.push(
-                    {
-                        Action: "Clicked",
-                        Target: "'No, Go Back' button",
-                        Result: "Deny integration of selected experiences",
-                        Time: time.toLocaleString(),
-                    }
-                    // "Clicked 'No, Go back' at " + time.toLocaleString()
-                );
+                userIntData.push({
+                    Action: "Clicked",
+                    Target: "'No, Go Back' button",
+                    Result: "Deny integration of selected experiences",
+                    Time: time.toLocaleString(),
+                });
                 sessionStorage.setItem(
                     "userInteractionData",
                     JSON.stringify(userIntData)
@@ -829,6 +799,22 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     }
 
     displayStudentData(event: any, experience: Experience) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Hovered over",
+            Target: "Student: " + experience.student_name,
+            Result: "Display student details",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         this.clickedExperience = experience;
         event.target.click();
     }
@@ -839,15 +825,12 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Search Student' filter",
-                Result: "Filter experiences",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Search Student' filter at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Student' filter",
+            Result: "Filter experiences",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -865,18 +848,12 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Typed",
-                Target: "'Search Student' filter",
-                Result: this.studentSearchTerm,
-                Time: time.toLocaleString(),
-            }
-            // "'Search Student' filter search term is " +
-            //     this.studentSearchTerm +
-            //     " at " +
-            //     time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Search Student' filter",
+            Result: this.studentSearchTerm,
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -901,15 +878,12 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Search Keyword' filter",
-                Result: "Filter experiences",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Search Keyword' filter at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Keyword' filter",
+            Result: "Filter experiences",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -927,18 +901,12 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Typed",
-                Target: "'Search Keyword' filter",
-                Result: this.keywordSearchTerm,
-                Time: time.toLocaleString(),
-            }
-            // "'Search Keyword' filter search term is " +
-            //     this.keywordSearchTerm +
-            //     " at " +
-            //     time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Search Keyword' filter",
+            Result: this.keywordSearchTerm,
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -964,21 +932,29 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
+    changeDateFormat(filterDateTerm: Date) {
+        const dateArray = filterDateTerm.toLocaleDateString().split("/");
+        dateArray[0] =
+            dateArray[0].length === 1 ? "0" + dateArray[0] : dateArray[0];
+        dateArray[1] =
+            dateArray[1].length === 1 ? "0" + dateArray[1] : dateArray[1];
+        const formattedDateTerm =
+            dateArray[2] + "-" + dateArray[0] + "-" + dateArray[1];
+        return formattedDateTerm;
+    }
+
     onFilterByDateClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Search Date' filter",
-                Result: "Filter experiences",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Search Date' filter at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Date' filter",
+            Result: "Filter experiences",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -996,18 +972,12 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Typed",
-                Target: "'Search Date' filter",
-                Result: this.dateSearchTerm,
-                Time: time.toLocaleString(),
-            }
-            // "'Search Date' filter search term is " +
-            //     this.dateSearchTerm +
-            //     " at " +
-            //     time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Search Date' filter",
+            Result: this.dateSearchTerm,
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -1026,11 +996,51 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
+    onFilterByDateRangeClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Date Range' filter",
+            Result: "Filter experiences",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
     filterExperiencesByDateRange() {
         if (!this.startDateSearchTerm || !this.endDateSearchTerm) {
             this.experiences = [...this.filteredExp]; // restore original list when search is cleared
             return;
         }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Search Date Range' filter",
+            Result: this.startDateSearchTerm,
+            Time: time.toLocaleString(),
+        });
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Search Date Range' filter",
+            Result: this.endDateSearchTerm,
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
 
         // Change format of start and end dates
         this.startDateTerm = this.changeDateFormat(this.startDateSearchTerm);
@@ -1049,24 +1059,31 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
-    changeDateFormat(filterDateTerm: Date) {
-        const dateArray = filterDateTerm.toLocaleDateString().split("/");
-        dateArray[0] =
-            dateArray[0].length === 1 ? "0" + dateArray[0] : dateArray[0];
-        dateArray[1] =
-            dateArray[1].length === 1 ? "0" + dateArray[1] : dateArray[1];
-        const formattedDateTerm =
-            dateArray[2] + "-" + dateArray[0] + "-" + dateArray[1];
-        return formattedDateTerm;
-    }
-
     filterExperiencesByStudentGender(event: any): void {
         if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            this.experiences = [...this.filteredExp];
             return;
         }
 
-        // const criteria = (event.target as HTMLSelectElement).value;
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Student Gender' filter",
+            Result:
+                "Select value(s) " +
+                event[0] +
+                (event[1] ? " and " + event[1] : ""),
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         const containsFemale = event.some(
             (element: any) => element === "female"
         );
@@ -1083,9 +1100,31 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     filterExperiencesByStudentLastTestGrade(event: any): void {
         if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            this.experiences = [...this.filteredExp];
             return;
         }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Student Last Test Grade' filter",
+            Result:
+                "Select value(s) " +
+                event[0] +
+                (event[1] ? " and " + event[1] : "") +
+                (event[2] ? " and " + event[2] : "") +
+                (event[3] ? " and " + event[3] : "") +
+                (event[4] ? " and " + event[4] : ""),
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
 
         const containsGradeA = event.some(
             (element: any) => element === "gradeA"
@@ -1121,9 +1160,31 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     filterExperiencesByStudentTable(event: any): void {
         if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            this.experiences = [...this.filteredExp];
             return;
         }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Student Table' filter",
+            Result:
+                "Select value(s) " +
+                event[0] +
+                (event[1] ? " and " + event[1] : "") +
+                (event[2] ? " and " + event[2] : "") +
+                (event[3] ? " and " + event[3] : "") +
+                (event[4] ? " and " + event[4] : ""),
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
 
         const containsBlue = event.some((element: any) => element === "blue");
         const containsGreen = event.some((element: any) => element === "green");
@@ -1153,9 +1214,31 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     filterExperiencesByStudentOverallPerformance(event: any): void {
         if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            this.experiences = [...this.filteredExp];
             return;
         }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Student Overall Performance' filter",
+            Result:
+                "Select value(s) " +
+                event[0] +
+                (event[1] ? " and " + event[1] : "") +
+                (event[2] ? " and " + event[2] : "") +
+                (event[3] ? " and " + event[3] : "") +
+                (event[4] ? " and " + event[4] : ""),
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
 
         const containsGradeA = event.some(
             (element: any) => element === "gradeA"
@@ -1191,9 +1274,31 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     filterExperiencesByStudentLearningDisability(event: any): void {
         if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            this.experiences = [...this.filteredExp];
             return;
         }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Student Learning Disability' filter",
+            Result:
+                "Select value(s) " +
+                event[0] +
+                (event[1] ? " and " + event[1] : "") +
+                (event[2] ? " and " + event[2] : "") +
+                (event[3] ? " and " + event[3] : "") +
+                (event[4] ? " and " + event[4] : ""),
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
 
         const containsADHD = event.some((element: any) => element === "adhd");
         const containsAutism = event.some(
@@ -1225,9 +1330,30 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     filterExperiencesByStudentRaceOrEthnicity(event: any): void {
         if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            this.experiences = [...this.filteredExp];
             return;
         }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Student Race/Ethnicity' filter",
+            Result:
+                "Select value(s) " +
+                event[0] +
+                (event[1] ? " and " + event[1] : "") +
+                (event[2] ? " and " + event[2] : "") +
+                (event[3] ? " and " + event[3] : ""),
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
 
         const containsAfricanAmerican = event.some(
             (element: any) => element === "african-american"
@@ -1254,9 +1380,35 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     filterExperiencesByStudentAttendance(event: any): void {
         if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            this.experiences = [...this.filteredExp];
             return;
         }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Student Attendance' filter",
+            Result:
+                "Select value(s) " +
+                event[0] +
+                (event[1] ? " and " + event[1] : "") +
+                (event[2] ? " and " + event[2] : "") +
+                (event[3] ? " and " + event[3] : "") +
+                (event[4] ? " and " + event[4] : "") +
+                (event[5] ? " and " + event[5] : "") +
+                (event[6] ? " and " + event[6] : "") +
+                (event[7] ? " and " + event[7] : "") +
+                (event[8] ? " and " + event[8] : ""),
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
 
         const contains80to84 = event.some(
             (element: any) => element === "80-84"
@@ -1323,9 +1475,29 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     filterExperiencesByStudentClassParticipation(event: any): void {
         if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            this.experiences = [...this.filteredExp];
             return;
         }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Student In-Class Participation' filter",
+            Result:
+                "Select value(s) " +
+                event[0] +
+                (event[1] ? " and " + event[1] : "") +
+                (event[2] ? " and " + event[2] : ""),
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
 
         const containsLow = event.some((element: any) => element === "low");
         const containsMid = event.some((element: any) => element === "mid");
@@ -1349,21 +1521,16 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Sort By' filter",
-                Result: "Sort experiences",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Sort By' filter at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Sort By' filter",
+            Result: "Sort experiences",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-
-        // const criteria = (event.target as HTMLSelectElement).value;
 
         switch (event) {
             case "timeNewest":
@@ -1414,8 +1581,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         }
     }
 
-    private getNumberFromTitle(title: string): number {
-        const match = title.match(/\d+/); // This regex finds numbers in a string
-        return match ? parseInt(match[0]) : 0; // Convert the matched number string to an integer
-    }
+    // private getNumberFromTitle(title: string): number {
+    //     const match = title.match(/\d+/); // This regex finds numbers in a string
+    //     return match ? parseInt(match[0]) : 0; // Convert the matched number string to an integer
+    // }
 }
