@@ -1,5 +1,11 @@
 <nav>
     <div class="nav-wrapper">
+        <div class="logo" style="opacity: 0;">
+            <a class="logo-image" (click)="onLogoClick()">
+                <img src="../../assets/WebsiteLogo.png" alt="Website Logo" />
+            </a>
+        </div>
+
         <!-- Logo on the left -->
         <div class="logo">
             <a class="logo-image" (click)="onLogoClick()">
@@ -12,14 +18,16 @@
             <a
                 *ngIf="(authService.currentUser | async) !== null"
                 (click)="onLogout()"
+                [class.active]="isLogOutActive"
                 >Log Out</a
             >
             <a
                 *ngIf="(authService.currentUser | async) !== null"
                 (click)="onAccountClick()"
+                [class.active]="isAccountActive"
                 >Account</a
             >
-            <a (click)="onAboutClick()">About</a>
+            <a (click)="onAboutClick()" [class.active]="isAboutActive">About</a>
         </div>
     </div>
 </nav>

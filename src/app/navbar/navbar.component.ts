@@ -13,6 +13,9 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     styleUrls: ["./navbar.component.css"],
 })
 export class NavbarComponent {
+    isAboutActive: boolean = false;
+    isAccountActive: boolean = false;
+    isLogOutActive: boolean = false;
     currentUser$ = this.authService.currentUser.subscribe((user) => {
         console.log(user);
     });
@@ -24,6 +27,9 @@ export class NavbarComponent {
     ) {}
 
     onLogoClick() {
+        this.isLogOutActive = false;
+        this.isAboutActive = false;
+        this.isAccountActive = false;
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -192,6 +198,9 @@ export class NavbarComponent {
 
     async onLogout() {
         try {
+            this.isLogOutActive = true;
+            this.isAboutActive = false;
+            this.isAccountActive = false;
             await this.authService.logout();
             sessionStorage.removeItem("instructionsDot");
             sessionStorage.removeItem("uploadFileDot");
@@ -229,6 +238,9 @@ export class NavbarComponent {
     }
 
     onAccountClick() {
+        this.isLogOutActive = false;
+        this.isAboutActive = false;
+        this.isAccountActive = true;
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -251,6 +263,9 @@ export class NavbarComponent {
     }
 
     onAboutClick() {
+        this.isLogOutActive = false;
+        this.isAboutActive = true;
+        this.isAccountActive = false;
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
