@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { UserInteractionCsvService } from "../user-interaction-csv-service/user-interaction-csv.service";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { first } from 'rxjs/operators';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -35,20 +36,32 @@ export class NavbarComponent {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "Logo on navbar",
-                Result: "Navigate to Landing page",
-                Time: time.toLocaleString(),
+
+        this.authService.currentUser.pipe(first()).subscribe((user) => {
+            if(user){
+                userIntData.push(
+                    {
+                        Action: "Clicked",
+                        Target: "Logo on navbar",
+                        Result: "Navigate to Landing page",
+                        Time: time.toLocaleString(),
+                    }
+                );
+                this.router.navigate(["/landing"]);
+            } 
+            else {
+                userIntData.push(
+                    {
+                        Action: "Clicked",
+                        Target: "Logo on navbar",
+                        Result: "Navigate to Login page",
+                        Time: time.toLocaleString(),
+                    }
+                );
+                this.router.navigate(["/"]);
             }
-            // "Clicked logo on navbar at " + time.toLocaleString()
-        );
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-        this.router.navigate(["/landing"]);
+            sessionStorage.setItem("userInteractionData", JSON.stringify(userIntData));
+        });
     }
 
     getUserIntDocument() {
