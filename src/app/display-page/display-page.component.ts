@@ -660,7 +660,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                         experiencesEditingIndex: -1, // Assuming -1 indicates no experience is being edited.
                         experiencesEditValue: "",
                     }));
-                    this.cdRef.detectChanges();
+                    this.router.navigate(["/display"]);
                 }catch (error) {
                     console.error("Error while updating field order:", error);
                 }
