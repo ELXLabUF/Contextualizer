@@ -612,10 +612,14 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(async (result) => {
             if (result) {
-                const containerName = result;
-                const index = this.editableFields.findIndex(
-                    (f) => f.key === field.key
-                );
+                const containerName = result.trim();
+
+                if (this.editableFields.some(f => f.name === containerName)) {
+                    this.openAlertDialog("Error", "A container with this name already exists. Please choose a unique name.");
+                    return;
+                }
+
+                const index = this.editableFields.findIndex((f) => f.key === field.key);
                 if (index === -1) return; // Field not found
 
                 const newField = {
