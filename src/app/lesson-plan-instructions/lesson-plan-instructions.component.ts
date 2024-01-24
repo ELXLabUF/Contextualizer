@@ -1,4 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/compat/firestore";
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 @Component({
     selector: "app-lesson-plan-instructions",
@@ -9,7 +11,7 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
     timeStart!: Date;
     timeEnd!: Date;
 
-    constructor() {}
+    constructor(private storage: AngularFireStorage) {}
 
     ngOnInit() {
         this.timeStart = new Date();
@@ -85,13 +87,19 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+        
+        const fileName = 'Template.pdf';
+        const fileRef = this.storage.ref(fileName);
 
-        const link = document.createElement("a");
-        link.setAttribute("target", "_self");
-        link.setAttribute("href", "./");
-        link.setAttribute("download", `template.pdf`);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+        fileRef.getDownloadURL().subscribe(url => {
+            console.log(url);
+            const link = document.createElement('a');
+            link.setAttribute('target', '_blank');
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        });
     }
 }

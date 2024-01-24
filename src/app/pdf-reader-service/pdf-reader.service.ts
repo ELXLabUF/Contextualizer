@@ -45,157 +45,64 @@ export class PdfReaderService {
                                 .get(response.url!, { responseType: "text" })
                                 .subscribe({
                                     next: (jsonData) => {
-                                        // console.log('Received JSON:', jsonData);
-                                        const transormedData =
-                                            this.transformData(jsonData);
-                                        const transformedJSONData =
-                                            this.arrayToJSON(transormedData);
-                                        if (
-                                            transformedJSONData &&
-                                            "Content Area" in
-                                                transformedJSONData
-                                        ) {
+
+                                        console.log('Received JSON ->', jsonData);
+
+                                        const transormedData = this.transformData(jsonData);
+                                        console.log('Transformed Data ->', transormedData);
+
+                                        const transformedJSONData = this.arrayToJSON(transormedData);
+                                        console.log('Transformed JSON Data ->', transformedJSONData);
+
+                                        if (transformedJSONData){
                                             const result = {
-                                                "Content Area": {
-                                                    title: "Content Area",
-                                                    content:
-                                                        transformedJSONData[
-                                                            "Content Area"
-                                                        ],
+                                                Grade: {
+                                                    title: "Grade",
+                                                    content: transformedJSONData["Grade"],
                                                     integrated_experiences: [],
                                                 },
-                                                "Grade Level": {
-                                                    title: "Grade Level",
-                                                    content:
-                                                        transformedJSONData[
-                                                            "Grade Level"
-                                                        ],
-                                                    integrated_experiences: [],
-                                                },
-                                                Topic: {
-                                                    title: "Topic",
-                                                    content:
-                                                        transformedJSONData[
-                                                            "Topic"
-                                                        ],
+                                                Subject: {
+                                                    title: "Subject",
+                                                    content: transformedJSONData["Subject"],
                                                     integrated_experiences: [],
                                                 },
                                                 Duration: {
                                                     title: "Duration",
-                                                    content:
-                                                        transformedJSONData[
-                                                            "Duration"
-                                                        ],
+                                                    content: transformedJSONData["Duration"],
                                                     integrated_experiences: [],
                                                 },
-                                                CCRSAE: {
-                                                    title: "CCRSAE",
-                                                    content:
-                                                        transformedJSONData[
-                                                            "CCRSAE"
-                                                        ],
-                                                    integrated_experiences: [],
-                                                },
-                                                "Instruction Shifts": {
-                                                    title: "Instruction Shifts",
-                                                    content:
-                                                        transformedJSONData[
-                                                            "Instruction Shifts"
-                                                        ].slice(
-                                                            1,
-                                                            transformedJSONData[
-                                                                "Instruction Shifts"
-                                                            ].length
-                                                        ),
-                                                    integrated_experiences: [],
-                                                },
-                                                Objective: {
-                                                    title: "Objective",
-                                                    content:
-                                                        this.transformArray(
-                                                            transformedJSONData[
-                                                                "Objective"
-                                                            ].slice(
-                                                                2,
-                                                                transformedJSONData[
-                                                                    "Objective"
-                                                                ].length
-                                                            )
-                                                        ),
-                                                    integrated_experiences: [],
-                                                },
-                                                Assessment: {
-                                                    title: "Assessment",
-                                                    content:
-                                                        this.transformArray(
-                                                            transformedJSONData[
-                                                                "Assessment"
-                                                            ].slice(
-                                                                2,
-                                                                transformedJSONData[
-                                                                    "Assessment"
-                                                                ].length
-                                                            )
-                                                        ),
+                                                "Lesson Standards & Objectives": {
+                                                    title: "Lesson Standards & Objectives",
+                                                    content: this.transformArray(transformedJSONData["Lesson Standards & Objectives"]),
                                                     integrated_experiences: [],
                                                 },
                                                 Materials: {
                                                     title: "Materials",
-                                                    content:
-                                                        this.transformArray(
-                                                            transformedJSONData[
-                                                                "Materials"
-                                                            ].slice(
-                                                                1,
-                                                                transformedJSONData[
-                                                                    "Materials"
-                                                                ].length
-                                                            )
-                                                        ),
+                                                    content: this.transformArray(transformedJSONData["Materials"]),
                                                     integrated_experiences: [],
                                                 },
-                                                Instructions: {
-                                                    title: "Instructions",
-                                                    content:
-                                                        this.transformArray(
-                                                            transformedJSONData[
-                                                                "Instructions"
-                                                            ].slice(
-                                                                2,
-                                                                transformedJSONData[
-                                                                    "Instructions"
-                                                                ].length
-                                                            )
-                                                        ),
+                                                "Warm-Up": {
+                                                    title: "Warm-Up",
+                                                    content: this.transformArray(transformedJSONData["Warm-Up"]),
                                                     integrated_experiences: [],
                                                 },
-                                                "Home Study": {
-                                                    title: "Home Study",
-                                                    content:
-                                                        transformedJSONData[
-                                                            "Home Study"
-                                                        ].slice(
-                                                            1,
-                                                            transformedJSONData[
-                                                                "Home Study"
-                                                            ].length
-                                                        ),
+                                                "Teacher-Led Instructions": {
+                                                    title: "Teacher-Led Instructions",
+                                                    content: this.transformArray(transformedJSONData["Teacher-Led Instructions"]),
                                                     integrated_experiences: [],
                                                 },
-                                                Reflection: {
-                                                    title: "Reflection",
-                                                    content:
-                                                        transformedJSONData[
-                                                            "Reflection"
-                                                        ].slice(
-                                                            2,
-                                                            transformedJSONData[
-                                                                "Reflection"
-                                                            ].length
-                                                        ),
+                                                "Student-Led Learning": {
+                                                    title: "Student-Led Learning",
+                                                    content: this.transformArray(transformedJSONData["Student-Led Learning"]),
+                                                    integrated_experiences: [],
+                                                },
+                                                "Wrap-Up/Closure": {
+                                                    title: "Wrap-Up/Closure",
+                                                    content: this.transformArray(transformedJSONData["Wrap-Up/Closure"]),
                                                     integrated_experiences: [],
                                                 },
                                             };
+                                            console.log("Result ->", result);
                                             resolve(result);
                                         } else {
                                             console.error(
@@ -241,52 +148,59 @@ export class PdfReaderService {
 
     private transformArray(input: string[]): string[] {
         const output: string[] = [];
-        for (let i = 0; i < input.length; i++) {
-            if (input[i].match(/^\d+\./)) {
-                let start = i;
-                let end = i + 1;
-                while (end < input.length && !input[end].match(/^\d+\./)) {
-                    end++;
-                }
-                output.push(input.slice(start, end).join(" "));
-                i = end - 1;
-            }
+        let currentPoint = '';
+        
+        if(!input || input.length == 0){
+            return []
         }
+
+        input.forEach(line => {
+            if (line.match(/^(\•|\-|\d+\.)\s/)) {
+                if (currentPoint) {
+                    output.push(currentPoint.trim());
+                    currentPoint = '';
+                }
+                currentPoint = line;
+            } else {
+                currentPoint += ' ' + line;
+            }
+        });
+
+        if (currentPoint) {
+            output.push(currentPoint.trim());
+        }
+
         return output;
     }
 
     private arrayToJSON(arr: string[]) {
         const fields = [
-            "Content Area",
-            "Grade Level",
-            "Topic",
-            "Duration",
-            "CCRSAE",
-            "Instruction Shifts",
-            "Objective",
-            "Assessment",
-            "Materials",
-            "Instructions",
-            "Home Study",
-            "Reflection",
+            "Grade:",
+            "Subject:",
+            "Duration:",
+            "Lesson Standards & Objectives:",
+            "Materials:",
+            "Warm-Up:",
+            "Teacher-Led Instruction:",
+            "Student-Led Learning:",
+            "Wrap-Up/Closure:"
         ];
 
         const result: { [key: string]: any } = {};
         fields.forEach((field, index) => {
-            const startIndex = arr.indexOf(field);
+            const startIndex = arr.findIndex(element => element.startsWith(field));
             let endIndex;
 
             if (index !== fields.length - 1) {
-                endIndex = arr.indexOf(fields[index + 1]);
+                endIndex = arr.findIndex(element => element.startsWith(fields[index + 1]));
             } else {
                 endIndex = arr.length;
             }
 
-            const dataForField = arr.slice(startIndex + 1, endIndex);
-            if (dataForField.length === 1) {
-                result[field] = dataForField[0];
-            } else {
-                result[field] = dataForField;
+            if (startIndex !== -1 && endIndex !== -1) {
+                const dataForField = arr.slice(startIndex, endIndex);
+                const formattedData = dataForField.map(line => line.replace(field, '').trim()).filter(line => line);
+                result[field.replace(':', '')] = formattedData.length === 1 ? formattedData[0] : formattedData;
             }
         });
         return result;

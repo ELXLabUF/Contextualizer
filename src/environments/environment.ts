@@ -1,12 +1,12 @@
 export const environment = {
     firebase: {
-        apiKey: "AIzaSyC7DfNKsu4LQ5CvR_moSGOnwfQcCqwaQxM",
-        authDomain: "contextualizer-e57ed.firebaseapp.com",
-        projectId: "contextualizer-e57ed",
-        storageBucket: "contextualizer-e57ed.appspot.com",
-        messagingSenderId: "829469841315",
-        appId: "1:829469841315:web:84a34218c225df8a46ec16",
-        measurementId: "G-C2R3Q3FL14",
-    },
+        apiKey: "AIzaSyB4hs7f0Jl9ptUS8t8TFM_Uaq7XG5JUfhY",
+        authDomain: "pdf-upload-92862.firebaseapp.com",
+        projectId: "pdf-upload-92862",
+        storageBucket: "pdf-upload-92862.appspot.com",
+        messagingSenderId: "32237319284",
+        appId: "1:32237319284:web:d66ed054ae997536a14d21",
+        measurementId: "G-D9H200RXNG"
+      },
     production: false,
 };

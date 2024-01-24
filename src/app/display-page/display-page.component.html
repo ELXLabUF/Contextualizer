@@ -18,7 +18,7 @@
     </div>
 
     <div class="parent-container flex-parent">
-        <div class="content-container flex-child">
+        <div *ngIf="pdfData" class="content-container flex-child">
             <div *ngFor="let field of editableFields; trackBy: trackByField">
                 <!-- Wrapper Box for entire content and integrated_experiences -->
                 <div class="wrapper-box" *ngIf="pdfData[field.key]">
@@ -68,7 +68,7 @@
                             (click)="enableEditing(field)"
                         >
                             <p class="editable-element" style="font-size: 18px">
-                                {{ pdfData[field.key]?.content }}
+                                {{ pdfData[field.key]?.content.content }}
                             </p>
                         </div>
 
