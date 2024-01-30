@@ -219,21 +219,9 @@ export class NavbarComponent {
             sessionStorage.removeItem("documentId");
             sessionStorage.removeItem("fileURL");
 
-            // let userIntData = this.getUserIntDocument();
             let userInteractionData: any = [];
             userInteractionData = this.getUserInteractionData();
-
-            // pdfMake
-            //     .createPdf(userIntData)
-            //     .download("User_Interaction_Data.pdf");
-
-            console.log("BEFORE SERVICE CALL");
-            console.log(userInteractionData.length);
-
-            this.userIntCSVService.exportToCsv(
-                "User_Interaction_Data.csv",
-                userInteractionData
-            );
+            this.userIntCSVService.exportToCsv(userInteractionData);
 
             sessionStorage.removeItem("userInteractionData");
             sessionStorage.removeItem("timeStart");
