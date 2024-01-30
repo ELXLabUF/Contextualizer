@@ -1,8 +1,12 @@
 <nav>
     <div class="nav-wrapper">
-        <div class="logo" style="opacity: 0;">
-            <a class="logo-image" (click)="onLogoClick()">
-                <img src="../../assets/WebsiteLogo.png" alt="Website Logo" />
+        <div class="logo" style="opacity: 0; width: 25%">
+            <a class="logo-image">
+                <img
+                    src="../../assets/WebsiteLogo.png"
+                    style="cursor: auto"
+                    alt="Website Logo"
+                />
             </a>
         </div>
 
@@ -18,7 +22,6 @@
             <a
                 *ngIf="(authService.currentUser | async) !== null"
                 (click)="onLogout()"
-                [class.active]="isLogOutActive"
                 >Log Out</a
             >
             <a

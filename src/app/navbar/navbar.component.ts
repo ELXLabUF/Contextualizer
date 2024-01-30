@@ -2,9 +2,10 @@ import { Component } from "@angular/core";
 import { AuthService } from "../auth.service";
 import { Router } from "@angular/router";
 import { UserInteractionCsvService } from "../user-interaction-csv-service/user-interaction-csv.service";
+import { first } from "rxjs/operators";
+
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { first } from 'rxjs/operators';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -14,9 +15,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     styleUrls: ["./navbar.component.css"],
 })
 export class NavbarComponent {
-    isAboutActive: boolean = false;
     isAccountActive: boolean = false;
-    isLogOutActive: boolean = false;
+    isAboutActive: boolean = false;
     currentUser$ = this.authService.currentUser.subscribe((user) => {
         console.log(user);
     });
@@ -28,9 +28,8 @@ export class NavbarComponent {
     ) {}
 
     onLogoClick() {
-        this.isLogOutActive = false;
-        this.isAboutActive = false;
         this.isAccountActive = false;
+        this.isAboutActive = false;
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -38,29 +37,27 @@ export class NavbarComponent {
         );
 
         this.authService.currentUser.pipe(first()).subscribe((user) => {
-            if(user){
-                userIntData.push(
-                    {
-                        Action: "Clicked",
-                        Target: "Logo on navbar",
-                        Result: "Navigate to Landing page",
-                        Time: time.toLocaleString(),
-                    }
-                );
+            if (user) {
+                userIntData.push({
+                    Action: "Clicked",
+                    Target: "Logo on navbar",
+                    Result: "Navigate to Landing page",
+                    Time: time.toLocaleString(),
+                });
                 this.router.navigate(["/landing"]);
-            } 
-            else {
-                userIntData.push(
-                    {
-                        Action: "Clicked",
-                        Target: "Logo on navbar",
-                        Result: "Navigate to Login page",
-                        Time: time.toLocaleString(),
-                    }
-                );
+            } else {
+                userIntData.push({
+                    Action: "Clicked",
+                    Target: "Logo on navbar",
+                    Result: "Navigate to Login page",
+                    Time: time.toLocaleString(),
+                });
                 this.router.navigate(["/"]);
             }
-            sessionStorage.setItem("userInteractionData", JSON.stringify(userIntData));
+            sessionStorage.setItem(
+                "userInteractionData",
+                JSON.stringify(userIntData)
+            );
         });
     }
 
@@ -211,9 +208,6 @@ export class NavbarComponent {
 
     async onLogout() {
         try {
-            this.isLogOutActive = true;
-            this.isAboutActive = false;
-            this.isAccountActive = false;
             await this.authService.logout();
             sessionStorage.removeItem("instructionsDot");
             sessionStorage.removeItem("uploadFileDot");
@@ -251,9 +245,6 @@ export class NavbarComponent {
     }
 
     onAccountClick() {
-        this.isLogOutActive = false;
-        this.isAboutActive = false;
-        this.isAccountActive = true;
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -272,13 +263,13 @@ export class NavbarComponent {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+
+        this.isAboutActive = false;
+        this.isAccountActive = true;
         this.router.navigate(["/account"]);
     }
 
     onAboutClick() {
-        this.isLogOutActive = false;
-        this.isAboutActive = true;
-        this.isAccountActive = false;
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -297,6 +288,9 @@ export class NavbarComponent {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+
+        this.isAboutActive = true;
+        this.isAccountActive = false;
         this.router.navigate(["/about"]);
     }
 }
