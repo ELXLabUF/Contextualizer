@@ -24,52 +24,40 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
 
     fields = [
         {
-            name: "Content Area",
-            key: "Content Area",
+            name: "Grade",
+            key: "Grade",
         },
         {
-            name: "Grade Level",
-            key: "Grade Level",
-        },
-        {
-            name: "Topic",
-            key: "Topic",
+            name: "Subject",
+            key: "Subject",
         },
         {
             name: "Duration",
             key: "Duration",
         },
         {
-            name: "CCRSAE",
-            key: "CCRSAE",
-        },
-        {
-            name: "Instruction Shifts",
-            key: "Instruction Shifts",
-        },
-        {
-            name: "Objective",
-            key: "Objective",
-        },
-        {
-            name: "Assessment",
-            key: "Assessment",
+            name: "Lesson Standards & Objectives",
+            key: "Lesson Standards & Objectives",
         },
         {
             name: "Materials",
             key: "Materials",
         },
         {
-            name: "Instructions",
-            key: "Instructions",
+            name: "Warm-Up",
+            key: "Warm-Up",
         },
         {
-            name: "Home Study",
-            key: "Home Study",
+            name: "Teacher-Led Instruction",
+            key: "Teacher-Led Instruction",
         },
         {
-            name: "Reflection",
-            key: "Reflection",
+            name: "Student-Led Learning",
+            key: "Student-Led Learning",
+        },
+        {
+            name: "Wrap-Up Closure",
+            key: "Wrap-Up Closure",
         },
     ];
 
@@ -160,30 +148,24 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
 
     private getFieldName(fieldKey: string): string {
         switch (fieldKey) {
-            case "Content Area":
-                return "Content Area";
-            case "Grade Level":
-                return "Grade Level";
-            case "Topic":
-                return "Topic";
+            case "Grade":
+                return "Grade";
+            case "Subject":
+                return "Subject";
             case "Duration":
                 return "Duration";
-            case "CCRSAE":
-                return "CCRSAE";
-            case "Instruction Shifts":
-                return "Instruction Shifts";
-            case "Objective":
-                return "Objective";
-            case "Assessment":
-                return "Assessment";
+            case "Lesson Standards & Objectives":
+                return "Lesson Standards & Objectives";
             case "Materials":
                 return "Materials";
-            case "Instructions":
-                return "Instructions";
-            case "Home Study":
-                return "Home Study";
-            case "Reflection":
-                return "Reflection";
+            case "Warm-Up":
+                return "Warm-Up";
+            case "Teacher-Led Instruction":
+                return "Teacher-Led Instruction";
+            case "Student-Led Learning":
+                return "Student-Led Learning";
+            case "Wrap-Up Closure":
+                return "Wrap-Up Closure";
             default:
                 return "Unknown";
         }
@@ -238,10 +220,10 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
             const fieldData =
                 this.pdfData[this.fields[this.currFieldNum - 1].key];
             let hasTitle = fieldData.title ? true : false;
-            let hasContent = fieldData.content ? true : false;
+            let hasContent = fieldData.content.content ? true : false;
             let hasExperiences: boolean = false;
             let isContentString =
-                typeof fieldData.content === "string" ? true : false;
+                typeof fieldData.content.content === "string" ? true : false;
             let experiences = [];
             let titleParagraph = new Paragraph("");
             let contentParagraph = new Paragraph("");
@@ -269,219 +251,219 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
             // Generate the content paragraph a.k.a. the content of the current section
             if (hasContent) {
                 if (isContentString) {
-                    contentParagraph = new Paragraph(fieldData.content);
-                } else if (fieldData.content.length === 1) {
+                    contentParagraph = new Paragraph(fieldData.content.content);
+                } else if (fieldData.content.content.length === 1) {
                     contentParagraph = new Paragraph({
                         children: [
                             new Paragraph({
-                                text: fieldData.content[0],
+                                text: fieldData.content.content[0],
                             }),
                         ],
                     });
-                } else if (fieldData.content.length === 2) {
+                } else if (fieldData.content.content.length === 2) {
                     contentParagraph = new Paragraph({
                         children: [
                             new Paragraph({
-                                text: fieldData.content[0],
+                                text: fieldData.content.content[0],
                             }),
                             new Paragraph({
-                                text: fieldData.content[1],
+                                text: fieldData.content.content[1],
                             }),
                         ],
                     });
-                } else if (fieldData.content.length === 3) {
+                } else if (fieldData.content.content.length === 3) {
                     contentParagraph = new Paragraph({
                         children: [
                             new Paragraph({
-                                text: fieldData.content[0],
+                                text: fieldData.content.content[0],
                             }),
                             new Paragraph({
-                                text: fieldData.content[1],
+                                text: fieldData.content.content[1],
                             }),
                             new Paragraph({
-                                text: fieldData.content[2],
+                                text: fieldData.content.content[2],
                             }),
                         ],
                     });
-                } else if (fieldData.content.length === 4) {
+                } else if (fieldData.content.content.length === 4) {
                     contentParagraph = new Paragraph({
                         children: [
                             new Paragraph({
-                                text: fieldData.content[0],
+                                text: fieldData.content.content[0],
                             }),
                             new Paragraph({
-                                text: fieldData.content[1],
+                                text: fieldData.content.content[1],
                             }),
                             new Paragraph({
-                                text: fieldData.content[2],
+                                text: fieldData.content.content[2],
                             }),
                             new Paragraph({
-                                text: fieldData.content[3],
+                                text: fieldData.content.content[3],
                             }),
                         ],
                     });
-                } else if (fieldData.content.length === 5) {
+                } else if (fieldData.content.content.length === 5) {
                     contentParagraph = new Paragraph({
                         children: [
                             new Paragraph({
-                                text: fieldData.content[0],
+                                text: fieldData.content.content[0],
                             }),
                             new Paragraph({
-                                text: fieldData.content[1],
+                                text: fieldData.content.content[1],
                             }),
                             new Paragraph({
-                                text: fieldData.content[2],
+                                text: fieldData.content.content[2],
                             }),
                             new Paragraph({
-                                text: fieldData.content[3],
+                                text: fieldData.content.content[3],
                             }),
                             new Paragraph({
-                                text: fieldData.content[4],
+                                text: fieldData.content.content[4],
                             }),
                         ],
                     });
-                } else if (fieldData.content.length === 6) {
+                } else if (fieldData.content.content.length === 6) {
                     contentParagraph = new Paragraph({
                         children: [
                             new Paragraph({
-                                text: fieldData.content[0],
+                                text: fieldData.content.content[0],
                             }),
                             new Paragraph({
-                                text: fieldData.content[1],
+                                text: fieldData.content.content[1],
                             }),
                             new Paragraph({
-                                text: fieldData.content[2],
+                                text: fieldData.content.content[2],
                             }),
                             new Paragraph({
-                                text: fieldData.content[3],
+                                text: fieldData.content.content[3],
                             }),
                             new Paragraph({
-                                text: fieldData.content[4],
+                                text: fieldData.content.content[4],
                             }),
                             new Paragraph({
-                                text: fieldData.content[5],
+                                text: fieldData.content.content[5],
                             }),
                         ],
                     });
-                } else if (fieldData.content.length === 7) {
+                } else if (fieldData.content.content.length === 7) {
                     contentParagraph = new Paragraph({
                         children: [
                             new Paragraph({
-                                text: fieldData.content[0],
+                                text: fieldData.content.content[0],
                             }),
                             new Paragraph({
-                                text: fieldData.content[1],
+                                text: fieldData.content.content[1],
                             }),
                             new Paragraph({
-                                text: fieldData.content[2],
+                                text: fieldData.content.content[2],
                             }),
                             new Paragraph({
-                                text: fieldData.content[3],
+                                text: fieldData.content.content[3],
                             }),
                             new Paragraph({
-                                text: fieldData.content[4],
+                                text: fieldData.content.content[4],
                             }),
                             new Paragraph({
-                                text: fieldData.content[5],
+                                text: fieldData.content.content[5],
                             }),
                             new Paragraph({
-                                text: fieldData.content[6],
+                                text: fieldData.content.content[6],
                             }),
                         ],
                     });
-                } else if (fieldData.content.length === 8) {
+                } else if (fieldData.content.content.length === 8) {
                     contentParagraph = new Paragraph({
                         children: [
                             new Paragraph({
-                                text: fieldData.content[0],
+                                text: fieldData.content.content[0],
                             }),
                             new Paragraph({
-                                text: fieldData.content[1],
+                                text: fieldData.content.content[1],
                             }),
                             new Paragraph({
-                                text: fieldData.content[2],
+                                text: fieldData.content.content[2],
                             }),
                             new Paragraph({
-                                text: fieldData.content[3],
+                                text: fieldData.content.content[3],
                             }),
                             new Paragraph({
-                                text: fieldData.content[4],
+                                text: fieldData.content.content[4],
                             }),
                             new Paragraph({
-                                text: fieldData.content[5],
+                                text: fieldData.content.content[5],
                             }),
                             new Paragraph({
-                                text: fieldData.content[6],
+                                text: fieldData.content.content[6],
                             }),
                             new Paragraph({
-                                text: fieldData.content[7],
+                                text: fieldData.content.content[7],
                             }),
                         ],
                     });
-                } else if (fieldData.content.length === 9) {
+                } else if (fieldData.content.content.length === 9) {
                     contentParagraph = new Paragraph({
                         children: [
                             new Paragraph({
-                                text: fieldData.content[0],
+                                text: fieldData.content.content[0],
                             }),
                             new Paragraph({
-                                text: fieldData.content[1],
+                                text: fieldData.content.content[1],
                             }),
                             new Paragraph({
-                                text: fieldData.content[2],
+                                text: fieldData.content.content[2],
                             }),
                             new Paragraph({
-                                text: fieldData.content[3],
+                                text: fieldData.content.content[3],
                             }),
                             new Paragraph({
-                                text: fieldData.content[4],
+                                text: fieldData.content.content[4],
                             }),
                             new Paragraph({
-                                text: fieldData.content[5],
+                                text: fieldData.content.content[5],
                             }),
                             new Paragraph({
-                                text: fieldData.content[6],
+                                text: fieldData.content.content[6],
                             }),
                             new Paragraph({
-                                text: fieldData.content[7],
+                                text: fieldData.content.content[7],
                             }),
                             new Paragraph({
-                                text: fieldData.content[8],
+                                text: fieldData.content.content[8],
                             }),
                         ],
                     });
-                } else if (fieldData.content.length === 10) {
+                } else if (fieldData.content.content.length === 10) {
                     contentParagraph = new Paragraph({
                         children: [
                             new Paragraph({
-                                text: fieldData.content[0],
+                                text: fieldData.content.content[0],
                             }),
                             new Paragraph({
-                                text: fieldData.content[1],
+                                text: fieldData.content.content[1],
                             }),
                             new Paragraph({
-                                text: fieldData.content[2],
+                                text: fieldData.content.content[2],
                             }),
                             new Paragraph({
-                                text: fieldData.content[3],
+                                text: fieldData.content.content[3],
                             }),
                             new Paragraph({
-                                text: fieldData.content[4],
+                                text: fieldData.content.content[4],
                             }),
                             new Paragraph({
-                                text: fieldData.content[5],
+                                text: fieldData.content.content[5],
                             }),
                             new Paragraph({
-                                text: fieldData.content[6],
+                                text: fieldData.content.content[6],
                             }),
                             new Paragraph({
-                                text: fieldData.content[7],
+                                text: fieldData.content.content[7],
                             }),
                             new Paragraph({
-                                text: fieldData.content[8],
+                                text: fieldData.content.content[8],
                             }),
                             new Paragraph({
-                                text: fieldData.content[9],
+                                text: fieldData.content.content[9],
                             }),
                         ],
                     });
@@ -676,8 +658,8 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
                     bold: true,
                     margin: [0, 20, 0, 0],
                 });
-                if (fieldData.content) {
-                    content.push(fieldData.content);
+                if (fieldData.content.content) {
+                    content.push(fieldData.content.content);
                 }
                 if (
                     fieldData.integrated_experiences &&

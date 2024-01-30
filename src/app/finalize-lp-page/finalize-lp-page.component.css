@@ -47,7 +47,8 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    margin-top: 90px;
+    margin-left: 20px;
+    margin-top: 120px;
     width: 20%;
     gap: 40px;
 }

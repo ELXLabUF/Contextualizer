@@ -45,60 +45,111 @@ export class PdfReaderService {
                                 .get(response.url!, { responseType: "text" })
                                 .subscribe({
                                     next: (jsonData) => {
+                                        console.log(
+                                            "Received JSON ->",
+                                            jsonData
+                                        );
 
-                                        console.log('Received JSON ->', jsonData);
+                                        const transormedData =
+                                            this.transformData(jsonData);
+                                        console.log(
+                                            "Transformed Data ->",
+                                            transormedData
+                                        );
 
-                                        const transormedData = this.transformData(jsonData);
-                                        console.log('Transformed Data ->', transormedData);
+                                        const transformedJSONData =
+                                            this.arrayToJSON(transormedData);
+                                        console.log(
+                                            "Transformed JSON Data ->",
+                                            transformedJSONData
+                                        );
 
-                                        const transformedJSONData = this.arrayToJSON(transormedData);
-                                        console.log('Transformed JSON Data ->', transformedJSONData);
-
-                                        if (transformedJSONData){
+                                        if (transformedJSONData) {
                                             const result = {
                                                 Grade: {
                                                     title: "Grade",
-                                                    content: transformedJSONData["Grade"],
+                                                    content:
+                                                        transformedJSONData[
+                                                            "Grade"
+                                                        ],
                                                     integrated_experiences: [],
                                                 },
                                                 Subject: {
                                                     title: "Subject",
-                                                    content: transformedJSONData["Subject"],
+                                                    content:
+                                                        transformedJSONData[
+                                                            "Subject"
+                                                        ],
                                                     integrated_experiences: [],
                                                 },
                                                 Duration: {
                                                     title: "Duration",
-                                                    content: transformedJSONData["Duration"],
+                                                    content:
+                                                        transformedJSONData[
+                                                            "Duration"
+                                                        ],
                                                     integrated_experiences: [],
                                                 },
-                                                "Lesson Standards & Objectives": {
-                                                    title: "Lesson Standards & Objectives",
-                                                    content: this.transformArray(transformedJSONData["Lesson Standards & Objectives"]),
-                                                    integrated_experiences: [],
-                                                },
+                                                "Lesson Standards & Objectives":
+                                                    {
+                                                        title: "Lesson Standards & Objectives",
+                                                        content:
+                                                            this.transformArray(
+                                                                transformedJSONData[
+                                                                    "Lesson Standards & Objectives"
+                                                                ]
+                                                            ),
+                                                        integrated_experiences:
+                                                            [],
+                                                    },
                                                 Materials: {
                                                     title: "Materials",
-                                                    content: this.transformArray(transformedJSONData["Materials"]),
+                                                    content:
+                                                        this.transformArray(
+                                                            transformedJSONData[
+                                                                "Materials"
+                                                            ]
+                                                        ),
                                                     integrated_experiences: [],
                                                 },
                                                 "Warm-Up": {
                                                     title: "Warm-Up",
-                                                    content: this.transformArray(transformedJSONData["Warm-Up"]),
+                                                    content:
+                                                        this.transformArray(
+                                                            transformedJSONData[
+                                                                "Warm-Up"
+                                                            ]
+                                                        ),
                                                     integrated_experiences: [],
                                                 },
-                                                "Teacher-Led Instructions": {
-                                                    title: "Teacher-Led Instructions",
-                                                    content: this.transformArray(transformedJSONData["Teacher-Led Instructions"]),
+                                                "Teacher-Led Instruction": {
+                                                    title: "Teacher-Led Instruction",
+                                                    content:
+                                                        this.transformArray(
+                                                            transformedJSONData[
+                                                                "Teacher-Led Instruction"
+                                                            ]
+                                                        ),
                                                     integrated_experiences: [],
                                                 },
                                                 "Student-Led Learning": {
                                                     title: "Student-Led Learning",
-                                                    content: this.transformArray(transformedJSONData["Student-Led Learning"]),
+                                                    content:
+                                                        this.transformArray(
+                                                            transformedJSONData[
+                                                                "Student-Led Learning"
+                                                            ]
+                                                        ),
                                                     integrated_experiences: [],
                                                 },
-                                                "Wrap-Up/Closure": {
-                                                    title: "Wrap-Up/Closure",
-                                                    content: this.transformArray(transformedJSONData["Wrap-Up/Closure"]),
+                                                "Wrap-Up Closure": {
+                                                    title: "Wrap-Up Closure",
+                                                    content:
+                                                        this.transformArray(
+                                                            transformedJSONData[
+                                                                "Wrap-Up Closure"
+                                                            ]
+                                                        ),
                                                     integrated_experiences: [],
                                                 },
                                             };
@@ -148,21 +199,21 @@ export class PdfReaderService {
 
     private transformArray(input: string[]): string[] {
         const output: string[] = [];
-        let currentPoint = '';
-        
-        if(!input || input.length == 0){
-            return []
+        let currentPoint = "";
+
+        if (!input || input.length == 0) {
+            return [];
         }
 
-        input.forEach(line => {
+        input.forEach((line) => {
             if (line.match(/^(\•|\-|\d+\.)\s/)) {
                 if (currentPoint) {
                     output.push(currentPoint.trim());
-                    currentPoint = '';
+                    currentPoint = "";
                 }
                 currentPoint = line;
             } else {
-                currentPoint += ' ' + line;
+                currentPoint += " " + line;
             }
         });
 
@@ -183,24 +234,33 @@ export class PdfReaderService {
             "Warm-Up:",
             "Teacher-Led Instruction:",
             "Student-Led Learning:",
-            "Wrap-Up/Closure:"
+            "Wrap-Up Closure:",
         ];
 
         const result: { [key: string]: any } = {};
         fields.forEach((field, index) => {
-            const startIndex = arr.findIndex(element => element.startsWith(field));
+            const startIndex = arr.findIndex((element) =>
+                element.startsWith(field)
+            );
             let endIndex;
 
             if (index !== fields.length - 1) {
-                endIndex = arr.findIndex(element => element.startsWith(fields[index + 1]));
+                endIndex = arr.findIndex((element) =>
+                    element.startsWith(fields[index + 1])
+                );
             } else {
                 endIndex = arr.length;
             }
 
             if (startIndex !== -1 && endIndex !== -1) {
                 const dataForField = arr.slice(startIndex, endIndex);
-                const formattedData = dataForField.map(line => line.replace(field, '').trim()).filter(line => line);
-                result[field.replace(':', '')] = formattedData.length === 1 ? formattedData[0] : formattedData;
+                const formattedData = dataForField
+                    .map((line) => line.replace(field, "").trim())
+                    .filter((line) => line);
+                result[field.replace(":", "")] =
+                    formattedData.length === 1
+                        ? formattedData[0]
+                        : formattedData;
             }
         });
         return result;

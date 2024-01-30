@@ -2,7 +2,11 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { PdfReaderService } from "../pdf-reader-service/pdf-reader.service";
-import {Storage,ref,uploadBytesResumable,getDownloadURL,
+import {
+    Storage,
+    ref,
+    uploadBytesResumable,
+    getDownloadURL,
 } from "@angular/fire/storage";
 
 import { ExperienceLessonPlanService } from "../experience-lesson-plan-service/experience-lesson-plan.service";
@@ -84,15 +88,21 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             }
             // "Visited Upload LP Page at " + this.timeStart.toLocaleString()
         );
-        sessionStorage.setItem("userInteractionData", JSON.stringify(userIntData));
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
         sessionStorage.setItem("timeStart", this.timeStart.toString());
     }
 
     ngOnDestroy() {
         this.timeEnd = new Date();
         let userIntData: any = [];
-        let duration = (this.timeEnd.valueOf() - this.timeStart.valueOf()) / 1000;
-        userIntData = JSON.parse(sessionStorage.getItem("userInteractionData") || "[]");
+        let duration =
+            (this.timeEnd.valueOf() - this.timeStart.valueOf()) / 1000;
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
         userIntData.push(
             {
                 Action: "Left",
@@ -111,13 +121,18 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             }
             // "Time spent on Upload LP Page: " + duration + " seconds"
         );
-        sessionStorage.setItem("userInteractionData",JSON.stringify(userIntData));
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     onMainTopicDropdownClick() {
         let userIntData: any = [];
         let time = new Date();
-        userIntData = JSON.parse(sessionStorage.getItem("userInteractionData") || "[]");
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
         userIntData.push(
             {
                 Action: "Clicked",
@@ -127,13 +142,18 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             }
             // "Clicked 'Select a science unit' at " + time.toLocaleString()
         );
-        sessionStorage.setItem("userInteractionData",JSON.stringify(userIntData));
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     onSubTopicDropdownClick() {
         let userIntData: any = [];
         let time = new Date();
-        userIntData = JSON.parse(sessionStorage.getItem("userInteractionData") || "[]");
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
         userIntData.push(
             {
                 Action: "Clicked",
@@ -143,7 +163,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             }
             // "Clicked 'Select a sub-topic' at " + time.toLocaleString()
         );
-        sessionStorage.setItem("userInteractionData",JSON.stringify(userIntData));
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     openAlertDialog(title: string, message: string): void {
@@ -156,7 +179,9 @@ export class LessonPageComponent implements OnInit, OnDestroy {
     onFileSelected(event: any) {
         let userIntData: any = [];
         let time = new Date();
-        userIntData = JSON.parse(sessionStorage.getItem("userInteractionData") || "[]");
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
         userIntData.push(
             {
                 Action: "Clicked",
@@ -166,14 +191,20 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             }
             // "Clicked 'Browse Files...' at " + time.toLocaleString()
         );
-        sessionStorage.setItem("userInteractionData",JSON.stringify(userIntData));
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
 
         this.selectedFile = event.target.files[0];
         this.labelText = this.selectedFile
             ? this.selectedFile.name
             : "No file selected";
         if (!this.selectedFile || !this.selectedFile.name) {
-            this.openAlertDialog("Error", "No file selected or file name is not valid.");
+            this.openAlertDialog(
+                "Error",
+                "No file selected or file name is not valid."
+            );
             return;
         }
 
@@ -182,18 +213,19 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             .pop()
             ?.toLowerCase();
 
-        if (fileExtension === "pdf") 
-        {
-        } 
-        else if (fileExtension === "doc" || fileExtension === "docx") 
-        {
-            this.openAlertDialog("File Format Error", "Please convert your Word file to PDF and then upload.");
+        if (fileExtension === "pdf") {
+        } else if (fileExtension === "doc" || fileExtension === "docx") {
+            this.openAlertDialog(
+                "File Format Error",
+                "Please convert your Word file to PDF and then upload."
+            );
             this.resetUploadState();
             return;
-        } 
-        else 
-        {
-            this.openAlertDialog("Unsupported Format", "The selected file format is not supported. Please upload a PDF.");
+        } else {
+            this.openAlertDialog(
+                "Unsupported Format",
+                "The selected file format is not supported. Please upload a PDF."
+            );
             this.resetUploadState();
             return;
         }
@@ -204,7 +236,9 @@ export class LessonPageComponent implements OnInit, OnDestroy {
     onUpload() {
         let userIntData: any = [];
         let time = new Date();
-        userIntData = JSON.parse(sessionStorage.getItem("userInteractionData") || "[]");
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
         userIntData.push(
             {
                 Action: "Clicked",
@@ -214,18 +248,18 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             }
             // "Clicked 'Upload' at " + time.toLocaleString()
         );
-        sessionStorage.setItem("userInteractionData", JSON.stringify(userIntData));
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
 
-        if (!this.selectedMainTopic || !this.selectedSubTopic) 
-        {
-            if (!this.selectedFile) 
-            {
-                this.uploadStatus = "Please select both topic and sub-topic and a file";
+        if (!this.selectedMainTopic || !this.selectedSubTopic) {
+            if (!this.selectedFile) {
+                this.uploadStatus =
+                    "Please select both topic and sub-topic and a file";
                 console.log(this.uploadStatus);
                 return;
-            } 
-            else 
-            {
+            } else {
                 this.uploadStatus = "Please select both topic and sub-topic";
                 return;
             }
@@ -246,9 +280,12 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         const uploadTask = uploadBytesResumable(fileRef, this.selectedFile);
 
         // observe percentage changes
-        uploadTask.on("state_changed",(snapshot: any) => {
+        uploadTask.on(
+            "state_changed",
+            (snapshot: any) => {
                 console.log(snapshot);
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 this.uploadProgress = progress;
 
                 if (snapshot.state === "running" && progress < 100) {
@@ -272,23 +309,56 @@ export class LessonPageComponent implements OnInit, OnDestroy {
 
                         // Save the file URL to sessionStorage for accessing it in DisplayPageComponent
                         sessionStorage.setItem("fileURL", downloadURL);
-                        
+
                         this.pdfReaderService
                             .convertPdfToJson(this.fileDownloadURL)
                             .then((jsonData) => {
-                                const mainTopic = this.expLessonPlanService.currentMainTopicValue;
-                                const subTopic = this.expLessonPlanService.currentSubTopicValue;
+                                const mainTopic =
+                                    this.expLessonPlanService
+                                        .currentMainTopicValue;
+                                const subTopic =
+                                    this.expLessonPlanService
+                                        .currentSubTopicValue;
 
-                                if (sessionStorage.getItem("altNavigation") ==="true" && sessionStorage.getItem("numIntegratedExperiences") !== null && Number(sessionStorage.getItem("numIntegratedExperiences")) > 0) {
+                                if (
+                                    sessionStorage.getItem("altNavigation") ===
+                                        "true" &&
+                                    sessionStorage.getItem(
+                                        "numIntegratedExperiences"
+                                    ) !== null &&
+                                    Number(
+                                        sessionStorage.getItem(
+                                            "numIntegratedExperiences"
+                                        )
+                                    ) > 0
+                                ) {
                                     let multipleIntegrate: any = [];
-                                    let numIntegratedExperiences = Number(sessionStorage.getItem("numIntegratedExperiences"));
+                                    let numIntegratedExperiences = Number(
+                                        sessionStorage.getItem(
+                                            "numIntegratedExperiences"
+                                        )
+                                    );
 
-                                    [...Array(numIntegratedExperiences),].forEach((_, index) => {
-                                        let exp: Experience = JSON.parse(sessionStorage.getItem("integratedExp".concat((index + 1).toString())) || "{}");
-                                        sessionStorage.removeItem("integratedExp".concat((index + 1).toString()));
+                                    [
+                                        ...Array(numIntegratedExperiences),
+                                    ].forEach((_, index) => {
+                                        let exp: Experience = JSON.parse(
+                                            sessionStorage.getItem(
+                                                "integratedExp".concat(
+                                                    (index + 1).toString()
+                                                )
+                                            ) || "{}"
+                                        );
+                                        sessionStorage.removeItem(
+                                            "integratedExp".concat(
+                                                (index + 1).toString()
+                                            )
+                                        );
                                         multipleIntegrate.push(exp);
                                     });
-                                    sessionStorage.removeItem("numIntegratedExperiences");
+                                    sessionStorage.removeItem(
+                                        "numIntegratedExperiences"
+                                    );
 
                                     jsonData = {
                                         Grade: {
@@ -308,7 +378,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                         },
                                         "Lesson Standards & Objectives": {
                                             title: "Lesson Standards & Objectives",
-                                            content: jsonData["Lesson Standards & Objectives"],
+                                            content:
+                                                jsonData[
+                                                    "Lesson Standards & Objectives"
+                                                ],
                                             integrated_experiences: [],
                                         },
                                         Materials: {
@@ -321,31 +394,52 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                             content: jsonData["Warm-Up"],
                                             integrated_experiences: [],
                                         },
-                                        "Teacher-Led Instructions": {
-                                            title: "Teacher-Led Instructions",
-                                            content: jsonData["Teacher-Led Instructions"],
+                                        "Teacher-Led Instruction": {
+                                            title: "Teacher-Led Instruction",
+                                            content:
+                                                jsonData[
+                                                    "Teacher-Led Instruction"
+                                                ],
                                             integrated_experiences: [],
                                         },
                                         "Student-Led Learning": {
                                             title: "Student-Led Learning",
-                                            content: jsonData["Student-Led Learning"],
+                                            content:
+                                                jsonData[
+                                                    "Student-Led Learning"
+                                                ],
                                             integrated_experiences: [],
                                         },
-                                        "Wrap-Up/Closure": {
-                                            title: "Wrap-Up/Closure",
-                                            content: jsonData["Wrap-Up/Closure"],
+                                        "Wrap-Up Closure": {
+                                            title: "Wrap-Up Closure",
+                                            content:
+                                                jsonData["Wrap-Up Closure"],
                                             integrated_experiences: [],
                                         },
                                         mainTopic: mainTopic,
                                         subTopic: subTopic,
                                         createdAt: new Date(),
-                                        integrated_experiences: [...multipleIntegrate,],
+                                        integrated_experiences: [
+                                            ...multipleIntegrate,
+                                        ],
                                     };
 
-                                    console.log("At Upload, Main Topic: ",mainTopic);
-                                    console.log("At Upload, Sub Topic: ",subTopic);
-                                    console.log( "At Upload, Created At: ", new Date());
-                                    console.log("At Upload, Integrated Experiences: ", multipleIntegrate);
+                                    console.log(
+                                        "At Upload, Main Topic: ",
+                                        mainTopic
+                                    );
+                                    console.log(
+                                        "At Upload, Sub Topic: ",
+                                        subTopic
+                                    );
+                                    console.log(
+                                        "At Upload, Created At: ",
+                                        new Date()
+                                    );
+                                    console.log(
+                                        "At Upload, Integrated Experiences: ",
+                                        multipleIntegrate
+                                    );
                                 } else {
                                     jsonData = {
                                         Grade: {
@@ -365,7 +459,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                         },
                                         "Lesson Standards & Objectives": {
                                             title: "Lesson Standards & Objectives",
-                                            content: jsonData["Lesson Standards & Objectives"],
+                                            content:
+                                                jsonData[
+                                                    "Lesson Standards & Objectives"
+                                                ],
                                             integrated_experiences: [],
                                         },
                                         Materials: {
@@ -378,19 +475,26 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                             content: jsonData["Warm-Up"],
                                             integrated_experiences: [],
                                         },
-                                        "Teacher-Led Instructions": {
-                                            title: "Teacher-Led Instructions",
-                                            content: jsonData["Teacher-Led Instructions"],
+                                        "Teacher-Led Instruction": {
+                                            title: "Teacher-Led Instruction",
+                                            content:
+                                                jsonData[
+                                                    "Teacher-Led Instruction"
+                                                ],
                                             integrated_experiences: [],
                                         },
                                         "Student-Led Learning": {
                                             title: "Student-Led Learning",
-                                            content: jsonData["Student-Led Learning"],
+                                            content:
+                                                jsonData[
+                                                    "Student-Led Learning"
+                                                ],
                                             integrated_experiences: [],
                                         },
-                                        "Wrap-Up/Closure": {
-                                            title: "Wrap-Up/Closure",
-                                            content: jsonData["Wrap-Up/Closure"],
+                                        "Wrap-Up Closure": {
+                                            title: "Wrap-Up Closure",
+                                            content:
+                                                jsonData["Wrap-Up Closure"],
                                             integrated_experiences: [],
                                         },
                                         mainTopic: mainTopic,
@@ -399,10 +503,22 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                         integrated_experiences: [],
                                     };
 
-                                    console.log("At Upload, Main Topic: ", mainTopic);
-                                    console.log( "At Upload, Sub Topic: ",subTopic);
-                                    console.log( "At Upload, Created At: ", new Date());
-                                    console.log("At Upload, Integrated Experiences: ", []);
+                                    console.log(
+                                        "At Upload, Main Topic: ",
+                                        mainTopic
+                                    );
+                                    console.log(
+                                        "At Upload, Sub Topic: ",
+                                        subTopic
+                                    );
+                                    console.log(
+                                        "At Upload, Created At: ",
+                                        new Date()
+                                    );
+                                    console.log(
+                                        "At Upload, Integrated Experiences: ",
+                                        []
+                                    );
                                 }
 
                                 this.firestore
@@ -410,18 +526,32 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                     .add(jsonData)
                                     .then((documentRef) => {
                                         // Redirect to DisplayPageComponent
-                                        this.expLessonPlanService.setLatestDocumentId(documentRef.id);
-                                        sessionStorage.setItem("documentId", documentRef.id);
+                                        this.expLessonPlanService.setLatestDocumentId(
+                                            documentRef.id
+                                        );
+                                        sessionStorage.setItem(
+                                            "documentId",
+                                            documentRef.id
+                                        );
                                         this.router.navigate(["/display"]);
-                                        sessionStorage.setItem("fileUploadSuccess", "true");
+                                        sessionStorage.setItem(
+                                            "fileUploadSuccess",
+                                            "true"
+                                        );
                                         this.cdr.detectChanges();
                                     })
                                     .catch((err) =>
-                                        console.error("Error adding document: ", err)
+                                        console.error(
+                                            "Error adding document: ",
+                                            err
+                                        )
                                     );
                             })
                             .catch((err) =>
-                                console.error("Error converting PDF to JSON: ", err)
+                                console.error(
+                                    "Error converting PDF to JSON: ",
+                                    err
+                                )
                             );
                     })
                     .catch((error: any) => {

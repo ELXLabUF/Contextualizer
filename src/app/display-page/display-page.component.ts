@@ -119,6 +119,16 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             experiencesEditingIndex: -1,
             experiencesEditValue: "",
         },
+        {
+            name: "Wrap-Up Closure",
+            key: "Wrap-Up Closure",
+            editing: false,
+            editValue: "",
+            labelEditing: false,
+            labelEditValue: "",
+            experiencesEditingIndex: -1,
+            experiencesEditValue: "",
+        },
     ];
 
     integratedExperiences: any = [];
@@ -141,6 +151,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     integratedExperiencesForWarmUp: any = [];
     integratedExperiencesForTeacher: any = [];
     integratedExperiencesForStudent: any = [];
+    integratedExperiencesForWrapUp: any = [];
 
     titleForGrade: string = "Grade";
     titleForSubject: string = "Subject";
@@ -150,6 +161,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     titleForWarmUp: string = "Warm-Up";
     titleForTeacher: string = "Teacher-Led Instruction";
     titleForStudent: string = "Student-Led Learning";
+    titleForWrapUp: string = "Wrap-Up Closure";
 
     currentExperienceTitle: string = "";
     currentExperienceDescription: string = "";
@@ -181,25 +193,35 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     ) {}
 
     get safeDownloadURL(): SafeResourceUrl {
-        return this.sanitizer.bypassSecurityTrustResourceUrl(this.fileDownloadURL || "");
+        return this.sanitizer.bypassSecurityTrustResourceUrl(
+            this.fileDownloadURL || ""
+        );
     }
 
     ngOnInit(): void {
         this.timeStart = new Date();
         let userIntData: any = [];
-        userIntData = JSON.parse(sessionStorage.getItem("userInteractionData") || "[]");
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
         userIntData.push({
             Action: "Visited",
             Target: "Display LP page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
-        sessionStorage.setItem("userInteractionData",JSON.stringify(userIntData));
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
         sessionStorage.setItem("timeStart", this.timeStart.toString());
 
         this.fileDownloadURL = sessionStorage.getItem("fileURL");
         if (this.fileDownloadURL) {
-            this.firestore.collection("Documents", (ref) => ref.orderBy("createdAt", "desc").limit(1))
+            this.firestore
+                .collection("Documents", (ref) =>
+                    ref.orderBy("createdAt", "desc").limit(1)
+                )
                 .get()
                 .toPromise()
                 .then((querySnapshot) => {
@@ -216,40 +238,81 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                         this.selectedSubTopic = this.pdfData.subTopic || "";
                         this.created_at = this.pdfData.createdAt.toDate() || "";
 
-                        this.integratedExperiencesForGrade = this.pdfData["Grade"]?.integrated_experiences || [];
-                        this.integratedExperiencesForSubject = this.pdfData["Subject"]?.integrated_experiences || [];
-                        this.integratedExperiencesForDuration = this.pdfData["Duration"]?.integrated_experiences || [];
-                        this.integratedExperiencesForLesson = this.pdfData["Lesson Standards & Objectives"]?.integrated_experiences || [];
-                        this.integratedExperiencesForMaterials = this.pdfData["Materials"]?.integrated_experiences || [];
-                        this.integratedExperiencesForWarmUp = this.pdfData["Warm-Up"]?.integrated_experiences || [];
-                        this.integratedExperiencesForTeacher = this.pdfData["Teacher-Led Instruction"]?.integrated_experiences || [];
-                        this.integratedExperiencesForStudent = this.pdfData["Student-Led Learning"]?.integrated_experiences || [];
+                        this.integratedExperiencesForGrade =
+                            this.pdfData["Grade"]?.integrated_experiences || [];
+                        this.integratedExperiencesForSubject =
+                            this.pdfData["Subject"]?.integrated_experiences ||
+                            [];
+                        this.integratedExperiencesForDuration =
+                            this.pdfData["Duration"]?.integrated_experiences ||
+                            [];
+                        this.integratedExperiencesForLesson =
+                            this.pdfData["Lesson Standards & Objectives"]
+                                ?.integrated_experiences || [];
+                        this.integratedExperiencesForMaterials =
+                            this.pdfData["Materials"]?.integrated_experiences ||
+                            [];
+                        this.integratedExperiencesForWarmUp =
+                            this.pdfData["Warm-Up"]?.integrated_experiences ||
+                            [];
+                        this.integratedExperiencesForTeacher =
+                            this.pdfData["Teacher-Led Instruction"]
+                                ?.integrated_experiences || [];
+                        this.integratedExperiencesForStudent =
+                            this.pdfData["Student-Led Learning"]
+                                ?.integrated_experiences || [];
+                        this.integratedExperiencesForWrapUp =
+                            this.pdfData["Wrap-Up Closure"]
+                                ?.integrated_experiences || [];
 
-                        this.titleForGrade = this.pdfData["Grade"]?.title || this.titleForGrade;
-                        this.titleForSubject = this.pdfData["Subject"]?.title || this.titleForSubject;
-                        this.titleForDuration = this.pdfData["Duration"]?.title || this.titleForDuration;
-                        this.titleForLesson = this.pdfData["Lesson Standards & Objectives"]?.title || this.titleForLesson;
-                        this.titleForMaterials = this.pdfData["Materials"]?.title || this.titleForMaterials;
-                        this.titleForWarmUp = this.pdfData["Warm-Up"]?.title || this.titleForWarmUp;
-                        this.titleForTeacher = this.pdfData["Teacher-Led Instruction"]?.title || this.titleForTeacher;
-                        this.titleForStudent = this.pdfData["Student-Led Learning"]?.title || this.titleForStudent;
+                        this.titleForGrade =
+                            this.pdfData["Grade"]?.title || this.titleForGrade;
+                        this.titleForSubject =
+                            this.pdfData["Subject"]?.title ||
+                            this.titleForSubject;
+                        this.titleForDuration =
+                            this.pdfData["Duration"]?.title ||
+                            this.titleForDuration;
+                        this.titleForLesson =
+                            this.pdfData["Lesson Standards & Objectives"]
+                                ?.title || this.titleForLesson;
+                        this.titleForMaterials =
+                            this.pdfData["Materials"]?.title ||
+                            this.titleForMaterials;
+                        this.titleForWarmUp =
+                            this.pdfData["Warm-Up"]?.title ||
+                            this.titleForWarmUp;
+                        this.titleForTeacher =
+                            this.pdfData["Teacher-Led Instruction"]?.title ||
+                            this.titleForTeacher;
+                        this.titleForStudent =
+                            this.pdfData["Student-Led Learning"]?.title ||
+                            this.titleForStudent;
+                        this.titleForWrapUp =
+                            this.pdfData["Wrap-Up Closure"]?.title ||
+                            this.titleForWrapUp;
 
-                        this.integratedExperiences = this.pdfData.integrated_experiences || "";
+                        this.integratedExperiences =
+                            this.pdfData.integrated_experiences || "";
 
-                        const fieldOrder = (this.pdfData.fieldOrder as string[]) || [];
-                        if ( !this.pdfData.fieldOrder || this.pdfData.fieldOrder.length === 0) 
-                        {
+                        const fieldOrder =
+                            (this.pdfData.fieldOrder as string[]) || [];
+                        if (
+                            !this.pdfData.fieldOrder ||
+                            this.pdfData.fieldOrder.length === 0
+                        ) {
                             this.setDefaultFieldOrder();
-                        } 
-                        else 
-                        {
-                            this.editableFields = fieldOrder.map((fieldKey) => ({
+                        } else {
+                            this.editableFields = fieldOrder.map(
+                                (fieldKey) => ({
                                     name: this.getFieldName(fieldKey),
                                     key: fieldKey,
                                     editing: false,
                                     editValue: "",
                                     labelEditing: false,
-                                    labelEditValue: this.pdfData[fieldKey]?.title || "Default Title",
+                                    labelEditValue:
+                                        this.pdfData[fieldKey]?.title ||
+                                        "Default Title",
                                     experiencesEditingIndex: -1, // Assuming -1 indicates no experience is being edited.
                                     experiencesEditValue: "",
                                 })
@@ -258,10 +321,17 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
 
                         this.initializeEditValues();
                         console.log("The ID is " + this.id);
-                        console.log( "The main topic is " + this.selectedMainTopic );
-                        console.log( "The sub topic is " + this.selectedSubTopic);
+                        console.log(
+                            "The main topic is " + this.selectedMainTopic
+                        );
+                        console.log(
+                            "The sub topic is " + this.selectedSubTopic
+                        );
                         console.log("The created date is " + this.created_at);
-                        console.log("The Integrated Experiences are: " + this.integratedExperiences);
+                        console.log(
+                            "The Integrated Experiences are: " +
+                                this.integratedExperiences
+                        );
                     }
                 })
                 .catch((err) =>
@@ -273,8 +343,11 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.timeEnd = new Date();
         let userIntData: any = [];
-        let duration = (this.timeEnd.valueOf() - this.timeStart.valueOf()) / 1000;
-        userIntData = JSON.parse(sessionStorage.getItem("userInteractionData") || "[]");
+        let duration =
+            (this.timeEnd.valueOf() - this.timeStart.valueOf()) / 1000;
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
         userIntData.push({
             Action: "Left",
             Target: "Display LP page",
@@ -287,7 +360,10 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             Result: "",
             Time: duration + " seconds",
         });
-        sessionStorage.setItem("userInteractionData",JSON.stringify(userIntData));
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     private setDefaultFieldOrder() {
@@ -300,7 +376,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             "Warm-Up",
             "Teacher-Led Instruction",
             "Student-Led Learning",
-            "Wrap-Up/Closure"
+            "Wrap-Up Closure",
         ];
 
         this.editableFields = defaultFieldOrder.map((fieldKey) => ({
@@ -317,44 +393,64 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
 
     private getFieldName(fieldKey: string): string {
         switch (fieldKey) {
-            case "Grade": return "Grade";
-            case "Subject": return "Subject";
-            case "Duration": return "Duration";
-            case "Lesson Standards & Objectives": return "Lesson Standards & Objectives";
-            case "Materials": return "Materials";
-            case "Warm-Up": return "Warm-Up";
-            case "Teacher-Led Instruction": return "Teacher-Led Instruction";
-            case "Student-Led Learning": return "Student-Led Learning";
-            case "Wrap-Up/Closure": return "Wrap-Up/Closure";
-            default: return "Unknown";
+            case "Grade":
+                return "Grade";
+            case "Subject":
+                return "Subject";
+            case "Duration":
+                return "Duration";
+            case "Lesson Standards & Objectives":
+                return "Lesson Standards & Objectives";
+            case "Materials":
+                return "Materials";
+            case "Warm-Up":
+                return "Warm-Up";
+            case "Teacher-Led Instruction":
+                return "Teacher-Led Instruction";
+            case "Student-Led Learning":
+                return "Student-Led Learning";
+            case "Wrap-Up Closure":
+                return "Wrap-Up Closure";
+            default:
+                return "Unknown";
         }
     }
 
     onBrowseExpClick() {
         let userIntData: any = [];
         let time = new Date();
-        userIntData = JSON.parse(sessionStorage.getItem("userInteractionData") || "[]");
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
         userIntData.push({
             Action: "Clicked",
             Target: "'Browse Experiences' button",
             Result: "Navigate to Experiences page",
             Time: time.toLocaleString(),
         });
-        sessionStorage.setItem("userInteractionData", JSON.stringify(userIntData));
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
         this.router.navigate(["/experience"]);
     }
 
     onFinalizeLPClick() {
         let userIntData: any = [];
         let time = new Date();
-        userIntData = JSON.parse(sessionStorage.getItem("userInteractionData") || "[]");
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
         userIntData.push({
             Action: "Clicked",
             Target: "'Finalize Lesson Plan' button",
             Result: "Navigate to Finalize LP page",
             Time: time.toLocaleString(),
         });
-        sessionStorage.setItem("userInteractionData", JSON.stringify(userIntData));
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
         this.router.navigate(["/finalize"]);
     }
 
@@ -376,13 +472,17 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
 
     enableExperienceEditing(field: any, index: any) {
         field.experiencesEditingIndex = index;
-        field.experiencesEditValue = this.pdfData[field.key]?.integrated_experiences[index];
+        field.experiencesEditValue =
+            this.pdfData[field.key]?.integrated_experiences[index];
     }
 
     submitEdit(field: any) {
         field.editing = false;
         // Update Firestore document
-        const updatedFieldData = { ...this.pdfData[field.key], content: field.editValue, };
+        const updatedFieldData = {
+            ...this.pdfData[field.key],
+            content: field.editValue,
+        };
 
         this.firestore
             .doc(`Documents/${this.id}`)
@@ -396,7 +496,10 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     submitLabelEdit(field: any) {
         field.labelEditing = false;
         // Update Firestore document
-        const updatedFieldData = {...this.pdfData[field.key], title: field.labelEditValue, };
+        const updatedFieldData = {
+            ...this.pdfData[field.key],
+            title: field.labelEditValue,
+        };
 
         this.firestore
             .doc(`Documents/${this.id}`)
@@ -410,12 +513,19 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     submitExperienceEdit(field: any) {
         field.experiencesEditingIndex = -1;
         // Update Firestore document
-        const updatedExperiences = [ ...this.pdfData[field.key]?.integrated_experiences, ];
-        updatedExperiences[field.experiencesEditingIndex] = field.experiencesEditValue;
+        const updatedExperiences = [
+            ...this.pdfData[field.key]?.integrated_experiences,
+        ];
+        updatedExperiences[field.experiencesEditingIndex] =
+            field.experiencesEditValue;
 
-        const updatedFieldData = { ...this.pdfData[field.key], integrated_experiences: updatedExperiences, };
+        const updatedFieldData = {
+            ...this.pdfData[field.key],
+            integrated_experiences: updatedExperiences,
+        };
 
-        this.firestore.doc(`Documents/${this.id}`)
+        this.firestore
+            .doc(`Documents/${this.id}`)
             .update({ [field.key]: updatedFieldData })
             .then(() => {
                 this.pdfData[field.key] = updatedFieldData;
@@ -448,11 +558,17 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         try {
             if (this.fileDownloadURL) {
                 // console.log("PDF-Text");
-                this.pdfText = await this.pdfReaderService.readPdf( this.fileDownloadURL);
+                this.pdfText = await this.pdfReaderService.readPdf(
+                    this.fileDownloadURL
+                );
                 console.log(this.pdfText);
             }
         } catch (error) {
-            console.error("Error reading the PDF:", error, JSON.stringify(error));
+            console.error(
+                "Error reading the PDF:",
+                error,
+                JSON.stringify(error)
+            );
         }
     }
 
@@ -465,7 +581,8 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     }
 
     addIntegratedExperiences() {
-        this.expIntegratedPDF.integrated_experiences = this.integratedExperiences;
+        this.expIntegratedPDF.integrated_experiences =
+            this.integratedExperiences;
         this.integrateExpService.addIntegratedExperience(this.expIntegratedPDF);
     }
 
@@ -489,11 +606,13 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             .then((doc) => {
                 if (doc && doc.exists) {
                     const data: any = doc.data();
-                    const existingFieldExperiences = data[field.key]?.integrated_experiences || [];
+                    const existingFieldExperiences =
+                        data[field.key]?.integrated_experiences || [];
                     existingFieldExperiences.push(description);
 
                     const updatePayload: { [key: string]: any } = {};
-                    updatePayload[`${field.key}.integrated_experiences`] = existingFieldExperiences;
+                    updatePayload[`${field.key}.integrated_experiences`] =
+                        existingFieldExperiences;
 
                     return this.firestore
                         .collection("Documents")
@@ -521,13 +640,15 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             .then((doc) => {
                 if (doc && doc.exists) {
                     const data: any = doc.data();
-                    const existingFieldExperiences = data[key]?.integrated_experiences || [];
+                    const existingFieldExperiences =
+                        data[key]?.integrated_experiences || [];
                     existingFieldExperiences.push(description);
 
                     console.log("Received Key:", key);
 
                     const updatePayload: { [key: string]: any } = {};
-                    updatePayload[`${key}.integrated_experiences`] = existingFieldExperiences;
+                    updatePayload[`${key}.integrated_experiences`] =
+                        existingFieldExperiences;
 
                     console.log("Update Payload:", updatePayload);
 
@@ -583,7 +704,9 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     onDrop(event: any, field: any) {
         let userIntData: any = [];
         let time = new Date();
-        userIntData = JSON.parse( sessionStorage.getItem("userInteractionData") || "[]" );
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
         userIntData.push({
             Action: "Added",
             Target: "Experience with title " + this.currentExperienceTitle,
@@ -614,12 +737,17 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             if (result) {
                 const containerName = result.trim();
 
-                if (this.editableFields.some(f => f.name === containerName)) {
-                    this.openAlertDialog("Error", "A container with this name already exists. Please choose a unique name.");
+                if (this.editableFields.some((f) => f.name === containerName)) {
+                    this.openAlertDialog(
+                        "Error",
+                        "A container with this name already exists. Please choose a unique name."
+                    );
                     return;
                 }
 
-                const index = this.editableFields.findIndex((f) => f.key === field.key);
+                const index = this.editableFields.findIndex(
+                    (f) => f.key === field.key
+                );
                 if (index === -1) return; // Field not found
 
                 const newField = {
@@ -641,34 +769,42 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                     integrated_experiences: [],
                 };
 
-                await this.addFieldtoFirebase(newContainerKey, newContainerData);
+                await this.addFieldtoFirebase(
+                    newContainerKey,
+                    newContainerData
+                );
                 // this.editableFields.splice(index + 1, 0, newField);
 
                 const newEditableFields = [...this.editableFields];
                 newEditableFields.splice(index + 1, 0, newField);
                 this.editableFields = newEditableFields;
-                    
+
                 this.cdRef.detectChanges();
 
-                try{
-                    const updatedfieldOrder = await this.updateFieldOrderInFirestore();
+                try {
+                    const updatedfieldOrder =
+                        await this.updateFieldOrderInFirestore();
                     console.log("Updated Field Order ->", updatedfieldOrder);
 
-                    this.editableFields = updatedfieldOrder.map((fieldKey: any) => ({
-                        name: this.getFieldName(fieldKey),
-                        key: fieldKey,
-                        editing: false,
-                        editValue: "",
-                        labelEditing: false,
-                        labelEditValue: this.pdfData[fieldKey]?.title || "Default Title",
-                        experiencesEditingIndex: -1, // Assuming -1 indicates no experience is being edited.
-                        experiencesEditValue: "",
-                    }));
+                    this.editableFields = updatedfieldOrder.map(
+                        (fieldKey: any) => ({
+                            name: this.getFieldName(fieldKey),
+                            key: fieldKey,
+                            editing: false,
+                            editValue: "",
+                            labelEditing: false,
+                            labelEditValue:
+                                this.pdfData[fieldKey]?.title ||
+                                "Default Title",
+                            experiencesEditingIndex: -1, // Assuming -1 indicates no experience is being edited.
+                            experiencesEditValue: "",
+                        })
+                    );
                     this.router.navigate(["/display"]);
-                }catch (error) {
+                } catch (error) {
                     console.error("Error while updating field order:", error);
                 }
-            this.cdRef.detectChanges();
+                this.cdRef.detectChanges();
             }
         });
     }
@@ -866,17 +1002,20 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         console.log("Update Field Order in FireStore ->", fieldOrder);
 
         return new Promise<string[]>(async (resolve, reject) => {
-            try{
+            try {
                 await this.firestore
                     .collection("Documents")
                     .doc(this.id)
-                    .update({ fieldOrder: fieldOrder })
+                    .update({ fieldOrder: fieldOrder });
 
                 console.log("Field order updated in Firestore"),
-                resolve(fieldOrder);
-            }catch(error) {
-                    console.error("Error updating field order in Firestore:", error)
-                    reject(error);
+                    resolve(fieldOrder);
+            } catch (error) {
+                console.error(
+                    "Error updating field order in Firestore:",
+                    error
+                );
+                reject(error);
             }
         });
     }
