@@ -125,6 +125,28 @@
         </div>
 
         <div class="mb-3 options-container flex-child">
+            <div class="search-keyword">
+                <mat-form-field appearance="outline" class="search-keyword">
+                    <mat-label>Search keyword</mat-label>
+                    <input
+                        type="text"
+                        matInput
+                        class="form-control"
+                        [(ngModel)]="keywordSearchTerm"
+                        (input)="filterExperiencesByKeyword()"
+                        (click)="onFilterByKeywordClick()"
+                    />
+                </mat-form-field>
+                <!-- <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="keywordSearchTerm"
+                    (input)="filterExperiencesByKeyword()"
+                    (click)="onFilterByKeywordClick()"
+                    placeholder="Search keyword"
+                /> -->
+            </div>
+
             <div class="search-student">
                 <mat-form-field appearance="outline" class="search-student">
                     <mat-label>Search student</mat-label>
@@ -144,28 +166,6 @@
                     (input)="filterExperiencesByStudent()"
                     (click)="onFilterByStudentClick()"
                     placeholder="Search student name"
-                /> -->
-            </div>
-
-            <div class="search-keyword">
-                <mat-form-field appearance="outline" class="search-keyword">
-                    <mat-label>Search experience</mat-label>
-                    <input
-                        type="text"
-                        matInput
-                        class="form-control"
-                        [(ngModel)]="keywordSearchTerm"
-                        (input)="filterExperiencesByKeyword()"
-                        (click)="onFilterByKeywordClick()"
-                    />
-                </mat-form-field>
-                <!-- <input
-                    type="text"
-                    class="form-control"
-                    [(ngModel)]="keywordSearchTerm"
-                    (input)="filterExperiencesByKeyword()"
-                    (click)="onFilterByKeywordClick()"
-                    placeholder="Search keyword"
                 /> -->
             </div>
 

@@ -805,7 +805,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             sessionStorage.getItem("userInteractionData") || "[]"
         );
         userIntData.push({
-            Action: "Hovered over",
+            Action: "Clicked on",
             Target: "Student: " + experience.student_name,
             Result: "Display student details",
             Time: time.toLocaleString(),
@@ -817,59 +817,6 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
         this.clickedExperience = experience;
         event.target.click();
-    }
-
-    onFilterByStudentClick() {
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Search Student' filter",
-            Result: "Filter experiences",
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-    }
-
-    filterExperiencesByStudent() {
-        if (!this.studentSearchTerm) {
-            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
-            return;
-        }
-
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Typed",
-            Target: "'Search Student' filter",
-            Result: this.studentSearchTerm,
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-
-        this.experiences = this.filteredExp.filter((value: Experience) =>
-            value.student_name
-                .toLowerCase()
-                .includes(this.studentSearchTerm.toLowerCase())
-        );
-
-        this.experiences.forEach((experience: any) => {
-            console.log(experience.student_name);
-        });
-
-        this.cdr.detectChanges();
     }
 
     onFilterByKeywordClick() {
@@ -927,6 +874,59 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 experience.experience_title,
                 experience.experience_description
             );
+        });
+
+        this.cdr.detectChanges();
+    }
+
+    onFilterByStudentClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Student' filter",
+            Result: "Filter experiences",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterExperiencesByStudent() {
+        if (!this.studentSearchTerm) {
+            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            return;
+        }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Search Student' filter",
+            Result: this.studentSearchTerm,
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.experiences = this.filteredExp.filter((value: Experience) =>
+            value.student_name
+                .toLowerCase()
+                .includes(this.studentSearchTerm.toLowerCase())
+        );
+
+        this.experiences.forEach((experience: any) => {
+            console.log(experience.student_name);
         });
 
         this.cdr.detectChanges();
