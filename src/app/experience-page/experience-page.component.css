@@ -103,6 +103,17 @@ html, body {
     text-align: left;
 }
 
+.student-name p a {
+    color: #0000FF;
+    font-size: 22px;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+}
+
+.student-name p:hover {
+    cursor: pointer;
+}
+
 .date-uploaded {
     width: 34%;
     border: 2px solid #000000;
