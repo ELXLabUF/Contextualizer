@@ -106,3 +106,7 @@ button {
     word-wrap: break-word;
     line-height: 30px;
 }
+
+.continue-button {
+    width: 15%;
+}
