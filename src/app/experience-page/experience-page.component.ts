@@ -35,6 +35,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     experienceDetails: any;
     experiences: any = [];
     filteredExp: any = [];
+    allExperiences: any = [];
     multipleIntegrate: any = [];
 
     clickedExperience: Experience = {
@@ -64,15 +65,49 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     id: string = "";
 
-    keywordSearchTerm!: string;
-    studentSearchTerm!: string;
+    keywordSearchTerm: string = "";
+    studentSearchTerm: string = "";
     // dateSearchTerm!: string;  // For normal HTML
     dateSearchTerm!: Date; // For mat-form-field mat-input mat-datepicker
     dateTerm!: string; // For mat-form-field mat-input mat-datepicker
     startDateSearchTerm!: Date;
     startDateTerm!: string;
-    endDateSearchTerm!: Date;
+    endDateSearchTerm: Date | null = null;
     endDateTerm!: string;
+
+    selectedFemale: boolean = false;
+    selectedMale: boolean = false;
+    selectedLastTestGradeA: boolean = false;
+    selectedLastTestGradeB: boolean = false;
+    selectedLastTestGradeC: boolean = false;
+    selectedLastTestGradeD: boolean = false;
+    selectedLastTestGradeF: boolean = false;
+    selectedOverallGradeA: boolean = false;
+    selectedOverallGradeB: boolean = false;
+    selectedOverallGradeC: boolean = false;
+    selectedOverallGradeD: boolean = false;
+    selectedOverallGradeF: boolean = false;
+    selectedADHD: boolean = false;
+    selectedAutism: boolean = false;
+    selectedDyslexia: boolean = false;
+    selectedDyscalculia: boolean = false;
+    selectedNone: boolean = false;
+    selectedAfricanAmerican: boolean = false;
+    selectedAsian: boolean = false;
+    selectedHispanic: boolean = false;
+    selectedWhite: boolean = false;
+    selected80to84: boolean = false;
+    selected85to89: boolean = false;
+    selected90to94: boolean = false;
+    selected95to99: boolean = false;
+    selected100: boolean = false;
+    selectedLow: boolean = false;
+    selectedMid: boolean = false;
+    selectedHigh: boolean = false;
+    sortOldToNew: boolean = false;
+    sortNewToOld: boolean = false;
+
+    selectedExperiences: number = 168;
 
     startNavigationFromExperiences: boolean = false;
 
@@ -218,6 +253,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             .subscribe((res: Experience[]) => {
                 this.experiences = res;
                 this.filteredExp = [...this.experiences];
+                this.allExperiences = [...this.experiences];
             });
     }
 
@@ -367,8 +403,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             return;
         }
 
-        console.log(this.selectedExperienceFile);
-        console.log(this.experienceLabelText);
+        // console.log(this.selectedExperienceFile);
+        // console.log(this.experienceLabelText);
     }
 
     onExperienceFileUpload() {
@@ -379,9 +415,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             alert(
                 this.selectedExperienceFile.name + " was successfully uploaded."
             );
-            console.log(
-                this.selectedExperienceFile.name + " was successfully uploaded."
-            );
+            // console.log(this.selectedExperienceFile.name + " was successfully uploaded.");
         }
 
         const storageRef = ref(
@@ -398,7 +432,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             (snapshot) => {
                 const progress =
                     (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log("Upload is " + progress + "% done");
+                // console.log("Upload is " + progress + "% done");
             },
             (error) => {
                 console.log(error.message);
@@ -497,8 +531,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             return;
         }
 
-        console.log(this.selectStudentFile);
-        console.log(this.studentLabelText);
+        // console.log(this.selectStudentFile);
+        // console.log(this.studentLabelText);
     }
 
     onStudentFileUpload() {
@@ -526,7 +560,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             (snapshot) => {
                 const progress =
                     (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log("Upload is " + progress + "% done");
+                // console.log("Upload is " + progress + "% done");
             },
             (error) => {
                 console.log(error.message);
@@ -721,18 +755,15 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                     this.router.navigate(["/instructions"]);
                 } else if (decision === true) {
                     // First, get the document ID.
-                    console.log("Clicked OK");
+                    // console.log("Clicked OK");
                     this.expLessonPlanService.currentDocumentId
                         .pipe(take(1))
                         .subscribe((id) => {
-                            console.log("Inside subscribe callback");
+                            // console.log("Inside subscribe callback");
                             if (id) {
                                 this.id = id;
-                                console.log("Document ID:", this.id);
-                                console.log(
-                                    "Experience to integrate:",
-                                    this.multipleIntegrate
-                                );
+                                // console.log("Document ID:", this.id);
+                                // console.log("Experience to integrate:", this.multipleIntegrate);
                                 // Now, we have the ID, so let's try to update Firestore.
                                 this.firestore
                                     .collection("Documents")
@@ -840,6 +871,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     filterExperiencesByKeyword() {
         if (!this.keywordSearchTerm) {
             this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            this.selectedExperiences = this.experiences.length;
             return;
         }
 
@@ -869,66 +901,14 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                     .includes(this.keywordSearchTerm.toLowerCase())
         );
 
-        this.experiences.forEach((experience: any) => {
-            console.log(
-                experience.experience_title,
-                experience.experience_description
-            );
-        });
+        // this.experiences.forEach((experience: any) => {
+        //     console.log(
+        //         experience.experience_title,
+        //         experience.experience_description
+        //     );
+        // });
 
-        this.cdr.detectChanges();
-    }
-
-    onFilterByStudentClick() {
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Search Student' filter",
-            Result: "Filter experiences",
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-    }
-
-    filterExperiencesByStudent() {
-        if (!this.studentSearchTerm) {
-            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
-            return;
-        }
-
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Typed",
-            Target: "'Search Student' filter",
-            Result: this.studentSearchTerm,
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-
-        this.experiences = this.filteredExp.filter((value: Experience) =>
-            value.student_name
-                .toLowerCase()
-                .includes(this.studentSearchTerm.toLowerCase())
-        );
-
-        this.experiences.forEach((experience: any) => {
-            console.log(experience.student_name);
-        });
-
+        this.selectedExperiences = this.experiences.length;
         this.cdr.detectChanges();
     }
 
@@ -943,58 +923,60 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         return formattedDateTerm;
     }
 
-    onFilterByDateClick() {
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Search Date' filter",
-            Result: "Filter experiences",
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-    }
+    // onFilterByDateClick() {
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push({
+    //         Action: "Clicked",
+    //         Target: "'Search Date' filter",
+    //         Result: "Filter experiences",
+    //         Time: time.toLocaleString(),
+    //     });
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
+    // }
 
-    filterExperiencesByDate() {
-        if (!this.dateSearchTerm) {
-            this.experiences = [...this.filteredExp]; // restore original list when search is cleared
-            return;
-        }
+    // filterExperiencesByDate() {
+    //     if (!this.dateSearchTerm) {
+    //         this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+    //         this.selectedExperiences = this.experiences.length;
+    //         return;
+    //     }
 
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Typed",
-            Target: "'Search Date' filter",
-            Result: this.dateSearchTerm,
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push({
+    //         Action: "Typed",
+    //         Target: "'Search Date' filter",
+    //         Result: this.dateSearchTerm,
+    //         Time: time.toLocaleString(),
+    //     });
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
 
-        this.dateTerm = this.changeDateFormat(this.dateSearchTerm); // For mat-form-field mat-input mat-datepicker
+    //     this.dateTerm = this.changeDateFormat(this.dateSearchTerm); // For mat-form-field mat-input mat-datepicker
 
-        this.experiences = this.filteredExp.filter((value: Experience) =>
-            value.date.includes(this.dateTerm)
-        );
+    //     this.experiences = this.filteredExp.filter((value: Experience) =>
+    //         value.date.includes(this.dateTerm)
+    //     );
 
-        this.experiences.forEach((experience: any) => {
-            console.log(experience.date);
-        });
+    //     // this.experiences.forEach((experience: any) => {
+    //     //     console.log(experience.date);
+    //     // });
 
-        this.cdr.detectChanges();
-    }
+    //     this.selectedExperiences = this.experiences.length;
+    //     this.cdr.detectChanges();
+    // }
 
     onFilterByDateRangeClick() {
         let userIntData: any = [];
@@ -1015,8 +997,9 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     }
 
     filterExperiencesByDateRange() {
-        if (!this.startDateSearchTerm || !this.endDateSearchTerm) {
+        if (!this.startDateSearchTerm) {
             this.experiences = [...this.filteredExp]; // restore original list when search is cleared
+            this.selectedExperiences = this.experiences.length;
             return;
         }
 
@@ -1044,7 +1027,12 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
         // Change format of start and end dates
         this.startDateTerm = this.changeDateFormat(this.startDateSearchTerm);
-        this.endDateTerm = this.changeDateFormat(this.endDateSearchTerm);
+        this.endDateSearchTerm === null
+            ? this.startDateSearchTerm
+            : this.endDateSearchTerm;
+        this.endDateTerm = this.changeDateFormat(
+            this.endDateSearchTerm || this.startDateSearchTerm
+        );
 
         this.experiences = this.filteredExp.filter(
             (value: Experience) =>
@@ -1052,16 +1040,35 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 value.date <= this.endDateTerm
         );
 
-        this.experiences.forEach((experience: any) => {
-            console.log(experience.date);
-        });
+        // this.experiences.forEach((experience: any) => {
+        //     console.log(experience.date);
+        // });
 
+        this.selectedExperiences = this.experiences.length;
         this.cdr.detectChanges();
     }
 
-    filterExperiencesByStudentGender(event: any): void {
-        if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp];
+    onFilterByStudentClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Search Student' filter",
+            Result: "Filter experiences",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterExperiencesByStudent() {
+        if (!this.studentSearchTerm) {
+            // this.experiences = [...this.filteredExp]; // restore original list when search is cleared
             return;
         }
 
@@ -1071,12 +1078,9 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             sessionStorage.getItem("userInteractionData") || "[]"
         );
         userIntData.push({
-            Action: "Clicked",
-            Target: "'Search Student Gender' filter",
-            Result:
-                "Select value(s) " +
-                event[0] +
-                (event[1] ? " and " + event[1] : ""),
+            Action: "Typed",
+            Target: "'Search Student' filter",
+            Result: this.studentSearchTerm,
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1084,434 +1088,808 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
 
-        const containsFemale = event.some(
-            (element: any) => element === "female"
-        );
-        const containsMale = event.some((element: any) => element === "male");
+        // this.experiences = this.filteredExp.filter((value: Experience) =>
+        //     value.student_name
+        //         .toLowerCase()
+        //         .includes(this.studentSearchTerm.toLowerCase())
+        // );
 
-        this.experiences = this.filteredExp.filter(
-            (value: Experience) =>
-                value.student_data.student_gender ===
-                    (containsFemale ? "F" : "") ||
-                value.student_data.student_gender === (containsMale ? "M" : "")
-        );
-        this.cdr.detectChanges();
+        // this.experiences.forEach((experience: any) => {
+        //     console.log(experience.student_name);
+        // });
+
+        // this.cdr.detectChanges();
     }
 
-    filterExperiencesByStudentLastTestGrade(event: any): void {
-        if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp];
-            return;
-        }
-
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Search Student Last Test Grade' filter",
-            Result:
-                "Select value(s) " +
-                event[0] +
-                (event[1] ? " and " + event[1] : "") +
-                (event[2] ? " and " + event[2] : "") +
-                (event[3] ? " and " + event[3] : "") +
-                (event[4] ? " and " + event[4] : ""),
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-
-        const containsGradeA = event.some(
-            (element: any) => element === "gradeA"
-        );
-        const containsGradeB = event.some(
-            (element: any) => element === "gradeB"
-        );
-        const containsGradeC = event.some(
-            (element: any) => element === "gradeC"
-        );
-        const containsGradeD = event.some(
-            (element: any) => element === "gradeD"
-        );
-        const containsGradeF = event.some(
-            (element: any) => element === "gradeF"
-        );
-
-        this.experiences = this.filteredExp.filter(
-            (value: Experience) =>
-                value.student_data.student_last_test_grade ===
-                    (containsGradeA ? "A" : "") ||
-                value.student_data.student_last_test_grade ===
-                    (containsGradeB ? "B" : "") ||
-                value.student_data.student_last_test_grade ===
-                    (containsGradeC ? "C" : "") ||
-                value.student_data.student_last_test_grade ===
-                    (containsGradeD ? "D" : "") ||
-                value.student_data.student_last_test_grade ===
-                    (containsGradeF ? "F" : "")
-        );
-        this.cdr.detectChanges();
+    filterByGenderFemale(checked: boolean) {
+        this.selectedFemale = checked;
     }
 
-    filterExperiencesByStudentTable(event: any): void {
-        if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp];
-            return;
-        }
-
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Search Student Table' filter",
-            Result:
-                "Select value(s) " +
-                event[0] +
-                (event[1] ? " and " + event[1] : "") +
-                (event[2] ? " and " + event[2] : "") +
-                (event[3] ? " and " + event[3] : "") +
-                (event[4] ? " and " + event[4] : ""),
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-
-        const containsBlue = event.some((element: any) => element === "blue");
-        const containsGreen = event.some((element: any) => element === "green");
-        const containsOrange = event.some(
-            (element: any) => element === "orange"
-        );
-        const containsPink = event.some((element: any) => element === "pink");
-        const containsPurple = event.some(
-            (element: any) => element === "purple"
-        );
-
-        this.experiences = this.filteredExp.filter(
-            (value: Experience) =>
-                value.student_data.student_table ===
-                    (containsBlue ? "Blue" : "") ||
-                value.student_data.student_table ===
-                    (containsGreen ? "Green" : "") ||
-                value.student_data.student_table ===
-                    (containsOrange ? "Orange" : "") ||
-                value.student_data.student_table ===
-                    (containsPink ? "Pink" : "") ||
-                value.student_data.student_table ===
-                    (containsPurple ? "Purple" : "")
-        );
-        this.cdr.detectChanges();
+    filterByGenderMale(checked: boolean) {
+        this.selectedMale = checked;
     }
 
-    filterExperiencesByStudentOverallPerformance(event: any): void {
-        if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp];
-            return;
-        }
-
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Search Student Overall Performance' filter",
-            Result:
-                "Select value(s) " +
-                event[0] +
-                (event[1] ? " and " + event[1] : "") +
-                (event[2] ? " and " + event[2] : "") +
-                (event[3] ? " and " + event[3] : "") +
-                (event[4] ? " and " + event[4] : ""),
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-
-        const containsGradeA = event.some(
-            (element: any) => element === "gradeA"
-        );
-        const containsGradeB = event.some(
-            (element: any) => element === "gradeB"
-        );
-        const containsGradeC = event.some(
-            (element: any) => element === "gradeC"
-        );
-        const containsGradeD = event.some(
-            (element: any) => element === "gradeD"
-        );
-        const containsGradeF = event.some(
-            (element: any) => element === "gradeF"
-        );
-
-        this.experiences = this.filteredExp.filter(
-            (value: Experience) =>
-                value.student_data.student_overall_performance ===
-                    (containsGradeA ? "A" : "") ||
-                value.student_data.student_overall_performance ===
-                    (containsGradeB ? "B" : "") ||
-                value.student_data.student_overall_performance ===
-                    (containsGradeC ? "C" : "") ||
-                value.student_data.student_overall_performance ===
-                    (containsGradeD ? "D" : "") ||
-                value.student_data.student_overall_performance ===
-                    (containsGradeF ? "F" : "")
-        );
-        this.cdr.detectChanges();
+    filterByLastTestGradeA(checked: boolean) {
+        this.selectedLastTestGradeA = checked;
     }
 
-    filterExperiencesByStudentLearningDisability(event: any): void {
-        if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp];
-            return;
-        }
-
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Search Student Learning Disability' filter",
-            Result:
-                "Select value(s) " +
-                event[0] +
-                (event[1] ? " and " + event[1] : "") +
-                (event[2] ? " and " + event[2] : "") +
-                (event[3] ? " and " + event[3] : "") +
-                (event[4] ? " and " + event[4] : ""),
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-
-        const containsADHD = event.some((element: any) => element === "adhd");
-        const containsAutism = event.some(
-            (element: any) => element === "autism"
-        );
-        const containsDyslexia = event.some(
-            (element: any) => element === "dyslexia"
-        );
-        const containsDyscalculiaD = event.some(
-            (element: any) => element === "dyscalculia"
-        );
-        const containsNone = event.some((element: any) => element === "none");
-
-        this.experiences = this.filteredExp.filter(
-            (value: Experience) =>
-                value.student_data.student_learning_disability ===
-                    (containsADHD ? "ADHD" : "") ||
-                value.student_data.student_learning_disability ===
-                    (containsAutism ? "Autism" : "") ||
-                value.student_data.student_learning_disability ===
-                    (containsDyslexia ? "Dyslexia" : "") ||
-                value.student_data.student_learning_disability ===
-                    (containsDyscalculiaD ? "Dyscalculia" : "") ||
-                value.student_data.student_learning_disability ===
-                    (containsNone ? "None reported" : "")
-        );
-        this.cdr.detectChanges();
+    filterByLastTestGradeB(checked: boolean) {
+        this.selectedLastTestGradeB = checked;
     }
 
-    filterExperiencesByStudentRaceOrEthnicity(event: any): void {
-        if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp];
-            return;
-        }
-
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Search Student Race/Ethnicity' filter",
-            Result:
-                "Select value(s) " +
-                event[0] +
-                (event[1] ? " and " + event[1] : "") +
-                (event[2] ? " and " + event[2] : "") +
-                (event[3] ? " and " + event[3] : ""),
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-
-        const containsAfricanAmerican = event.some(
-            (element: any) => element === "african-american"
-        );
-        const containsAsian = event.some((element: any) => element === "asian");
-        const containsHispanic = event.some(
-            (element: any) => element === "hispanic"
-        );
-        const containsWhite = event.some((element: any) => element === "white");
-
-        this.experiences = this.filteredExp.filter(
-            (value: Experience) =>
-                value.student_data.student_race_ethnicity ===
-                    (containsAfricanAmerican ? "African-American" : "") ||
-                value.student_data.student_race_ethnicity ===
-                    (containsAsian ? "Asian" : "") ||
-                value.student_data.student_race_ethnicity ===
-                    (containsHispanic ? "Hispanic" : "") ||
-                value.student_data.student_race_ethnicity ===
-                    (containsWhite ? "White" : "")
-        );
-        this.cdr.detectChanges();
+    filterByLastTestGradeC(checked: boolean) {
+        this.selectedLastTestGradeC = checked;
     }
 
-    filterExperiencesByStudentAttendance(event: any): void {
-        if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp];
-            return;
-        }
-
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Search Student Attendance' filter",
-            Result:
-                "Select value(s) " +
-                event[0] +
-                (event[1] ? " and " + event[1] : "") +
-                (event[2] ? " and " + event[2] : "") +
-                (event[3] ? " and " + event[3] : "") +
-                (event[4] ? " and " + event[4] : "") +
-                (event[5] ? " and " + event[5] : "") +
-                (event[6] ? " and " + event[6] : "") +
-                (event[7] ? " and " + event[7] : "") +
-                (event[8] ? " and " + event[8] : ""),
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-
-        const contains80to84 = event.some(
-            (element: any) => element === "80-84"
-        );
-        const containsAbove80 = event.some(
-            (element: any) => element === "above80"
-        );
-        const contains85to89 = event.some(
-            (element: any) => element === "85-89"
-        );
-        const containsAbove85 = event.some(
-            (element: any) => element === "above85"
-        );
-        const contains90to94 = event.some(
-            (element: any) => element === "90-94"
-        );
-        const containsAbove90 = event.some(
-            (element: any) => element === "above90"
-        );
-        const contains95to99 = event.some(
-            (element: any) => element === "95-99"
-        );
-        const containsAbove95 = event.some(
-            (element: any) => element === "above95"
-        );
-        const contains100 = event.some((element: any) => element === "100");
-
-        this.experiences = this.filteredExp.filter(
-            (value: Experience) =>
-                (contains80to84
-                    ? parseInt(value.student_data.student_attendance) >= 80 &&
-                      parseInt(value.student_data.student_attendance) <= 84
-                    : null) ||
-                (containsAbove80
-                    ? parseInt(value.student_data.student_attendance) >= 80
-                    : null) ||
-                (contains85to89
-                    ? parseInt(value.student_data.student_attendance) >= 85 &&
-                      parseInt(value.student_data.student_attendance) <= 89
-                    : null) ||
-                (containsAbove85
-                    ? parseInt(value.student_data.student_attendance) >= 85
-                    : null) ||
-                (contains90to94
-                    ? parseInt(value.student_data.student_attendance) >= 90 &&
-                      parseInt(value.student_data.student_attendance) <= 94
-                    : null) ||
-                (containsAbove90
-                    ? parseInt(value.student_data.student_attendance) >= 90
-                    : null) ||
-                (contains95to99
-                    ? parseInt(value.student_data.student_attendance) >= 95 &&
-                      parseInt(value.student_data.student_attendance) <= 99
-                    : null) ||
-                (containsAbove95
-                    ? parseInt(value.student_data.student_attendance) >= 95
-                    : null) ||
-                (contains100
-                    ? parseInt(value.student_data.student_attendance) === 100
-                    : null)
-        );
-        this.cdr.detectChanges();
+    filterByLastTestGradeD(checked: boolean) {
+        this.selectedLastTestGradeD = checked;
     }
 
-    filterExperiencesByStudentClassParticipation(event: any): void {
-        if (!event || event.length === 0) {
-            this.experiences = [...this.filteredExp];
-            return;
+    filterByLastTestGradeF(checked: boolean) {
+        this.selectedLastTestGradeF = checked;
+    }
+
+    filterByOverallGradeA(checked: boolean) {
+        this.selectedOverallGradeA = checked;
+    }
+
+    filterByOverallGradeB(checked: boolean) {
+        this.selectedOverallGradeB = checked;
+    }
+
+    filterByOverallGradeC(checked: boolean) {
+        this.selectedOverallGradeC = checked;
+    }
+
+    filterByOverallGradeD(checked: boolean) {
+        this.selectedOverallGradeD = checked;
+    }
+
+    filterByOverallGradeF(checked: boolean) {
+        this.selectedOverallGradeF = checked;
+    }
+
+    filterByADHD(checked: boolean) {
+        this.selectedADHD = checked;
+    }
+
+    filterByAutism(checked: boolean) {
+        this.selectedAutism = checked;
+    }
+
+    filterByDyslexia(checked: boolean) {
+        this.selectedDyslexia = checked;
+    }
+
+    filterByDyscalculia(checked: boolean) {
+        this.selectedDyscalculia = checked;
+    }
+
+    filterByNone(checked: boolean) {
+        this.selectedNone = checked;
+    }
+
+    filterByAfricanAmerican(checked: boolean) {
+        this.selectedAfricanAmerican = checked;
+    }
+
+    filterByAsian(checked: boolean) {
+        this.selectedAsian = checked;
+    }
+
+    filterByHispanic(checked: boolean) {
+        this.selectedHispanic = checked;
+    }
+
+    filterByWhite(checked: boolean) {
+        this.selectedWhite = checked;
+    }
+
+    filterBy80to84(checked: boolean) {
+        this.selected80to84 = checked;
+    }
+
+    filterBy85to89(checked: boolean) {
+        this.selected85to89 = checked;
+    }
+
+    filterBy90to94(checked: boolean) {
+        this.selected90to94 = checked;
+    }
+
+    filterBy95to99(checked: boolean) {
+        this.selected95to99 = checked;
+    }
+
+    filterBy100(checked: boolean) {
+        this.selected100 = checked;
+    }
+
+    filterByLow(checked: boolean) {
+        this.selectedLow = checked;
+    }
+
+    filterByMid(checked: boolean) {
+        this.selectedMid = checked;
+    }
+
+    filterByHigh(checked: boolean) {
+        this.selectedHigh = checked;
+    }
+
+    filterByTimeAscending(event: any) {
+        event.value === "timeOldest"
+            ? (this.sortOldToNew = true)
+            : (this.sortOldToNew = false);
+    }
+
+    filterByTimeDescending(event: any) {
+        event.value === "timeNewest"
+            ? (this.sortNewToOld = true)
+            : (this.sortNewToOld = false);
+    }
+
+    // filterExperiencesByStudentGender(event: any): void {
+    //     if (!event || event.length === 0) {
+    //         // this.experiences = [...this.filteredExp];
+    //         this.containsFemale = false;
+    //         this.containsMale = false;
+    //         return;
+    //     }
+
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push({
+    //         Action: "Clicked",
+    //         Target: "'Search Student Gender' filter",
+    //         Result:
+    //             "Select value(s) " +
+    //             event[0] +
+    //             (event[1] ? " and " + event[1] : ""),
+    //         Time: time.toLocaleString(),
+    //     });
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
+
+    //     this.containsFemale = event.some(
+    //         (element: any) => element === "female"
+    //     );
+    //     this.containsMale = event.some((element: any) => element === "male");
+
+    //     // this.experiences = this.filteredExp.filter(
+    //     //     (value: Experience) =>
+    //     //         value.student_data.student_gender ===
+    //     //             (containsFemale ? "F" : "") ||
+    //     //         value.student_data.student_gender === (containsMale ? "M" : "")
+    //     // );
+    //     // this.cdr.detectChanges();
+    // }
+
+    // filterExperiencesByStudentLastTestGrade(event: any): void {
+    //     if (!event || event.length === 0) {
+    //         // this.experiences = [...this.filteredExp];
+    //         this.containsLastTestGradeA = false;
+    //         this.containsLastTestGradeB = false;
+    //         this.containsLastTestGradeC = false;
+    //         this.containsLastTestGradeD = false;
+    //         this.containsLastTestGradeF = false;
+    //         return;
+    //     }
+
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push({
+    //         Action: "Clicked",
+    //         Target: "'Search Student Last Test Grade' filter",
+    //         Result:
+    //             "Select value(s) " +
+    //             event[0] +
+    //             (event[1] ? " and " + event[1] : "") +
+    //             (event[2] ? " and " + event[2] : "") +
+    //             (event[3] ? " and " + event[3] : "") +
+    //             (event[4] ? " and " + event[4] : ""),
+    //         Time: time.toLocaleString(),
+    //     });
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
+
+    //     this.containsLastTestGradeA = event.some(
+    //         (element: any) => element === "lastTestGradeA"
+    //     );
+    //     this.containsLastTestGradeB = event.some(
+    //         (element: any) => element === "lastTestGradeB"
+    //     );
+    //     this.containsLastTestGradeC = event.some(
+    //         (element: any) => element === "lastTestGradeC"
+    //     );
+    //     this.containsLastTestGradeD = event.some(
+    //         (element: any) => element === "lastTestGradeD"
+    //     );
+    //     this.containsLastTestGradeF = event.some(
+    //         (element: any) => element === "lastTestGradeF"
+    //     );
+
+    //     // this.experiences = this.filteredExp.filter(
+    //     //     (value: Experience) =>
+    //     //         value.student_data.student_last_test_grade ===
+    //     //             (containsGradeA ? "A" : "") ||
+    //     //         value.student_data.student_last_test_grade ===
+    //     //             (containsGradeB ? "B" : "") ||
+    //     //         value.student_data.student_last_test_grade ===
+    //     //             (containsGradeC ? "C" : "") ||
+    //     //         value.student_data.student_last_test_grade ===
+    //     //             (containsGradeD ? "D" : "") ||
+    //     //         value.student_data.student_last_test_grade ===
+    //     //             (containsGradeF ? "F" : "")
+    //     // );
+    //     // this.cdr.detectChanges();
+    // }
+
+    // filterExperiencesByStudentTable(event: any): void {
+    //     if (!event || event.length === 0) {
+    //         this.experiences = [...this.filteredExp];
+    //         return;
+    //     }
+
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push({
+    //         Action: "Clicked",
+    //         Target: "'Search Student Table' filter",
+    //         Result:
+    //             "Select value(s) " +
+    //             event[0] +
+    //             (event[1] ? " and " + event[1] : "") +
+    //             (event[2] ? " and " + event[2] : "") +
+    //             (event[3] ? " and " + event[3] : "") +
+    //             (event[4] ? " and " + event[4] : ""),
+    //         Time: time.toLocaleString(),
+    //     });
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
+
+    //     const containsBlue = event.some((element: any) => element === "blue");
+    //     const containsGreen = event.some((element: any) => element === "green");
+    //     const containsOrange = event.some(
+    //         (element: any) => element === "orange"
+    //     );
+    //     const containsPink = event.some((element: any) => element === "pink");
+    //     const containsPurple = event.some(
+    //         (element: any) => element === "purple"
+    //     );
+
+    //     this.experiences = this.filteredExp.filter(
+    //         (value: Experience) =>
+    //             value.student_data.student_table ===
+    //                 (containsBlue ? "Blue" : "") ||
+    //             value.student_data.student_table ===
+    //                 (containsGreen ? "Green" : "") ||
+    //             value.student_data.student_table ===
+    //                 (containsOrange ? "Orange" : "") ||
+    //             value.student_data.student_table ===
+    //                 (containsPink ? "Pink" : "") ||
+    //             value.student_data.student_table ===
+    //                 (containsPurple ? "Purple" : "")
+    //     );
+    //     this.cdr.detectChanges();
+    // }
+
+    // filterExperiencesByStudentOverallPerformance(event: any): void {
+    //     if (!event || event.length === 0) {
+    //         // this.experiences = [...this.filteredExp];
+    //         this.containsOverallGradeA = false;
+    //         this.containsOverallGradeB = false;
+    //         this.containsOverallGradeC = false;
+    //         this.containsOverallGradeD = false;
+    //         this.containsOverallGradeF = false;
+    //         return;
+    //     }
+
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push({
+    //         Action: "Clicked",
+    //         Target: "'Search Student Overall Performance' filter",
+    //         Result:
+    //             "Select value(s) " +
+    //             event[0] +
+    //             (event[1] ? " and " + event[1] : "") +
+    //             (event[2] ? " and " + event[2] : "") +
+    //             (event[3] ? " and " + event[3] : "") +
+    //             (event[4] ? " and " + event[4] : ""),
+    //         Time: time.toLocaleString(),
+    //     });
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
+
+    //     this.containsOverallGradeA = event.some(
+    //         (element: any) => element === "overallGradeA"
+    //     );
+    //     this.containsOverallGradeB = event.some(
+    //         (element: any) => element === "overallGradeB"
+    //     );
+    //     this.containsOverallGradeC = event.some(
+    //         (element: any) => element === "overallGradeC"
+    //     );
+    //     this.containsOverallGradeD = event.some(
+    //         (element: any) => element === "overallGradeD"
+    //     );
+    //     this.containsOverallGradeF = event.some(
+    //         (element: any) => element === "overallGradeF"
+    //     );
+
+    //     // this.experiences = this.filteredExp.filter(
+    //     //     (value: Experience) =>
+    //     //         value.student_data.student_overall_performance ===
+    //     //             (containsGradeA ? "A" : "") ||
+    //     //         value.student_data.student_overall_performance ===
+    //     //             (containsGradeB ? "B" : "") ||
+    //     //         value.student_data.student_overall_performance ===
+    //     //             (containsGradeC ? "C" : "") ||
+    //     //         value.student_data.student_overall_performance ===
+    //     //             (containsGradeD ? "D" : "") ||
+    //     //         value.student_data.student_overall_performance ===
+    //     //             (containsGradeF ? "F" : "")
+    //     // );
+    //     // this.cdr.detectChanges();
+    // }
+
+    // filterExperiencesByStudentLearningDisability(event: any): void {
+    //     if (!event || event.length === 0) {
+    //         // this.experiences = [...this.filteredExp];
+    //         this.containsADHD = false;
+    //         this.containsAutism = false;
+    //         this.containsDyslexia = false;
+    //         this.containsDyscalculia = false;
+    //         this.containsNone = false;
+    //         return;
+    //     }
+
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push({
+    //         Action: "Clicked",
+    //         Target: "'Search Student Learning Disability' filter",
+    //         Result:
+    //             "Select value(s) " +
+    //             event[0] +
+    //             (event[1] ? " and " + event[1] : "") +
+    //             (event[2] ? " and " + event[2] : "") +
+    //             (event[3] ? " and " + event[3] : "") +
+    //             (event[4] ? " and " + event[4] : ""),
+    //         Time: time.toLocaleString(),
+    //     });
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
+
+    //     this.containsADHD = event.some((element: any) => element === "adhd");
+    //     this.containsAutism = event.some(
+    //         (element: any) => element === "autism"
+    //     );
+    //     this.containsDyslexia = event.some(
+    //         (element: any) => element === "dyslexia"
+    //     );
+    //     this.containsDyscalculia = event.some(
+    //         (element: any) => element === "dyscalculia"
+    //     );
+    //     this.containsNone = event.some((element: any) => element === "none");
+
+    //     // this.experiences = this.filteredExp.filter(
+    //     //     (value: Experience) =>
+    //     //         value.student_data.student_learning_disability ===
+    //     //             (containsADHD ? "ADHD" : "") ||
+    //     //         value.student_data.student_learning_disability ===
+    //     //             (containsAutism ? "Autism" : "") ||
+    //     //         value.student_data.student_learning_disability ===
+    //     //             (containsDyslexia ? "Dyslexia" : "") ||
+    //     //         value.student_data.student_learning_disability ===
+    //     //             (containsDyscalculia ? "Dyscalculia" : "") ||
+    //     //         value.student_data.student_learning_disability ===
+    //     //             (containsNone ? "None reported" : "")
+    //     // );
+    //     // this.cdr.detectChanges();
+    // }
+
+    // filterExperiencesByStudentRaceOrEthnicity(event: any): void {
+    //     if (!event || event.length === 0) {
+    //         // this.experiences = [...this.filteredExp];
+    //         this.containsAfricanAmerican = false;
+    //         this.containsAsian = false;
+    //         this.containsHispanic = false;
+    //         this.containsWhite = false;
+    //         return;
+    //     }
+
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push({
+    //         Action: "Clicked",
+    //         Target: "'Search Student Race/Ethnicity' filter",
+    //         Result:
+    //             "Select value(s) " +
+    //             event[0] +
+    //             (event[1] ? " and " + event[1] : "") +
+    //             (event[2] ? " and " + event[2] : "") +
+    //             (event[3] ? " and " + event[3] : ""),
+    //         Time: time.toLocaleString(),
+    //     });
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
+
+    //     this.containsAfricanAmerican = event.some(
+    //         (element: any) => element === "african-american"
+    //     );
+    //     this.containsAsian = event.some((element: any) => element === "asian");
+    //     this.containsHispanic = event.some(
+    //         (element: any) => element === "hispanic"
+    //     );
+    //     this.containsWhite = event.some((element: any) => element === "white");
+
+    //     // this.experiences = this.filteredExp.filter(
+    //     //     (value: Experience) =>
+    //     //         value.student_data.student_race_ethnicity ===
+    //     //             (containsAfricanAmerican ? "African-American" : "") ||
+    //     //         value.student_data.student_race_ethnicity ===
+    //     //             (containsAsian ? "Asian" : "") ||
+    //     //         value.student_data.student_race_ethnicity ===
+    //     //             (containsHispanic ? "Hispanic" : "") ||
+    //     //         value.student_data.student_race_ethnicity ===
+    //     //             (containsWhite ? "White" : "")
+    //     // );
+    //     // this.cdr.detectChanges();
+    // }
+
+    // filterExperiencesByStudentAttendance(event: any): void {
+    //     if (!event || event.length === 0) {
+    //         // this.experiences = [...this.filteredExp];
+    //         this.contains80to84 = false;
+    //         this.contains85to89 = false;
+    //         this.contains90to94 = false;
+    //         this.contains95to99 = false;
+    //         this.contains100 = false;
+    //         return;
+    //     }
+
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push({
+    //         Action: "Clicked",
+    //         Target: "'Search Student Attendance' filter",
+    //         Result:
+    //             "Select value(s) " +
+    //             event[0] +
+    //             (event[1] ? " and " + event[1] : "") +
+    //             (event[2] ? " and " + event[2] : "") +
+    //             (event[3] ? " and " + event[3] : "") +
+    //             (event[4] ? " and " + event[4] : "") +
+    //             (event[5] ? " and " + event[5] : ""),
+    //         // + (event[6] ? " and " + event[6] : "") +
+    //         // (event[7] ? " and " + event[7] : "") +
+    //         // (event[8] ? " and " + event[8] : ""),
+    //         Time: time.toLocaleString(),
+    //     });
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
+
+    //     this.contains80to84 = event.some((element: any) => element === "80-84");
+    //     // const containsAbove80 = event.some(
+    //     //     (element: any) => element === "above80"
+    //     // );
+    //     this.contains85to89 = event.some((element: any) => element === "85-89");
+    //     // const containsAbove85 = event.some(
+    //     //     (element: any) => element === "above85"
+    //     // );
+    //     this.contains90to94 = event.some((element: any) => element === "90-94");
+    //     // const containsAbove90 = event.some(
+    //     //     (element: any) => element === "above90"
+    //     // );
+    //     this.contains95to99 = event.some((element: any) => element === "95-99");
+    //     // const containsAbove95 = event.some(
+    //     //     (element: any) => element === "above95"
+    //     // );
+    //     this.contains100 = event.some((element: any) => element === "100");
+
+    //     // this.experiences = this.filteredExp.filter(
+    //     //     (value: Experience) =>
+    //     //         (contains80to84
+    //     //             ? parseInt(value.student_data.student_attendance) >= 80 &&
+    //     //               parseInt(value.student_data.student_attendance) <= 84
+    //     //             : null) ||
+    //     //         // (containsAbove80
+    //     //         //     ? parseInt(value.student_data.student_attendance) >= 80
+    //     //         //     : null) ||
+    //     //         (contains85to89
+    //     //             ? parseInt(value.student_data.student_attendance) >= 85 &&
+    //     //               parseInt(value.student_data.student_attendance) <= 89
+    //     //             : null) ||
+    //     //         // (containsAbove85
+    //     //         //     ? parseInt(value.student_data.student_attendance) >= 85
+    //     //         //     : null) ||
+    //     //         (contains90to94
+    //     //             ? parseInt(value.student_data.student_attendance) >= 90 &&
+    //     //               parseInt(value.student_data.student_attendance) <= 94
+    //     //             : null) ||
+    //     //         // (containsAbove90
+    //     //         //     ? parseInt(value.student_data.student_attendance) >= 90
+    //     //         //     : null) ||
+    //     //         (contains95to99
+    //     //             ? parseInt(value.student_data.student_attendance) >= 95 &&
+    //     //               parseInt(value.student_data.student_attendance) <= 99
+    //     //             : null) ||
+    //     //         // (containsAbove95
+    //     //         //     ? parseInt(value.student_data.student_attendance) >= 95
+    //     //         //     : null) ||
+    //     //         (contains100
+    //     //             ? parseInt(value.student_data.student_attendance) === 100
+    //     //             : null)
+    //     // );
+    //     // this.cdr.detectChanges();
+    // }
+
+    // filterExperiencesByStudentClassParticipation(event: any): void {
+    //     if (!event || event.length === 0) {
+    //         // this.experiences = [...this.filteredExp];
+    //         this.containsLow = false;
+    //         this.containsMid = false;
+    //         this.containsHigh = false;
+    //         return;
+    //     }
+
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push({
+    //         Action: "Clicked",
+    //         Target: "'Search Student In-Class Participation' filter",
+    //         Result:
+    //             "Select value(s) " +
+    //             event[0] +
+    //             (event[1] ? " and " + event[1] : "") +
+    //             (event[2] ? " and " + event[2] : ""),
+    //         Time: time.toLocaleString(),
+    //     });
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
+
+    //     this.containsLow = event.some((element: any) => element === "low");
+    //     this.containsMid = event.some((element: any) => element === "mid");
+    //     this.containsHigh = event.some((element: any) => element === "high");
+
+    //     // this.experiences = this.filteredExp.filter(
+    //     //     (value: Experience) =>
+    //     //         value.student_data.student_class_participation ===
+    //     //             (containsLow ? "Low" : "") ||
+    //     //         value.student_data.student_class_participation ===
+    //     //             (containsMid ? "Mid" : "") ||
+    //     //         value.student_data.student_class_participation ===
+    //     //             (containsHigh ? "High" : "")
+    //     // );
+    //     // this.cdr.detectChanges();
+    // }
+
+    applyAdvancedSearchFilters() {
+        this.filteredExp = [...this.allExperiences];
+
+        this.experiences = this.filteredExp.filter((value: Experience) =>
+            value.student_name
+                .toLowerCase()
+                .includes(this.studentSearchTerm.toLowerCase())
+        );
+
+        this.filteredExp = [...this.experiences];
+
+        if (this.selectedFemale || this.selectedMale) {
+            this.experiences = this.filteredExp.filter(
+                (value: Experience) =>
+                    value.student_data.student_gender ===
+                        (this.selectedFemale ? "F" : null) ||
+                    value.student_data.student_gender ===
+                        (this.selectedMale ? "M" : null)
+            );
         }
 
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Search Student In-Class Participation' filter",
-            Result:
-                "Select value(s) " +
-                event[0] +
-                (event[1] ? " and " + event[1] : "") +
-                (event[2] ? " and " + event[2] : ""),
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
+        this.filteredExp = [...this.experiences];
 
-        const containsLow = event.some((element: any) => element === "low");
-        const containsMid = event.some((element: any) => element === "mid");
-        const containsHigh = event.some((element: any) => element === "high");
+        if (
+            this.selectedLastTestGradeA ||
+            this.selectedLastTestGradeB ||
+            this.selectedLastTestGradeC ||
+            this.selectedLastTestGradeD ||
+            this.selectedLastTestGradeF
+        ) {
+            this.experiences = this.filteredExp.filter(
+                (value: Experience) =>
+                    value.student_data.student_last_test_grade ===
+                        (this.selectedLastTestGradeA ? "A" : null) ||
+                    value.student_data.student_last_test_grade ===
+                        (this.selectedLastTestGradeB ? "B" : null) ||
+                    value.student_data.student_last_test_grade ===
+                        (this.selectedLastTestGradeC ? "C" : null) ||
+                    value.student_data.student_last_test_grade ===
+                        (this.selectedLastTestGradeD ? "D" : null) ||
+                    value.student_data.student_last_test_grade ===
+                        (this.selectedLastTestGradeF ? "F" : null)
+            );
+        }
 
-        this.experiences = this.filteredExp.filter(
-            (value: Experience) =>
-                value.student_data.student_class_participation ===
-                    (containsLow ? "Low" : "") ||
-                value.student_data.student_class_participation ===
-                    (containsMid ? "Mid" : "") ||
-                value.student_data.student_class_participation ===
-                    (containsHigh ? "High" : "")
-        );
+        this.filteredExp = [...this.experiences];
+
+        if (
+            this.selectedOverallGradeA ||
+            this.selectedOverallGradeB ||
+            this.selectedOverallGradeC ||
+            this.selectedOverallGradeD ||
+            this.selectedOverallGradeF
+        ) {
+            this.experiences = this.filteredExp.filter(
+                (value: Experience) =>
+                    value.student_data.student_overall_performance ===
+                        (this.selectedOverallGradeA ? "A" : null) ||
+                    value.student_data.student_overall_performance ===
+                        (this.selectedOverallGradeB ? "B" : null) ||
+                    value.student_data.student_overall_performance ===
+                        (this.selectedOverallGradeC ? "C" : null) ||
+                    value.student_data.student_overall_performance ===
+                        (this.selectedOverallGradeD ? "D" : null) ||
+                    value.student_data.student_overall_performance ===
+                        (this.selectedOverallGradeF ? "F" : null)
+            );
+        }
+
+        this.filteredExp = [...this.experiences];
+
+        if (
+            this.selectedADHD ||
+            this.selectedAutism ||
+            this.selectedDyslexia ||
+            this.selectedDyscalculia ||
+            this.selectedNone
+        ) {
+            this.experiences = this.filteredExp.filter(
+                (value: Experience) =>
+                    value.student_data.student_learning_disability ===
+                        (this.selectedADHD ? "ADHD" : null) ||
+                    value.student_data.student_learning_disability ===
+                        (this.selectedAutism ? "Autism" : null) ||
+                    value.student_data.student_learning_disability ===
+                        (this.selectedDyslexia ? "Dyslexia" : null) ||
+                    value.student_data.student_learning_disability ===
+                        (this.selectedDyscalculia ? "Dyscalculia" : null) ||
+                    value.student_data.student_learning_disability ===
+                        (this.selectedNone ? "None reported" : null)
+            );
+        }
+
+        this.filteredExp = [...this.experiences];
+
+        if (
+            this.selectedAfricanAmerican ||
+            this.selectedAsian ||
+            this.selectedHispanic ||
+            this.selectedWhite
+        ) {
+            this.experiences = this.filteredExp.filter(
+                (value: Experience) =>
+                    value.student_data.student_race_ethnicity ===
+                        (this.selectedAfricanAmerican
+                            ? "African-American"
+                            : null) ||
+                    value.student_data.student_race_ethnicity ===
+                        (this.selectedAsian ? "Asian" : null) ||
+                    value.student_data.student_race_ethnicity ===
+                        (this.selectedHispanic ? "Hispanic" : null) ||
+                    value.student_data.student_race_ethnicity ===
+                        (this.selectedWhite ? "White" : null)
+            );
+        }
+
+        this.filteredExp = [...this.experiences];
+
+        if (
+            this.selected80to84 ||
+            this.selected85to89 ||
+            this.selected90to94 ||
+            this.selected95to99 ||
+            this.selected100
+        ) {
+            this.experiences = this.filteredExp.filter(
+                (value: Experience) =>
+                    (this.selected80to84
+                        ? parseInt(value.student_data.student_attendance) >=
+                              80 &&
+                          parseInt(value.student_data.student_attendance) <= 84
+                        : null) ||
+                    (this.selected85to89
+                        ? parseInt(value.student_data.student_attendance) >=
+                              85 &&
+                          parseInt(value.student_data.student_attendance) <= 89
+                        : null) ||
+                    (this.selected90to94
+                        ? parseInt(value.student_data.student_attendance) >=
+                              90 &&
+                          parseInt(value.student_data.student_attendance) <= 94
+                        : null) ||
+                    (this.selected95to99
+                        ? parseInt(value.student_data.student_attendance) >=
+                              95 &&
+                          parseInt(value.student_data.student_attendance) <= 99
+                        : null) ||
+                    (this.selected100
+                        ? parseInt(value.student_data.student_attendance) ===
+                          100
+                        : null)
+            );
+        }
+
+        this.filteredExp = [...this.experiences];
+
+        if (this.selectedLow || this.selectedMid || this.selectedHigh) {
+            this.experiences = this.filteredExp.filter(
+                (value: Experience) =>
+                    value.student_data.student_class_participation ===
+                        (this.selectedLow ? "Low" : null) ||
+                    value.student_data.student_class_participation ===
+                        (this.selectedMid ? "Mid" : null) ||
+                    value.student_data.student_class_participation ===
+                        (this.selectedHigh ? "High" : null)
+            );
+        }
+
+        this.selectedExperiences = this.experiences.length;
+
+        if (this.sortOldToNew) {
+            this.experiences.sort(
+                (a: Experience, b: Experience) =>
+                    new Date(a.date).getTime() - new Date(b.date).getTime()
+            );
+        }
+
+        if (this.sortNewToOld) {
+            this.experiences.sort(
+                (a: Experience, b: Experience) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime()
+            );
+        }
+
         this.cdr.detectChanges();
     }
 
@@ -1546,43 +1924,6 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                         new Date(a.date).getTime() - new Date(b.date).getTime()
                 );
                 break;
-
-            // case "titleHighest":
-            //     this.experiences.sort(
-            //         (a: Experience, b: Experience) =>
-            //             this.getNumberFromTitle(b.experience_title) -
-            //             this.getNumberFromTitle(a.experience_title)
-            //     );
-            //     break;
-
-            // case "titleLowest":
-            //     this.experiences.sort(
-            //         (a: Experience, b: Experience) =>
-            //             this.getNumberFromTitle(a.experience_title) -
-            //             this.getNumberFromTitle(b.experience_title)
-            //     );
-            //     break;
-
-            // case "studentHighest":
-            //     this.experiences.sort(
-            //         (a: Experience, b: Experience) =>
-            //             this.getNumberFromTitle(b.student_name) -
-            //             this.getNumberFromTitle(a.student_name)
-            //     );
-            //     break;
-
-            // case "studentLowest":
-            //     this.experiences.sort(
-            //         (a: Experience, b: Experience) =>
-            //             this.getNumberFromTitle(a.student_name) -
-            //             this.getNumberFromTitle(b.student_name)
-            //     );
-            //     break;
         }
     }
-
-    // private getNumberFromTitle(title: string): number {
-    //     const match = title.match(/\d+/); // This regex finds numbers in a string
-    //     return match ? parseInt(match[0]) : 0; // Convert the matched number string to an integer
-    // }
 }

@@ -21,16 +21,21 @@
         <div class="nav-links">
             <a
                 *ngIf="(authService.currentUser | async) !== null"
-                (click)="onLogout()"
-                >Log Out</a
+                (click)="onHomeClick()"
+                >Home</a
             >
+            <a (click)="onAboutClick()" [class.active]="isAboutActive">About</a>
             <a
                 *ngIf="(authService.currentUser | async) !== null"
                 (click)="onAccountClick()"
                 [class.active]="isAccountActive"
                 >Account</a
             >
-            <a (click)="onAboutClick()" [class.active]="isAboutActive">About</a>
+            <a
+                *ngIf="(authService.currentUser | async) !== null"
+                (click)="onLogout()"
+                >Log Out</a
+            >
         </div>
     </div>
 </nav>

@@ -46,12 +46,16 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatExpansionModule } from "@angular/material/expansion";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { MatNativeDateModule } from "@angular/material/core";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatSelectModule } from "@angular/material/select";
 import { MatInputModule } from "@angular/material/input";
+import { MatRadioModule } from "@angular/material/radio";
 import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
 import { DatePipe } from "@angular/common";
 
 import { DragDropModule } from "@angular/cdk/drag-drop";
@@ -106,10 +110,14 @@ import { InputDialogComponent } from "./input-dialog/input-dialog.component";
         MatNativeDateModule,
         MatFormFieldModule,
         MatExpansionModule,
+        MatCheckboxModule,
         MatDividerModule,
+        MatTooltipModule,
         MatSelectModule,
         MatInputModule,
+        MatRadioModule,
         MatCardModule,
+        MatIconModule,
         DragDropModule,
         MatDialogModule,
     ],

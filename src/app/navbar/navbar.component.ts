@@ -99,33 +99,24 @@ export class NavbarComponent {
 
         let duration = (timeEnd.valueOf() - timeStart.valueOf()) / 1000;
 
-        content.push(
-            {
-                Action: "Clicked",
-                Target: "Log Out on navbar",
-                Result: "Log Out from website",
-                Time: timeEnd.toLocaleString(),
-            }
-            // "Clicked 'Log Out' at " + timeEnd.toLocaleString()
-        );
-        content.push(
-            {
-                Action: "Left",
-                Target: pageName + "page",
-                Result: "",
-                Time: timeEnd.toLocaleString(),
-            }
-            // "Left" + pageName + "Page at " + timeEnd.toLocaleString()
-        );
-        content.push(
-            {
-                Action: "Time spent",
-                Target: pageName + "page",
-                Result: "",
-                Time: duration + " seconds",
-            }
-            // "Time spent on" + pageName + "Page: " + duration + " seconds"
-        );
+        content.push({
+            Action: "Clicked",
+            Target: "Log Out on navbar",
+            Result: "Log Out from website",
+            Time: timeEnd.toLocaleString(),
+        });
+        content.push({
+            Action: "Left",
+            Target: pageName + "page",
+            Result: "",
+            Time: timeEnd.toLocaleString(),
+        });
+        content.push({
+            Action: "Time spent",
+            Target: pageName + "page",
+            Result: "",
+            Time: duration + " seconds",
+        });
 
         return {
             content: content,
@@ -170,39 +161,24 @@ export class NavbarComponent {
 
         let duration = (timeEnd.valueOf() - timeStart.valueOf()) / 1000;
 
-        content.push(
-            {
-                Action: "Clicked",
-                Target: "Log Out on navbar",
-                Result: "Log Out from website",
-                Time: timeEnd.toLocaleString(),
-            }
-            // "Clicked 'Log Out' at " + timeEnd.toLocaleString()
-        );
-        content.push(
-            {
-                Action: "Left",
-                Target: pageName + "page",
-                Result: "",
-                Time: timeEnd.toLocaleString(),
-            }
-            // "Left" + pageName + "Page at " + timeEnd.toLocaleString()
-        );
-        content.push(
-            {
-                Action: "Time spent",
-                Target: pageName + "page",
-                Result: "",
-                Time: duration + " seconds",
-            }
-            // "Time spent on" + pageName + "Page: " + duration + " seconds"
-        );
-
-        console.log("INSIDE FINAL FUNCTION FOR USER DATA");
-        console.log(content.length);
-        // return {
-        //     content: content,
-        // };
+        content.push({
+            Action: "Clicked",
+            Target: "Log Out on navbar",
+            Result: "Log Out from website",
+            Time: timeEnd.toLocaleString(),
+        });
+        content.push({
+            Action: "Left",
+            Target: pageName + "page",
+            Result: "",
+            Time: timeEnd.toLocaleString(),
+        });
+        content.push({
+            Action: "Time spent",
+            Target: pageName + "page",
+            Result: "",
+            Time: duration + " seconds",
+        });
         return content;
     }
 
@@ -238,15 +214,12 @@ export class NavbarComponent {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Account' on navbar",
-                Result: "Navigate to Account page",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Account' at " + date.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Account' on navbar",
+            Result: "Navigate to Account page",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -263,15 +236,12 @@ export class NavbarComponent {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'About' on navbar",
-                Result: "Navigate to About page",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'About' at " + date.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'About' on navbar",
+            Result: "Navigate to About page",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -280,5 +250,27 @@ export class NavbarComponent {
         this.isAboutActive = true;
         this.isAccountActive = false;
         this.router.navigate(["/about"]);
+    }
+
+    onHomeClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Home' on navbar",
+            Result: "Navigate to landing page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.isAboutActive = false;
+        this.isAccountActive = false;
+        this.router.navigate(["/landing"]);
     }
 }

@@ -45,6 +45,9 @@
             <p style="font-size: 25px; text-align: left; margin-bottom: 25px">
                 Select students' experiences to integrate into your lesson plan.
             </p>
+            <p style="font-size: 18px; color: #808080">
+                Showing {{ selectedExperiences }} of 168 entries
+            </p>
             <div
                 style="margin-bottom: 15px"
                 *ngFor="let experience of experiences"
@@ -59,10 +62,6 @@
                         </div>
                         <div class="experience-details">
                             <div class="student-name">
-                                <!-- <div class="flex align-self-stretch">
-                                    <i class="bi bi-person"></i>
-                                </div> -->
-                                <!-- <div class="flex-grow-1 mx-2"> -->
                                 <p>
                                     Student:
                                     <a
@@ -77,39 +76,11 @@
                                         >{{ experience.student_name }}</a
                                     >
                                 </p>
-                                <!-- </div> -->
                             </div>
                             <div class="date-uploaded">
-                                <!-- <div class="flex align-self-stretch">
-                                    <i class="bi bi-calendar3"></i>
-                                </div> -->
-                                <!-- <div class="flex-grow-1 mx-2"> -->
                                 <p>Date: {{ experience.date | date }}</p>
-                                <!-- </div> -->
                             </div>
                         </div>
-                        <!-- <div class="d-flex justify-content-center">
-                            <button
-                                class="me-4"
-                                data-bs-toggle="modal"
-                                data-bs-target="#editExperienceModal"
-                                (click)="getExperienceDetails(experience)"
-                            >
-                                Edit experience
-                            </button>
-                            <button
-                                class="mx-4"
-                                (click)="deleteExperience(experience)"
-                            >
-                                Delete experience
-                            </button>
-                            <button
-                                class="ms-4"
-                                (click)="integrateExperience(experience)"
-                            >
-                                Integrate experience
-                            </button>
-                        </div> -->
                     </div>
                     <div class="card-checkbox">
                         <span
@@ -124,7 +95,7 @@
             </div>
         </div>
 
-        <div class="mb-3 options-container flex-child">
+        <div class="options-container flex-child">
             <div class="search-keyword">
                 <mat-form-field appearance="outline" class="search-keyword">
                     <mat-label>Search keyword</mat-label>
@@ -137,17 +108,9 @@
                         (click)="onFilterByKeywordClick()"
                     />
                 </mat-form-field>
-                <!-- <input
-                    type="text"
-                    class="form-control"
-                    [(ngModel)]="keywordSearchTerm"
-                    (input)="filterExperiencesByKeyword()"
-                    (click)="onFilterByKeywordClick()"
-                    placeholder="Search keyword"
-                /> -->
             </div>
 
-            <div class="search-student">
+            <!-- <div class="search-student">
                 <mat-form-field appearance="outline" class="search-student">
                     <mat-label>Search student</mat-label>
                     <input
@@ -159,17 +122,9 @@
                         (click)="onFilterByStudentClick()"
                     />
                 </mat-form-field>
-                <!-- <input
-                    type="text"
-                    class="form-control"
-                    [(ngModel)]="studentSearchTerm"
-                    (input)="filterExperiencesByStudent()"
-                    (click)="onFilterByStudentClick()"
-                    placeholder="Search student name"
-                /> -->
-            </div>
+            </div> -->
 
-            <div class="search-date">
+            <!-- <div class="search-date">
                 <mat-form-field appearance="outline" class="search-date">
                     <mat-label>Search date</mat-label>
                     <input
@@ -187,15 +142,7 @@
                     ></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
-                <!-- <input
-                    type="date"
-                    class="form-control"
-                    [(ngModel)]="dateSearchTerm"
-                    (input)="filterExperiencesByDate()"
-                    (click)="onFilterByDateClick()"
-                    placeholder="Search date"
-                /> -->
-            </div>
+            </div> -->
 
             <div>
                 <mat-form-field appearance="outline" class="search-date-range">
@@ -206,6 +153,7 @@
                             placeholder="Start date"
                             [(ngModel)]="startDateSearchTerm"
                             (click)="onFilterByDateRangeClick()"
+                            (dateInput)="filterExperiencesByDateRange()"
                         />
                         <input
                             matEndDate
@@ -223,7 +171,13 @@
                 </mat-form-field>
             </div>
 
-            <div class="search-student-gender">
+            <div class="student-search-filter">
+                <button data-bs-toggle="modal" data-bs-target="#filterModal">
+                    Advanced Search and Filter
+                </button>
+            </div>
+
+            <!-- <div class="search-student-gender">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-gender"
@@ -237,20 +191,9 @@
                         <mat-option value="male">Male</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <!-- <select
-                    class="form-select"
-                    (change)="filterExperiencesByStudentGender($event)"
-                    multiple
-                >
-                    <option value="" disabled selected>
-                        Search student gender
-                    </option>
-                    <option value="female">Female</option>
-                    <option value="male">Male</option>
-                </select> -->
-            </div>
+            </div> -->
 
-            <div class="search-student-last-test-grade">
+            <!-- <div class="search-student-last-test-grade">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-last-test-grade"
@@ -269,9 +212,9 @@
                         <mat-option value="gradeF">F</mat-option>
                     </mat-select>
                 </mat-form-field>
-            </div>
+            </div> -->
 
-            <div class="search-student-table">
+            <!-- <div class="search-student-table">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-table"
@@ -288,9 +231,9 @@
                         <mat-option value="purple">Purple</mat-option>
                     </mat-select>
                 </mat-form-field>
-            </div>
+            </div> -->
 
-            <div class="search-student-overall-performance">
+            <!-- <div class="search-student-overall-performance">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-overall-performance"
@@ -309,9 +252,9 @@
                         <mat-option value="gradeF">F</mat-option>
                     </mat-select>
                 </mat-form-field>
-            </div>
+            </div> -->
 
-            <div class="search-student-learning-disability">
+            <!-- <div class="search-student-learning-disability">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-learning-disability"
@@ -330,9 +273,9 @@
                         <mat-option value="none">None Reported</mat-option>
                     </mat-select>
                 </mat-form-field>
-            </div>
+            </div> -->
 
-            <div class="search-student-race-ethnicity">
+            <!-- <div class="search-student-race-ethnicity">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-race-ethnicity"
@@ -352,9 +295,9 @@
                         <mat-option value="white">White</mat-option>
                     </mat-select>
                 </mat-form-field>
-            </div>
+            </div> -->
 
-            <div class="search-student-attendance">
+            <!-- <div class="search-student-attendance">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-attendance"
@@ -377,9 +320,9 @@
                         <mat-option value="100">100%</mat-option>
                     </mat-select>
                 </mat-form-field>
-            </div>
+            </div> -->
 
-            <div class="search-student-class-participation">
+            <!-- <div class="search-student-class-participation">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-class-participation"
@@ -396,9 +339,9 @@
                         <mat-option value="high">High</mat-option>
                     </mat-select>
                 </mat-form-field>
-            </div>
+            </div> -->
 
-            <div class="sort-experiences">
+            <!-- <div class="sort-experiences">
                 <mat-form-field appearance="outline" class="sort-experiences">
                     <mat-label>Sort By</mat-label>
                     <mat-select (valueChange)="sortExperiences($event)">
@@ -408,38 +351,9 @@
                         <mat-option value="timeNewest"
                             >Time (Newest to Oldest)</mat-option
                         >
-                        <!-- <mat-option value="titleLowest">
-                            Title Number (Lowest to Highest)
-                        </mat-option>
-                        <mat-option value="titleHighest">
-                            Title Number (Highest to Lowest)
-                        </mat-option>
-                        <mat-option value="studentLowest">
-                            Student (Lowest to Highest)
-                        </mat-option>
-                        <mat-option value="studentHighest">
-                            Student (Highest to Lowest)
-                        </mat-option> -->
                     </mat-select>
                 </mat-form-field>
-                <!-- <select class="form-select" (change)="sortExperiences($event)">
-                    <option value="" disabled selected>Sort By</option>
-                    <option value="timeOldest">Time (Oldest to Newest)</option>
-                    <option value="timeNewest">Time (Newest to Oldest)</option>
-                    <option value="titleLowest">
-                        Title Number (Lowest to Highest)
-                    </option>
-                    <option value="titleHighest">
-                        Title Number (Highest to Lowest)
-                    </option>
-                    <option value="studentLowest">
-                        Student (Lowest to Highest)
-                    </option>
-                    <option value="studentHighest">
-                        Student (Highest to Lowest)
-                    </option>
-                </select> -->
-            </div>
+            </div> -->
 
             <div>
                 <button
@@ -548,6 +462,539 @@
                         data-bs-dismiss="modal"
                     >
                         Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter modal -->
+    <div
+        class="modal fade"
+        id="filterModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title" id="exampleModalLabel">
+                        Advanced Search and Filter
+                    </h1>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col" style="max-width: 75%">
+                                    <p
+                                        style="
+                                            font-size: 15px;
+                                            padding-left: 10px;
+                                            padding-right: 0px;
+                                            margin-right: 0px;
+                                        "
+                                    >
+                                        <strong>Search by student name</strong>
+                                    </p>
+                                </div>
+                                <div
+                                    class="col"
+                                    style="
+                                        max-width: 25%;
+                                        padding-left: 20px;
+                                        margin-left: 0px;
+                                    "
+                                >
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Use the textbox below to filter the results by the students' names."
+                                    ></mat-icon>
+                                </div>
+                            </div>
+                            <mat-form-field
+                                appearance="outline"
+                                class="search-student"
+                            >
+                                <mat-label>Search student</mat-label>
+                                <input
+                                    matInput
+                                    type="text"
+                                    class="form-control"
+                                    [(ngModel)]="studentSearchTerm"
+                                    (input)="filterExperiencesByStudent()"
+                                    (click)="onFilterByStudentClick()"
+                                />
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col">
+                            <div class="row">
+                                <div class="col" style="max-width: 75%">
+                                    <p
+                                        style="
+                                            font-size: 15px;
+                                            padding-left: 10px;
+                                            padding-right: 0px;
+                                            margin-right: 0px;
+                                        "
+                                    >
+                                        <strong
+                                            >Search by student gender</strong
+                                        >
+                                    </p>
+                                </div>
+                                <div
+                                    class="col"
+                                    style="
+                                        max-width: 25%;
+                                        padding-left: 20px;
+                                        margin-left: 0px;
+                                    "
+                                >
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Use the checkboxes below to filter the results by the students' gender."
+                                    ></mat-icon>
+                                </div>
+                            </div>
+                            <section class="search-student-gender">
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByGenderFemale($event.checked)
+                                    "
+                                    >Female</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByGenderMale($event.checked)
+                                    "
+                                    >Male</mat-checkbox
+                                >
+                            </section>
+                        </div>
+
+                        <div class="col">
+                            <div class="row">
+                                <div class="col" style="max-width: 75%">
+                                    <p
+                                        style="
+                                            font-size: 15px;
+                                            padding-left: 10px;
+                                            padding-right: 0px;
+                                            margin-right: 0px;
+                                        "
+                                    >
+                                        <strong
+                                            >Search by student last test
+                                            grade</strong
+                                        >
+                                    </p>
+                                </div>
+                                <div
+                                    class="col"
+                                    style="
+                                        max-width: 25%;
+                                        padding-left: 20px;
+                                        margin-left: 0px;
+                                    "
+                                >
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Use the checkboxes below to filter the results by the students' last test grade."
+                                    ></mat-icon>
+                                </div>
+                            </div>
+                            <section class="search-student-last-test-grade">
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByLastTestGradeA($event.checked)
+                                    "
+                                    >A</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByLastTestGradeB($event.checked)
+                                    "
+                                    >B</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByLastTestGradeC($event.checked)
+                                    "
+                                    >C</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByLastTestGradeD($event.checked)
+                                    "
+                                    >D</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByLastTestGradeF($event.checked)
+                                    "
+                                    >F</mat-checkbox
+                                >
+                            </section>
+                        </div>
+
+                        <div class="col">
+                            <div class="row">
+                                <div class="col" style="max-width: 75%">
+                                    <p
+                                        style="
+                                            font-size: 15px;
+                                            padding-left: 10px;
+                                            padding-right: 0px;
+                                            margin-right: 0px;
+                                        "
+                                    >
+                                        <strong
+                                            >Search by student overall
+                                            performance</strong
+                                        >
+                                    </p>
+                                </div>
+                                <div
+                                    class="col"
+                                    style="
+                                        max-width: 25%;
+                                        padding-left: 20px;
+                                        margin-left: 0px;
+                                    "
+                                >
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Use the checkboxes below to filter the results by the students' overall performance."
+                                    ></mat-icon>
+                                </div>
+                            </div>
+                            <section class="search-student-overall-performance">
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByOverallGradeA($event.checked)
+                                    "
+                                    >A</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByOverallGradeB($event.checked)
+                                    "
+                                    >B</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByOverallGradeC($event.checked)
+                                    "
+                                    >C</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByOverallGradeD($event.checked)
+                                    "
+                                    >D</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByOverallGradeF($event.checked)
+                                    "
+                                    >F</mat-checkbox
+                                >
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col" style="max-width: 75%">
+                                    <p
+                                        style="
+                                            font-size: 15px;
+                                            padding-left: 10px;
+                                            padding-right: 0px;
+                                            margin-right: 0px;
+                                        "
+                                    >
+                                        <strong
+                                            >Search by student learning
+                                            disability</strong
+                                        >
+                                    </p>
+                                </div>
+                                <div
+                                    class="col"
+                                    style="
+                                        max-width: 25%;
+                                        padding-left: 20px;
+                                        margin-left: 0px;
+                                    "
+                                >
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Use the checkboxes below to filter the results by the students' learning disability."
+                                    ></mat-icon>
+                                </div>
+                            </div>
+                            <section class="search-student-learning-disability">
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterByADHD($event.checked)"
+                                    >ADHD</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterByAutism($event.checked)"
+                                    >Autism</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterByDyslexia($event.checked)"
+                                    >Dyslexia</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByDyscalculia($event.checked)
+                                    "
+                                    >Dyscalculia</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterByNone($event.checked)"
+                                    >None Reported</mat-checkbox
+                                >
+                            </section>
+                        </div>
+
+                        <div class="col">
+                            <div class="row">
+                                <div class="col" style="max-width: 75%">
+                                    <p
+                                        style="
+                                            font-size: 15px;
+                                            padding-left: 10px;
+                                            padding-right: 0px;
+                                            margin-right: 0px;
+                                        "
+                                    >
+                                        <strong
+                                            >Search by student
+                                            race/ethnicity</strong
+                                        >
+                                    </p>
+                                </div>
+                                <div
+                                    class="col"
+                                    style="
+                                        max-width: 25%;
+                                        padding-left: 20px;
+                                        margin-left: 0px;
+                                    "
+                                >
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Use the checkboxes below to filter the results by the students' race/ethnicity."
+                                    ></mat-icon>
+                                </div>
+                            </div>
+                            <section class="search-student-race-ethnicity">
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="
+                                        filterByAfricanAmerican($event.checked)
+                                    "
+                                    >African-American</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterByAsian($event.checked)"
+                                    >Asian</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterByHispanic($event.checked)"
+                                    >Hispanic</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterByWhite($event.checked)"
+                                    >White</mat-checkbox
+                                >
+                            </section>
+                        </div>
+
+                        <div class="col">
+                            <div class="row">
+                                <div class="col" style="max-width: 75%">
+                                    <p
+                                        style="
+                                            font-size: 15px;
+                                            padding-left: 10px;
+                                            padding-right: 0px;
+                                            margin-right: 0px;
+                                        "
+                                    >
+                                        <strong
+                                            >Search by student
+                                            attendance</strong
+                                        >
+                                    </p>
+                                </div>
+                                <div
+                                    class="col"
+                                    style="
+                                        max-width: 25%;
+                                        padding-left: 20px;
+                                        margin-left: 0px;
+                                    "
+                                >
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Use the checkboxes below to filter the results by the students' attendance."
+                                    ></mat-icon>
+                                </div>
+                            </div>
+                            <section class="search-student-attendance">
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterBy80to84($event.checked)"
+                                    >80% - 84%</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterBy85to89($event.checked)"
+                                    >85% - 89%</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterBy90to94($event.checked)"
+                                    >90% - 94%</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterBy95to99($event.checked)"
+                                    >95% - 99%</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterBy100($event.checked)"
+                                    >100%</mat-checkbox
+                                >
+                            </section>
+                        </div>
+
+                        <div class="col">
+                            <div class="row">
+                                <div class="col" style="max-width: 75%">
+                                    <p
+                                        style="
+                                            font-size: 15px;
+                                            padding-left: 10px;
+                                            padding-right: 0px;
+                                            margin-right: 0px;
+                                        "
+                                    >
+                                        <strong
+                                            >Search by student in-class
+                                            participation</strong
+                                        >
+                                    </p>
+                                </div>
+                                <div
+                                    class="col"
+                                    style="
+                                        max-width: 25%;
+                                        padding-left: 20px;
+                                        margin-left: 0px;
+                                    "
+                                >
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Use the checkboxes below to filter the results by the students' in-class participation."
+                                    ></mat-icon>
+                                </div>
+                            </div>
+                            <section class="search-student-class-participation">
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterByLow($event.checked)"
+                                    >Low</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterByMid($event.checked)"
+                                    >Mid</mat-checkbox
+                                >
+                                <mat-checkbox
+                                    class="example-margin"
+                                    (change)="filterByHigh($event.checked)"
+                                    >High</mat-checkbox
+                                >
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="row" style="text-align: center; margin: 0 auto">
+                        <div
+                            class="col"
+                            style="
+                                display: inline-block;
+                                vertical-align: middle;
+                                float: none;
+                            "
+                        >
+                            <div class="row">
+                                <strong>Sort by date of experience</strong>
+                            </div>
+                            <div class="row">
+                                <mat-radio-group aria-label="Select an option">
+                                    <mat-radio-button
+                                        value="timeOldest"
+                                        (change)="filterByTimeAscending($event)"
+                                        >Oldest to Newest</mat-radio-button
+                                    >
+                                    <mat-radio-button
+                                        value="timeNewest"
+                                        (change)="
+                                            filterByTimeDescending($event)
+                                        "
+                                        >Newest to Oldest</mat-radio-button
+                                    >
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                        (click)="applyAdvancedSearchFilters()"
+                    >
+                        Apply
                     </button>
                 </div>
             </div>
