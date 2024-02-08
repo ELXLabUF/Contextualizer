@@ -142,12 +142,12 @@ export class PdfReaderService {
                                                         ),
                                                     integrated_experiences: [],
                                                 },
-                                                "Wrap-Up Closure": {
-                                                    title: "Wrap-Up Closure",
+                                                "Wrap-Up/Closure": {
+                                                    title: "Wrap-Up/Closure",
                                                     content:
                                                         this.transformArray(
                                                             transformedJSONData[
-                                                                "Wrap-Up Closure"
+                                                                "Wrap-Up/Closure"
                                                             ]
                                                         ),
                                                     integrated_experiences: [],
@@ -234,7 +234,7 @@ export class PdfReaderService {
             "Warm-Up:",
             "Teacher-Led Instruction:",
             "Student-Led Learning:",
-            "Wrap-Up Closure:",
+            "Wrap-Up/Closure:",
         ];
 
         const result: { [key: string]: any } = {};
@@ -249,7 +249,12 @@ export class PdfReaderService {
                     element.startsWith(fields[index + 1])
                 );
             } else {
-                endIndex = arr.length;
+                // endIndex = arr.length;
+                endIndex = arr.findIndex((element) =>
+                    element.startsWith(
+                        "This lesson plan template is based on: Nagro, S. A., Fraser, D. W., & Hooks, S. D. (2019)."
+                    )
+                );
             }
 
             if (startIndex !== -1 && endIndex !== -1) {
@@ -257,10 +262,11 @@ export class PdfReaderService {
                 const formattedData = dataForField
                     .map((line) => line.replace(field, "").trim())
                     .filter((line) => line);
-                result[field.replace(":", "")] =
-                    formattedData.length === 1
-                        ? formattedData[0]
-                        : formattedData;
+                // result[field.replace(":", "")] =
+                //     formattedData.length === 1
+                //         ? formattedData[0]
+                //         : formattedData;
+                result[field.replace(":", "")] = formattedData;
             }
         });
         return result;

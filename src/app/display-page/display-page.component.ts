@@ -120,8 +120,8 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             experiencesEditValue: "",
         },
         {
-            name: "Wrap-Up Closure",
-            key: "Wrap-Up Closure",
+            name: "Wrap-Up/Closure",
+            key: "Wrap-Up/Closure",
             editing: false,
             editValue: "",
             labelEditing: false,
@@ -161,7 +161,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     titleForWarmUp: string = "Warm-Up";
     titleForTeacher: string = "Teacher-Led Instruction";
     titleForStudent: string = "Student-Led Learning";
-    titleForWrapUp: string = "Wrap-Up Closure";
+    titleForWrapUp: string = "Wrap-Up/Closure";
 
     currentExperienceTitle: string = "";
     currentExperienceDescription: string = "";
@@ -262,7 +262,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                             this.pdfData["Student-Led Learning"]
                                 ?.integrated_experiences || [];
                         this.integratedExperiencesForWrapUp =
-                            this.pdfData["Wrap-Up Closure"]
+                            this.pdfData["Wrap-Up/Closure"]
                                 ?.integrated_experiences || [];
 
                         this.titleForGrade =
@@ -289,7 +289,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                             this.pdfData["Student-Led Learning"]?.title ||
                             this.titleForStudent;
                         this.titleForWrapUp =
-                            this.pdfData["Wrap-Up Closure"]?.title ||
+                            this.pdfData["Wrap-Up/Closure"]?.title ||
                             this.titleForWrapUp;
 
                         this.integratedExperiences =
@@ -376,7 +376,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             "Warm-Up",
             "Teacher-Led Instruction",
             "Student-Led Learning",
-            "Wrap-Up Closure",
+            "Wrap-Up/Closure",
         ];
 
         this.editableFields = defaultFieldOrder.map((fieldKey) => ({
@@ -409,8 +409,8 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                 return "Teacher-Led Instruction";
             case "Student-Led Learning":
                 return "Student-Led Learning";
-            case "Wrap-Up Closure":
-                return "Wrap-Up Closure";
+            case "Wrap-Up/Closure":
+                return "Wrap-Up/Closure";
             default:
                 return "Unknown";
         }

@@ -410,10 +410,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                                 ],
                                             integrated_experiences: [],
                                         },
-                                        "Wrap-Up Closure": {
-                                            title: "Wrap-Up Closure",
+                                        "Wrap-Up/Closure": {
+                                            title: "Wrap-Up/Closure",
                                             content:
-                                                jsonData["Wrap-Up Closure"],
+                                                jsonData["Wrap-Up/Closure"],
                                             integrated_experiences: [],
                                         },
                                         mainTopic: mainTopic,
@@ -491,10 +491,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                                 ],
                                             integrated_experiences: [],
                                         },
-                                        "Wrap-Up Closure": {
-                                            title: "Wrap-Up Closure",
+                                        "Wrap-Up/Closure": {
+                                            title: "Wrap-Up/Closure",
                                             content:
-                                                jsonData["Wrap-Up Closure"],
+                                                jsonData["Wrap-Up/Closure"],
                                             integrated_experiences: [],
                                         },
                                         mainTopic: mainTopic,
