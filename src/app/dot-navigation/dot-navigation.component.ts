@@ -17,47 +17,118 @@ export class DotNavigationComponent implements OnInit {
     constructor(private router: Router) {}
 
     ngOnInit(): void {
-        if (sessionStorage.getItem("instructionsDot") !== null) {
-            this.instructionsDot = true;
-        }
+        // if (sessionStorage.getItem("instructionsDot") !== null) {
+        //     this.instructionsDot = true;
+        // }
 
-        if (sessionStorage.getItem("uploadFileDot") !== null) {
-            this.uploadFileDot = true;
-        }
+        // if (sessionStorage.getItem("uploadFileDot") !== null) {
+        //     this.uploadFileDot = true;
+        // }
 
-        if (sessionStorage.getItem("experiencesDot") !== null) {
-            this.experiencesDot = true;
-        }
+        // if (sessionStorage.getItem("experiencesDot") !== null) {
+        //     this.experiencesDot = true;
+        // }
 
-        if (sessionStorage.getItem("displayPageDot") !== null) {
-            this.displayPageDot = true;
-        }
+        // if (sessionStorage.getItem("displayPageDot") !== null) {
+        //     this.displayPageDot = true;
+        // }
 
-        if (sessionStorage.getItem("finalizePageDot") !== null) {
-            this.finalizePageDot = true;
-        }
+        // if (sessionStorage.getItem("finalizePageDot") !== null) {
+        //     this.finalizePageDot = true;
+        // }
 
-        if (this.router.url === "/instructions") {
-            this.instructionsDot = true;
-            sessionStorage.setItem("instructionsDot", "true");
-        } else if (this.router.url === "/lesson") {
-            this.uploadFileDot = true;
-            sessionStorage.setItem("uploadFileDot", "true");
-        } else if (this.router.url === "/experience") {
-            this.experiencesDot = true;
-            sessionStorage.setItem("experiencesDot", "true");
-        } else if (this.router.url === "/display") {
-            this.displayPageDot = true;
-            sessionStorage.setItem("displayPageDot", "true");
-        } else if (this.router.url === "/finalize") {
-            this.finalizePageDot = true;
-            sessionStorage.setItem("finalizePageDot", "true");
-        }
+        this.instructionsDot =
+            sessionStorage.getItem("instructionsDot") === "true" ? true : false;
+        this.uploadFileDot =
+            sessionStorage.getItem("uploadFileDot") === "true" ? true : false;
+        this.experiencesDot =
+            sessionStorage.getItem("experiencesDot") === "true" ? true : false;
+        this.displayPageDot =
+            sessionStorage.getItem("displayPageDot") === "true" ? true : false;
+        this.finalizePageDot =
+            sessionStorage.getItem("finalizePageDot") === "true" ? true : false;
 
         if (sessionStorage.getItem("altNavigation") === "true") {
             this.startNavigationFromExperiences = true;
         } else if (sessionStorage.getItem("altNavigation") === "false") {
             this.startNavigationFromExperiences = false;
+        }
+
+        if (this.router.url === "/instructions") {
+            this.instructionsDot = true;
+            this.uploadFileDot = false;
+            this.experiencesDot = this.startNavigationFromExperiences
+                ? true
+                : false;
+            this.displayPageDot = false;
+            this.finalizePageDot = false;
+            sessionStorage.setItem("instructionsDot", "true");
+            sessionStorage.setItem("uploadFileDot", "false");
+            sessionStorage.setItem(
+                "experiencesDot",
+                this.startNavigationFromExperiences ? "true" : "false"
+            );
+            sessionStorage.setItem("displayPageDot", "false");
+            sessionStorage.setItem("finalizePageDot", "false");
+        } else if (this.router.url === "/lesson") {
+            this.instructionsDot = true;
+            this.uploadFileDot = true;
+            this.experiencesDot = this.startNavigationFromExperiences
+                ? true
+                : false;
+            this.displayPageDot = false;
+            this.finalizePageDot = false;
+            sessionStorage.setItem("instructionsDot", "true");
+            sessionStorage.setItem("uploadFileDot", "true");
+            sessionStorage.setItem(
+                "experiencesDot",
+                this.startNavigationFromExperiences ? "true" : "false"
+            );
+            sessionStorage.setItem("displayPageDot", "false");
+            sessionStorage.setItem("finalizePageDot", "false");
+        } else if (this.router.url === "/experience") {
+            this.instructionsDot = this.startNavigationFromExperiences
+                ? false
+                : true;
+            this.uploadFileDot = this.startNavigationFromExperiences
+                ? false
+                : true;
+            this.experiencesDot = true;
+            this.displayPageDot = false;
+            this.finalizePageDot = false;
+            sessionStorage.setItem(
+                "instructionsDot",
+                this.startNavigationFromExperiences ? "false" : "true"
+            );
+            sessionStorage.setItem(
+                "uploadFileDot",
+                this.startNavigationFromExperiences ? "false" : "true"
+            );
+            sessionStorage.setItem("experiencesDot", "true");
+            sessionStorage.setItem("displayPageDot", "false");
+            sessionStorage.setItem("finalizePageDot", "false");
+        } else if (this.router.url === "/display") {
+            this.instructionsDot = true;
+            this.uploadFileDot = true;
+            this.experiencesDot = true;
+            this.displayPageDot = true;
+            this.finalizePageDot = false;
+            sessionStorage.setItem("instructionsDot", "true");
+            sessionStorage.setItem("uploadFileDot", "true");
+            sessionStorage.setItem("experiencesDot", "true");
+            sessionStorage.setItem("displayPageDot", "true");
+            sessionStorage.setItem("finalizePageDot", "false");
+        } else if (this.router.url === "/finalize") {
+            this.instructionsDot = true;
+            this.uploadFileDot = true;
+            this.experiencesDot = true;
+            this.displayPageDot = true;
+            this.finalizePageDot = true;
+            sessionStorage.setItem("instructionsDot", "true");
+            sessionStorage.setItem("uploadFileDot", "true");
+            sessionStorage.setItem("experiencesDot", "true");
+            sessionStorage.setItem("displayPageDot", "true");
+            sessionStorage.setItem("finalizePageDot", "true");
         }
     }
 
@@ -89,7 +160,9 @@ export class DotNavigationComponent implements OnInit {
 
         this.instructionsDot = true;
         this.uploadFileDot = false;
-        this.experiencesDot = false;
+        this.experiencesDot = this.startNavigationFromExperiences
+            ? true
+            : false;
         this.displayPageDot = false;
         this.finalizePageDot = false;
         this.router.navigate(["/instructions"]);
@@ -121,9 +194,11 @@ export class DotNavigationComponent implements OnInit {
             JSON.stringify(userIntData)
         );
 
-        this.instructionsDot = false;
+        this.instructionsDot = true;
         this.uploadFileDot = true;
-        this.experiencesDot = false;
+        this.experiencesDot = this.startNavigationFromExperiences
+            ? true
+            : false;
         this.displayPageDot = false;
         this.finalizePageDot = false;
         this.router.navigate(["/lesson"]);
@@ -153,8 +228,10 @@ export class DotNavigationComponent implements OnInit {
             JSON.stringify(userIntData)
         );
 
-        this.instructionsDot = false;
-        this.uploadFileDot = false;
+        this.instructionsDot = this.startNavigationFromExperiences
+            ? false
+            : true;
+        this.uploadFileDot = this.startNavigationFromExperiences ? false : true;
         this.experiencesDot = true;
         this.displayPageDot = false;
         this.finalizePageDot = false;
@@ -182,9 +259,9 @@ export class DotNavigationComponent implements OnInit {
             JSON.stringify(userIntData)
         );
 
-        this.instructionsDot = false;
-        this.uploadFileDot = false;
-        this.experiencesDot = false;
+        this.instructionsDot = true;
+        this.uploadFileDot = true;
+        this.experiencesDot = true;
         this.displayPageDot = true;
         this.finalizePageDot = false;
         this.router.navigate(["/display"]);
@@ -211,10 +288,10 @@ export class DotNavigationComponent implements OnInit {
             JSON.stringify(userIntData)
         );
 
-        this.instructionsDot = false;
-        this.uploadFileDot = false;
-        this.experiencesDot = false;
-        this.displayPageDot = false;
+        this.instructionsDot = true;
+        this.uploadFileDot = true;
+        this.experiencesDot = true;
+        this.displayPageDot = true;
         this.finalizePageDot = true;
         this.router.navigate(["/finalize"]);
     }
