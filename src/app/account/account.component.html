@@ -1,17 +1,24 @@
 <div class="account-container">
-    <p style="font-size: 30px; font-weight: 900; color: #47141c; padding: 10px">
+    <p
+        style="
+            font-size: 30px;
+            line-height: 35px;
+            font-weight: bold;
+            color: #47141c;
+            padding: 10px;
+        "
+    >
         Account Settings
     </p>
-    <p style="font-size: 20px">Username: {{ currentUsername }}</p>
+    <p style="font-size: 25px">
+        <strong>Username:</strong> {{ currentUsername }}
+    </p>
 
     <button (click)="showForm = !showForm">Update Password</button>
 
     <div class="password-form" *ngIf="showForm">
         <label>Current Password: </label>
         <input type="password" [(ngModel)]="currentPassword" />
-
-        <label> New Password:</label>
-        <input type="password" [(ngModel)]="newPassword" />
 
         <ul class="password-requirements">
             <li [class.valid]="newPassword && newPassword.length > 8">
@@ -40,12 +47,17 @@
                 At least one special character
             </li>
         </ul>
-        <label>
-            Confirm New Password:
-            <input type="password" [(ngModel)]="confirmPassword" />
-        </label>
+
+        <label> New Password:</label>
+        <input type="password" [(ngModel)]="newPassword" />
+
+        <label> Confirm New Password:</label>
+        <input
+            type="password"
+            [(ngModel)]="confirmPassword"
+            style="margin-bottom: 10px"
+        />
+        <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
         <button (click)="changePassword()">Submit</button>
     </div>
-
-    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
 </div>
