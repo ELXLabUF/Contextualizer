@@ -136,12 +136,12 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
 
     selectedExperienceToAdd: Experience | null = null;
     selectedMainTopic: string = "";
-    selectedSubTopic: string = "";
+    // selectedSubTopic: string = "";
 
     id: string = "";
     created_at: Date | null = null;
     mainTopicSubscription!: Subscription;
-    subTopicSubscription!: Subscription;
+    // subTopicSubscription!: Subscription;
 
     integratedExperiencesForGrade: any = [];
     integratedExperiencesForSubject: any = [];
@@ -235,7 +235,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
 
                         this.id = doc.id || "";
                         this.selectedMainTopic = this.pdfData.mainTopic || "";
-                        this.selectedSubTopic = this.pdfData.subTopic || "";
+                        // this.selectedSubTopic = this.pdfData.subTopic || "";
                         this.created_at = this.pdfData.createdAt.toDate() || "";
 
                         this.integratedExperiencesForGrade =
@@ -324,9 +324,9 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                         console.log(
                             "The main topic is " + this.selectedMainTopic
                         );
-                        console.log(
-                            "The sub topic is " + this.selectedSubTopic
-                        );
+                        // console.log(
+                        //     "The sub topic is " + this.selectedSubTopic
+                        // );
                         console.log("The created date is " + this.created_at);
                         console.log(
                             "The Integrated Experiences are: " +
@@ -575,7 +575,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     addPDFToFirestore() {
         this.expIntegratedPDF.id = "user";
         this.expIntegratedPDF.main_topic = this.selectedMainTopic;
-        this.expIntegratedPDF.sub_topic = this.selectedSubTopic;
+        // this.expIntegratedPDF.sub_topic = this.selectedSubTopic;
         this.expIntegratedPDF.pdf_data = this.pdfData;
         this.integrateExpService.addParsedPDF(this.expIntegratedPDF);
     }

@@ -27,38 +27,46 @@ export class LessonPageComponent implements OnInit, OnDestroy {
     labelText: string = "No file selected";
     uploadInProgress: boolean = false;
 
+    // mainTopics: string[] = [
+    //     "Life Science",
+    //     "Physical Science",
+    //     "Earth and Space Science",
+    //     "Nature of Science",
+    // ];
+
     mainTopics: string[] = [
-        "Life Science",
-        "Physical Science",
-        "Earth and Space Science",
-        "Nature of Science",
+        "Adaptation",
+        "Carbon Cycle",
+        "Energy Flow",
+        "Friction",
+        "Gravity",
     ];
 
-    subTopics: { [key: string]: string[] } = {
-        "Life Science": [
-            "Organization and Development of Living Organisms",
-            "Diversity and Evolution of Living Organism",
-            "Interdependence",
-        ],
-        "Physical Science": [
-            "Properties of Matter",
-            "Changes in Matter",
-            "Forms of Energy",
-            "Energy Transfer and Transformations",
-            "Forces and Changes in Motion",
-        ],
-        "Earth and Space Science": [
-            "Earth in Space and Time",
-            "Earth Systems and Patterns",
-        ],
-        "Nature of Science": [
-            "The Practice of Science",
-            "The Characteristics of Scientific Knowledge",
-        ],
-    };
+    // subTopics: { [key: string]: string[] } = {
+    //     "Life Science": [
+    //         "Organization and Development of Living Organisms",
+    //         "Diversity and Evolution of Living Organism",
+    //         "Interdependence",
+    //     ],
+    //     "Physical Science": [
+    //         "Properties of Matter",
+    //         "Changes in Matter",
+    //         "Forms of Energy",
+    //         "Energy Transfer and Transformations",
+    //         "Forces and Changes in Motion",
+    //     ],
+    //     "Earth and Space Science": [
+    //         "Earth in Space and Time",
+    //         "Earth Systems and Patterns",
+    //     ],
+    //     "Nature of Science": [
+    //         "The Practice of Science",
+    //         "The Characteristics of Scientific Knowledge",
+    //     ],
+    // };
 
     selectedMainTopic: string = "";
-    selectedSubTopic: string = "";
+    // selectedSubTopic: string = "";
 
     timeStart!: Date;
     timeEnd!: Date;
@@ -148,26 +156,26 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         );
     }
 
-    onSubTopicDropdownClick() {
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Select a sub-topic' dropdown menu",
-                Result: "Select the sub-topic",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Select a sub-topic' at " + time.toLocaleString()
-        );
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-    }
+    // onSubTopicDropdownClick() {
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push(
+    //         {
+    //             Action: "Clicked",
+    //             Target: "'Select a sub-topic' dropdown menu",
+    //             Result: "Select the sub-topic",
+    //             Time: time.toLocaleString(),
+    //         }
+    //         // "Clicked 'Select a sub-topic' at " + time.toLocaleString()
+    //     );
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
+    // }
 
     openAlertDialog(title: string, message: string): void {
         this.dialog.open(AlertDialogComponent, {
@@ -253,7 +261,8 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
 
-        if (!this.selectedMainTopic || !this.selectedSubTopic) {
+        // if (!this.selectedMainTopic || !this.selectedSubTopic) {
+        if (!this.selectedMainTopic) {
             if (!this.selectedFile) {
                 this.uploadStatus =
                     "Please select both topic and sub-topic and a file";
@@ -273,9 +282,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         }
 
         this.expLessonPlanService.changeMainTopic(this.selectedMainTopic); // deliver selected main topic to other components
-        this.expLessonPlanService.changeSubTopic(this.selectedSubTopic); // deliver selected sub topic to other components
+        // this.expLessonPlanService.changeSubTopic(this.selectedSubTopic); // deliver selected sub topic to other components
 
-        const filePath = `${this.selectedMainTopic}/${this.selectedSubTopic}/${this.selectedFile.name}`;
+        // const filePath = `${this.selectedMainTopic}/${this.selectedSubTopic}/${this.selectedFile.name}`;
+        const filePath = `${this.selectedMainTopic}/${this.selectedFile.name}`;
         const fileRef = ref(this.storage, `lesson-files/${filePath}`);
         const uploadTask = uploadBytesResumable(fileRef, this.selectedFile);
 
@@ -316,9 +326,9 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                 const mainTopic =
                                     this.expLessonPlanService
                                         .currentMainTopicValue;
-                                const subTopic =
-                                    this.expLessonPlanService
-                                        .currentSubTopicValue;
+                                // const subTopic =
+                                //     this.expLessonPlanService
+                                //         .currentSubTopicValue;
 
                                 if (
                                     sessionStorage.getItem("altNavigation") ===
@@ -417,7 +427,7 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                             integrated_experiences: [],
                                         },
                                         mainTopic: mainTopic,
-                                        subTopic: subTopic,
+                                        // subTopic: subTopic,
                                         createdAt: new Date(),
                                         integrated_experiences: [
                                             ...multipleIntegrate,
@@ -428,10 +438,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                         "At Upload, Main Topic: ",
                                         mainTopic
                                     );
-                                    console.log(
-                                        "At Upload, Sub Topic: ",
-                                        subTopic
-                                    );
+                                    // console.log(
+                                    //     "At Upload, Sub Topic: ",
+                                    //     subTopic
+                                    // );
                                     console.log(
                                         "At Upload, Created At: ",
                                         new Date()
@@ -498,7 +508,7 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                             integrated_experiences: [],
                                         },
                                         mainTopic: mainTopic,
-                                        subTopic: subTopic,
+                                        // subTopic: subTopic,
                                         createdAt: new Date(),
                                         integrated_experiences: [],
                                     };
@@ -507,10 +517,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                         "At Upload, Main Topic: ",
                                         mainTopic
                                     );
-                                    console.log(
-                                        "At Upload, Sub Topic: ",
-                                        subTopic
-                                    );
+                                    // console.log(
+                                    //     "At Upload, Sub Topic: ",
+                                    //     subTopic
+                                    // );
                                     console.log(
                                         "At Upload, Created At: ",
                                         new Date()
@@ -571,6 +581,6 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         this.uploadProgress = 0;
         this.fileDownloadURL = "";
         this.selectedMainTopic = "";
-        this.selectedSubTopic = "";
+        // this.selectedSubTopic = "";
     }
 }

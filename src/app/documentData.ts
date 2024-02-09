@@ -16,6 +16,6 @@ export interface DocumentData {
     Reflection?: string;
     Topic?: string;
     mainTopic?: string;
-    subTopic?: string;
+    // subTopic?: string;
     createdAt?: Timestamp;
 }
