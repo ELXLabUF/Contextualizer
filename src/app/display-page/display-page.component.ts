@@ -801,6 +801,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                         })
                     );
                     this.router.navigate(["/display"]);
+                    this.ngOnInit();
                 } catch (error) {
                     console.error("Error while updating field order:", error);
                 }
