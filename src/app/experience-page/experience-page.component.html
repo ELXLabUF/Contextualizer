@@ -971,14 +971,12 @@
                                 <mat-radio-group aria-label="Select an option">
                                     <mat-radio-button
                                         value="timeOldest"
-                                        (change)="filterByTimeAscending($event)"
+                                        (change)="sortByTime($event)"
                                         >Oldest to Newest</mat-radio-button
                                     >
                                     <mat-radio-button
                                         value="timeNewest"
-                                        (change)="
-                                            filterByTimeDescending($event)
-                                        "
+                                        (change)="sortByTime($event)"
                                         >Newest to Oldest</mat-radio-button
                                     >
                                 </mat-radio-group>

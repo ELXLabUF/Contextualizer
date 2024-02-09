@@ -1217,13 +1217,10 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.selectedHigh = checked;
     }
 
-    filterByTimeAscending(event: any) {
+    sortByTime(event: any) {
         event.value === "timeOldest"
             ? (this.sortOldToNew = true)
             : (this.sortOldToNew = false);
-    }
-
-    filterByTimeDescending(event: any) {
         event.value === "timeNewest"
             ? (this.sortNewToOld = true)
             : (this.sortNewToOld = false);
@@ -1893,37 +1890,37 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
-    sortExperiences(event: any): void {
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Sort By' filter",
-            Result: "Sort experiences",
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
+    // sortExperiences(event: any): void {
+    //     let userIntData: any = [];
+    //     let time = new Date();
+    //     userIntData = JSON.parse(
+    //         sessionStorage.getItem("userInteractionData") || "[]"
+    //     );
+    //     userIntData.push({
+    //         Action: "Clicked",
+    //         Target: "'Sort By' filter",
+    //         Result: "Sort experiences",
+    //         Time: time.toLocaleString(),
+    //     });
+    //     sessionStorage.setItem(
+    //         "userInteractionData",
+    //         JSON.stringify(userIntData)
+    //     );
 
-        switch (event) {
-            case "timeNewest":
-                this.experiences.sort(
-                    (a: Experience, b: Experience) =>
-                        new Date(b.date).getTime() - new Date(a.date).getTime()
-                );
-                break;
+    //     switch (event) {
+    //         case "timeNewest":
+    //             this.experiences.sort(
+    //                 (a: Experience, b: Experience) =>
+    //                     new Date(b.date).getTime() - new Date(a.date).getTime()
+    //             );
+    //             break;
 
-            case "timeOldest":
-                this.experiences.sort(
-                    (a: Experience, b: Experience) =>
-                        new Date(a.date).getTime() - new Date(b.date).getTime()
-                );
-                break;
-        }
-    }
+    //         case "timeOldest":
+    //             this.experiences.sort(
+    //                 (a: Experience, b: Experience) =>
+    //                     new Date(a.date).getTime() - new Date(b.date).getTime()
+    //             );
+    //             break;
+    //     }
+    // }
 }
