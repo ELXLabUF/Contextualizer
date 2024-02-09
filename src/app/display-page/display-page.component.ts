@@ -462,7 +462,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
 
     enableEditing(field: any) {
         field.editing = true;
-        field.editValue = this.pdfData[field.key]?.content;
+        field.editValue = this.pdfData[field.key]?.content.content;
     }
 
     enableLabelEditing(field: any) {
@@ -481,7 +481,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         // Update Firestore document
         const updatedFieldData = {
             ...this.pdfData[field.key],
-            content: field.editValue,
+            content: { content: field.editValue },
         };
 
         this.firestore
