@@ -44,6 +44,8 @@
         <div class="exp-display-container flex-child">
             <p style="font-size: 25px; text-align: left; margin-bottom: 25px">
                 Select students' experiences to integrate into your lesson plan.
+                Use the filters on the right side of your screen to update the
+                list below.
             </p>
             <p style="font-size: 18px; color: #808080">
                 Showing {{ selectedExperiences }} of 168 entries
@@ -364,7 +366,7 @@
                     Integrate all selected
                 </button>
                 <button
-                    class="integrate-all-alt-button"
+                    class="integrate-all-button"
                     *ngIf="this.startNavigationFromExperiences"
                     (click)="integrateMultipleExp()"
                 >

@@ -174,7 +174,7 @@ html, body {
 }
 
 .options-container {
-    margin-top: 85px;
+    margin-top: 110px;
     padding: 20px;
     width: 25%;
     /* flex: 1; */
@@ -204,9 +204,10 @@ html, body {
 }
 
 .student-search-filter button {
-    height: 55px;
+    height: 60px;
     width: 100%;
-    margin-bottom: 30px;
+    margin: 5px auto;
+    display: block;
 }
 
 .integrate-all-button {
@@ -214,27 +215,13 @@ html, body {
     color: #FFFFFF;
     border: none;
     border-radius: 10px;
-    padding: 20px 25px;
-    font-size: 25px;
+    padding: 20px;
+    font-size: 30px;
     cursor: pointer;
-    width: max-content;
-    line-height: 25px;
+    width: 100%;
+    line-height: 35px;
     word-wrap: break-word;
-    margin: 0px 30px;
-}
-
-.integrate-all-alt-button {
-    background-color: #47141C;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 10px;
-    padding: 20px 25px;
-    font-size: 25px;
-    cursor: pointer;
-    width: 90%;
-    line-height: 30px;
-    word-wrap: break-word;
-    margin: 0px 25px;
+    margin-top: 30px;
 }
 
 button {
