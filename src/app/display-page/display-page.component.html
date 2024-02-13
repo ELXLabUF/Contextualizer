@@ -152,7 +152,7 @@
                 *ngFor="let experience of integratedExperiences"
             >
                 <mat-expansion-panel
-                    hideToggle
+                    [expanded]="true"
                     draggable="true"
                     (dragstart)="
                         onDragStart(
