@@ -249,12 +249,12 @@ export class PdfReaderService {
                     element.startsWith(fields[index + 1])
                 );
             } else {
-                // endIndex = arr.length;
-                endIndex = arr.findIndex((element) =>
-                    element.startsWith(
-                        "This lesson plan template is based on: Nagro, S. A., Fraser, D. W., & Hooks, S. D. (2019)."
-                    )
-                );
+                // endIndex = arr.findIndex((element) =>
+                //     element.startsWith(
+                //         "This lesson plan template is based on: Nagro, S. A., Fraser, D. W., & Hooks, S. D. (2019)."
+                //     )
+                // );
+                endIndex = arr.length;
             }
 
             if (startIndex !== -1 && endIndex !== -1) {
