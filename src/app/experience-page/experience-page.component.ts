@@ -104,6 +104,12 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     selectedLow: boolean = false;
     selectedMid: boolean = false;
     selectedHigh: boolean = false;
+    selectedPurple: boolean = false;
+    selectedPink: boolean = false;
+    selectedGreen: boolean = false;
+    selectedBlue: boolean = false;
+    selectedYellow: boolean = false;
+    selectedOrange: boolean = false;
     sortOldToNew: boolean = false;
     sortNewToOld: boolean = false;
 
@@ -1101,131 +1107,6 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         // this.cdr.detectChanges();
     }
 
-    filterByGenderFemale(checked: boolean) {
-        this.selectedFemale = checked;
-    }
-
-    filterByGenderMale(checked: boolean) {
-        this.selectedMale = checked;
-    }
-
-    filterByLastTestGradeA(checked: boolean) {
-        this.selectedLastTestGradeA = checked;
-    }
-
-    filterByLastTestGradeB(checked: boolean) {
-        this.selectedLastTestGradeB = checked;
-    }
-
-    filterByLastTestGradeC(checked: boolean) {
-        this.selectedLastTestGradeC = checked;
-    }
-
-    filterByLastTestGradeD(checked: boolean) {
-        this.selectedLastTestGradeD = checked;
-    }
-
-    filterByLastTestGradeF(checked: boolean) {
-        this.selectedLastTestGradeF = checked;
-    }
-
-    filterByOverallGradeA(checked: boolean) {
-        this.selectedOverallGradeA = checked;
-    }
-
-    filterByOverallGradeB(checked: boolean) {
-        this.selectedOverallGradeB = checked;
-    }
-
-    filterByOverallGradeC(checked: boolean) {
-        this.selectedOverallGradeC = checked;
-    }
-
-    filterByOverallGradeD(checked: boolean) {
-        this.selectedOverallGradeD = checked;
-    }
-
-    filterByOverallGradeF(checked: boolean) {
-        this.selectedOverallGradeF = checked;
-    }
-
-    filterByADHD(checked: boolean) {
-        this.selectedADHD = checked;
-    }
-
-    filterByAutism(checked: boolean) {
-        this.selectedAutism = checked;
-    }
-
-    filterByDyslexia(checked: boolean) {
-        this.selectedDyslexia = checked;
-    }
-
-    filterByDyscalculia(checked: boolean) {
-        this.selectedDyscalculia = checked;
-    }
-
-    filterByNone(checked: boolean) {
-        this.selectedNone = checked;
-    }
-
-    filterByAfricanAmerican(checked: boolean) {
-        this.selectedAfricanAmerican = checked;
-    }
-
-    filterByAsian(checked: boolean) {
-        this.selectedAsian = checked;
-    }
-
-    filterByHispanic(checked: boolean) {
-        this.selectedHispanic = checked;
-    }
-
-    filterByWhite(checked: boolean) {
-        this.selectedWhite = checked;
-    }
-
-    filterBy80to84(checked: boolean) {
-        this.selected80to84 = checked;
-    }
-
-    filterBy85to89(checked: boolean) {
-        this.selected85to89 = checked;
-    }
-
-    filterBy90to94(checked: boolean) {
-        this.selected90to94 = checked;
-    }
-
-    filterBy95to99(checked: boolean) {
-        this.selected95to99 = checked;
-    }
-
-    filterBy100(checked: boolean) {
-        this.selected100 = checked;
-    }
-
-    filterByLow(checked: boolean) {
-        this.selectedLow = checked;
-    }
-
-    filterByMid(checked: boolean) {
-        this.selectedMid = checked;
-    }
-
-    filterByHigh(checked: boolean) {
-        this.selectedHigh = checked;
-    }
-
-    sortByTime(event: any) {
-        event.value === "timeOldest"
-            ? (this.sortOldToNew = true)
-            : (this.sortOldToNew = false);
-        event.value === "timeNewest"
-            ? (this.sortNewToOld = true)
-            : (this.sortNewToOld = false);
-    }
-
     // filterExperiencesByStudentGender(event: any): void {
     //     if (!event || event.length === 0) {
     //         // this.experiences = [...this.filteredExp];
@@ -1703,6 +1584,39 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     //     // this.cdr.detectChanges();
     // }
 
+    filterByBlue() {
+        this.selectedBlue = !this.selectedBlue;
+    }
+
+    filterByGreen() {
+        this.selectedGreen = !this.selectedGreen;
+    }
+
+    filterByOrange() {
+        this.selectedOrange = !this.selectedOrange;
+    }
+
+    filterByPink() {
+        this.selectedPink = !this.selectedPink;
+    }
+
+    filterByPurple() {
+        this.selectedPurple = !this.selectedPurple;
+    }
+
+    filterByYellow() {
+        this.selectedYellow = !this.selectedYellow;
+    }
+
+    sortByTime(event: any) {
+        event.value === "timeOldest"
+            ? (this.sortOldToNew = true)
+            : (this.sortOldToNew = false);
+        event.value === "timeNewest"
+            ? (this.sortNewToOld = true)
+            : (this.sortNewToOld = false);
+    }
+
     applyAdvancedSearchFilters() {
         this.filteredExp = [...this.allExperiences];
 
@@ -1868,6 +1782,33 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                         (this.selectedMid ? "Mid" : null) ||
                     value.student_data.student_class_participation ===
                         (this.selectedHigh ? "High" : null)
+            );
+        }
+
+        this.filteredExp = [...this.experiences];
+
+        if (
+            this.selectedBlue ||
+            this.selectedGreen ||
+            this.selectedOrange ||
+            this.selectedPink ||
+            this.selectedPurple ||
+            this.selectedYellow
+        ) {
+            this.experiences = this.filteredExp.filter(
+                (value: Experience) =>
+                    value.student_data.student_table ===
+                        (this.selectedBlue ? "Blue" : null) ||
+                    value.student_data.student_table ===
+                        (this.selectedGreen ? "Green" : null) ||
+                    value.student_data.student_table ===
+                        (this.selectedOrange ? "Orange" : null) ||
+                    value.student_data.student_table ===
+                        (this.selectedPink ? "Pink" : null) ||
+                    value.student_data.student_table ===
+                        (this.selectedPurple ? "Purple" : null) ||
+                    value.student_data.student_table ===
+                        (this.selectedYellow ? "Yellow" : null)
             );
         }
 

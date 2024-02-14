@@ -381,13 +381,22 @@
         class="modal fade"
         id="studentModal"
         tabindex="-1"
-        aria-labelledby="exampleModalLabel"
+        aria-labelledby="studentDetailsModal"
         aria-hidden="true"
     >
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content" style="width: 750px">
                 <div class="modal-header">
-                    <h1 class="modal-title" id="exampleModalLabel">
+                    <h1
+                        class="modal-title"
+                        id="studentDetailsModal"
+                        style="
+                            display: block;
+                            margin: auto;
+                            margin-left: 45%;
+                            font-size: 35px;
+                        "
+                    >
                         {{ clickedExperience.student_data.student_name }}
                     </h1>
                     <button
@@ -398,12 +407,18 @@
                     ></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <p class="col">
+                    <div class="row" style="margin-bottom: 10px">
+                        <p
+                            class="col"
+                            style="font-size: 22px; line-height: 25px"
+                        >
                             <strong>Gender:</strong>
                             {{ clickedExperience.student_data.student_gender }}
                         </p>
-                        <p class="col">
+                        <p
+                            class="col"
+                            style="font-size: 22px; line-height: 25px"
+                        >
                             <strong>Race/Ethnicity:</strong>
                             {{
                                 clickedExperience.student_data
@@ -411,15 +426,21 @@
                             }}
                         </p>
                     </div>
-                    <div class="row">
-                        <p class="col">
+                    <div class="row" style="margin-bottom: 10px">
+                        <p
+                            class="col"
+                            style="font-size: 22px; line-height: 25px"
+                        >
                             <strong>Last Test Grade:</strong>
                             {{
                                 clickedExperience.student_data
                                     .student_last_test_grade
                             }}
                         </p>
-                        <p class="col">
+                        <p
+                            class="col"
+                            style="font-size: 22px; line-height: 25px"
+                        >
                             <strong>Overall Performance:</strong>
                             {{
                                 clickedExperience.student_data
@@ -427,15 +448,21 @@
                             }}
                         </p>
                     </div>
-                    <div class="row">
-                        <p class="col">
+                    <div class="row" style="margin-bottom: 10px">
+                        <p
+                            class="col"
+                            style="font-size: 22px; line-height: 25px"
+                        >
                             <strong>Attendance:</strong>
                             {{
                                 clickedExperience.student_data
                                     .student_attendance
                             }}
                         </p>
-                        <p class="col">
+                        <p
+                            class="col"
+                            style="font-size: 22px; line-height: 25px"
+                        >
                             <strong>In Class Participation:</strong>
                             {{
                                 clickedExperience.student_data
@@ -443,18 +470,183 @@
                             }}
                         </p>
                     </div>
-                    <div class="row">
-                        <p class="col">
-                            <strong>Table:</strong>
-                            {{ clickedExperience.student_data.student_table }}
-                        </p>
-                        <p class="col">
+                    <div class="row" style="margin-bottom: 10px">
+                        <p
+                            class="col"
+                            style="font-size: 22px; line-height: 25px"
+                        >
                             <strong>Learning Disability:</strong>
                             {{
                                 clickedExperience.student_data
                                     .student_learning_disability
                             }}
                         </p>
+                        <div class="col">
+                            <p style="font-size: 22px; line-height: 25px">
+                                <strong>Student Table:</strong>
+                            </p>
+                            <div class="col" style="margin-left: 10px">
+                                <div class="row" style="margin: 5px auto">
+                                    <img
+                                        src="./../../assets/Seating Chart - Teacher.png"
+                                        style="
+                                            width: 200px;
+                                            height: 100px;
+                                            padding: 50px auto;
+                                            margin-left: 50px;
+                                        "
+                                    />
+                                </div>
+                                <div class="row" style="margin: 5px auto">
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table === 'Purple'
+                                        "
+                                        src="./../../assets/Seating Chart - Purple Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table !== 'Purple'
+                                        "
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table === 'Pink'
+                                        "
+                                        src="./../../assets/Seating Chart - Pink Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table !== 'Pink'
+                                        "
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table === 'Green'
+                                        "
+                                        src="./../../assets/Seating Chart - Green Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table !== 'Green'
+                                        "
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                </div>
+                                <div class="row" style="margin: 5px auto">
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table === 'Blue'
+                                        "
+                                        src="./../../assets/Seating Chart - Blue Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table !== 'Blue'
+                                        "
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table === 'Yellow'
+                                        "
+                                        src="./../../assets/Seating Chart - Yellow Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table !== 'Yellow'
+                                        "
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table === 'Orange'
+                                        "
+                                        src="./../../assets/Seating Chart - Orange Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                    <img
+                                        *ngIf="
+                                            clickedExperience.student_data
+                                                .student_table !== 'Orange'
+                                        "
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -462,6 +654,7 @@
                         type="button"
                         class="btn btn-secondary"
                         data-bs-dismiss="modal"
+                        style="font-size: 25px"
                     >
                         Close
                     </button>
@@ -475,13 +668,22 @@
         class="modal fade"
         id="filterModal"
         tabindex="-1"
-        aria-labelledby="exampleModalLabel"
+        aria-labelledby="studentFilterModal"
         aria-hidden="true"
     >
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title" id="exampleModalLabel">
+                    <h1
+                        class="modal-title"
+                        id="studentFilterModal"
+                        style="
+                            display: block;
+                            margin: auto;
+                            margin-left: 35%;
+                            font-size: 30px;
+                        "
+                    >
                         Advanced Search and Filter
                     </h1>
                     <button
@@ -498,7 +700,8 @@
                                 <div class="col" style="max-width: 75%">
                                     <p
                                         style="
-                                            font-size: 15px;
+                                            font-size: 20px;
+                                            line-height: 25px;
                                             padding-left: 10px;
                                             padding-right: 0px;
                                             margin-right: 0px;
@@ -542,7 +745,8 @@
                                 <div class="col" style="max-width: 75%">
                                     <p
                                         style="
-                                            font-size: 15px;
+                                            font-size: 20px;
+                                            line-height: 25px;
                                             padding-left: 10px;
                                             padding-right: 0px;
                                             margin-right: 0px;
@@ -570,16 +774,12 @@
                             <section class="search-student-gender">
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        filterByGenderFemale($event.checked)
-                                    "
+                                    (change)="selectedFemale = $event.checked"
                                     >Female</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        filterByGenderMale($event.checked)
-                                    "
+                                    (change)="selectedMale = $event.checked"
                                     >Male</mat-checkbox
                                 >
                             </section>
@@ -590,7 +790,8 @@
                                 <div class="col" style="max-width: 75%">
                                     <p
                                         style="
-                                            font-size: 15px;
+                                            font-size: 20px;
+                                            line-height: 25px;
                                             padding-left: 10px;
                                             padding-right: 0px;
                                             margin-right: 0px;
@@ -620,35 +821,35 @@
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByLastTestGradeA($event.checked)
+                                        selectedLastTestGradeA = $event.checked
                                     "
                                     >A</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByLastTestGradeB($event.checked)
+                                        selectedLastTestGradeB = $event.checked
                                     "
                                     >B</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByLastTestGradeC($event.checked)
+                                        selectedLastTestGradeC = $event.checked
                                     "
                                     >C</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByLastTestGradeD($event.checked)
+                                        selectedLastTestGradeD = $event.checked
                                     "
                                     >D</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByLastTestGradeF($event.checked)
+                                        selectedLastTestGradeF = $event.checked
                                     "
                                     >F</mat-checkbox
                                 >
@@ -660,7 +861,8 @@
                                 <div class="col" style="max-width: 75%">
                                     <p
                                         style="
-                                            font-size: 15px;
+                                            font-size: 20px;
+                                            line-height: 25px;
                                             padding-left: 10px;
                                             padding-right: 0px;
                                             margin-right: 0px;
@@ -690,35 +892,35 @@
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByOverallGradeA($event.checked)
+                                        selectedOverallGradeA = $event.checked
                                     "
                                     >A</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByOverallGradeB($event.checked)
+                                        selectedOverallGradeB = $event.checked
                                     "
                                     >B</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByOverallGradeC($event.checked)
+                                        selectedOverallGradeC = $event.checked
                                     "
                                     >C</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByOverallGradeD($event.checked)
+                                        selectedOverallGradeD = $event.checked
                                     "
                                     >D</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByOverallGradeF($event.checked)
+                                        selectedOverallGradeF = $event.checked
                                     "
                                     >F</mat-checkbox
                                 >
@@ -726,13 +928,14 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row" style="margin-top: 20px">
                         <div class="col">
                             <div class="row">
                                 <div class="col" style="max-width: 75%">
                                     <p
                                         style="
-                                            font-size: 15px;
+                                            font-size: 20px;
+                                            line-height: 25px;
                                             padding-left: 10px;
                                             padding-right: 0px;
                                             margin-right: 0px;
@@ -761,29 +964,29 @@
                             <section class="search-student-learning-disability">
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterByADHD($event.checked)"
+                                    (change)="selectedADHD = $event.checked"
                                     >ADHD</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterByAutism($event.checked)"
+                                    (change)="selectedAutism = $event.checked"
                                     >Autism</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterByDyslexia($event.checked)"
+                                    (change)="selectedDyslexia = $event.checked"
                                     >Dyslexia</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByDyscalculia($event.checked)
+                                        selectedDyscalculia = $event.checked
                                     "
                                     >Dyscalculia</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterByNone($event.checked)"
+                                    (change)="selectedNone = $event.checked"
                                     >None Reported</mat-checkbox
                                 >
                             </section>
@@ -794,7 +997,8 @@
                                 <div class="col" style="max-width: 75%">
                                     <p
                                         style="
-                                            font-size: 15px;
+                                            font-size: 20px;
+                                            line-height: 25px;
                                             padding-left: 10px;
                                             padding-right: 0px;
                                             margin-right: 0px;
@@ -824,23 +1028,23 @@
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        filterByAfricanAmerican($event.checked)
+                                        selectedAfricanAmerican = $event.checked
                                     "
                                     >African-American</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterByAsian($event.checked)"
+                                    (change)="selectedAsian = $event.checked"
                                     >Asian</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterByHispanic($event.checked)"
+                                    (change)="selectedHispanic = $event.checked"
                                     >Hispanic</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterByWhite($event.checked)"
+                                    (change)="selectedWhite = $event.checked"
                                     >White</mat-checkbox
                                 >
                             </section>
@@ -851,7 +1055,8 @@
                                 <div class="col" style="max-width: 75%">
                                     <p
                                         style="
-                                            font-size: 15px;
+                                            font-size: 20px;
+                                            line-height: 25px;
                                             padding-left: 10px;
                                             padding-right: 0px;
                                             margin-right: 0px;
@@ -880,27 +1085,27 @@
                             <section class="search-student-attendance">
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterBy80to84($event.checked)"
+                                    (change)="selected80to84 = $event.checked"
                                     >80% - 84%</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterBy85to89($event.checked)"
+                                    (change)="selected85to89 = $event.checked"
                                     >85% - 89%</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterBy90to94($event.checked)"
+                                    (change)="selected90to94 = $event.checked"
                                     >90% - 94%</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterBy95to99($event.checked)"
+                                    (change)="selected95to99 = $event.checked"
                                     >95% - 99%</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterBy100($event.checked)"
+                                    (change)="selected100 = $event.checked"
                                     >100%</mat-checkbox
                                 >
                             </section>
@@ -911,7 +1116,8 @@
                                 <div class="col" style="max-width: 75%">
                                     <p
                                         style="
-                                            font-size: 15px;
+                                            font-size: 20px;
+                                            line-height: 25px;
                                             padding-left: 10px;
                                             padding-right: 0px;
                                             margin-right: 0px;
@@ -940,36 +1146,217 @@
                             <section class="search-student-class-participation">
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterByLow($event.checked)"
+                                    (change)="selectedLow = $event.checked"
                                     >Low</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterByMid($event.checked)"
+                                    (change)="selectedMid = $event.checked"
                                     >Mid</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="filterByHigh($event.checked)"
+                                    (change)="selectedHigh = $event.checked"
                                     >High</mat-checkbox
                                 >
                             </section>
                         </div>
                     </div>
 
-                    <div class="row" style="text-align: center; margin: 0 auto">
+                    <!-- <div class="row" style="text-align: center; margin: 0 auto"> -->
+                    <div class="row" style="margin-top: 20px">
+                        <div class="col">
+                            <div class="row" style="margin-left: 125px">
+                                <div class="col" style="max-width: fit-content">
+                                    <p
+                                        style="
+                                            font-size: 20px;
+                                            line-height: 25px;
+                                            padding-left: 10px;
+                                            padding-right: 0px;
+                                            margin-right: 0px;
+                                        "
+                                    >
+                                        <strong>Search by student table</strong>
+                                    </p>
+                                </div>
+                                <div class="col" style="max-width: fit-content">
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Click on the tables below to filter the results by the students' seating arrangement."
+                                    ></mat-icon>
+                                </div>
+                            </div>
+                            <div class="col" style="margin-left: 125px">
+                                <div class="row" style="margin: 5px auto">
+                                    <img
+                                        src="./../../assets/Seating Chart - Teacher.png"
+                                        style="
+                                            width: 200px;
+                                            height: 100px;
+                                            padding: 50px auto;
+                                            margin-left: 50px;
+                                        "
+                                    />
+                                </div>
+                                <div class="row" style="margin: 5px auto">
+                                    <img
+                                        *ngIf="selectedPurple"
+                                        src="./../../assets/Seating Chart - Purple Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByPurple()"
+                                    />
+                                    <img
+                                        *ngIf="!selectedPurple"
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByPurple()"
+                                    />
+                                    <img
+                                        *ngIf="selectedPink"
+                                        src="./../../assets/Seating Chart - Pink Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByPink()"
+                                    />
+                                    <img
+                                        *ngIf="!selectedPink"
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByPink()"
+                                    />
+                                    <img
+                                        *ngIf="selectedGreen"
+                                        src="./../../assets/Seating Chart - Green Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByGreen()"
+                                    />
+                                    <img
+                                        *ngIf="!selectedGreen"
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByGreen()"
+                                    />
+                                </div>
+                                <div class="row" style="margin: 5px auto">
+                                    <img
+                                        *ngIf="selectedBlue"
+                                        src="./../../assets/Seating Chart - Blue Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByBlue()"
+                                    />
+                                    <img
+                                        *ngIf="!selectedBlue"
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByBlue()"
+                                    />
+                                    <img
+                                        *ngIf="selectedYellow"
+                                        src="./../../assets/Seating Chart - Yellow Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByYellow()"
+                                    />
+                                    <img
+                                        *ngIf="!selectedYellow"
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByYellow()"
+                                    />
+                                    <img
+                                        *ngIf="selectedOrange"
+                                        src="./../../assets/Seating Chart - Orange Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByOrange()"
+                                    />
+                                    <img
+                                        *ngIf="!selectedOrange"
+                                        src="./../../assets/Seating Chart - Table.png"
+                                        style="
+                                            width: 100px;
+                                            height: 110px;
+                                            margin: 0px;
+                                        "
+                                        (click)="filterByOrange()"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                         <div
                             class="col"
                             style="
-                                display: inline-block;
-                                vertical-align: middle;
-                                float: none;
+                                display: block;
+                                margin: auto;
+                                margin-top: 0px;
                             "
                         >
-                            <div class="row">
-                                <strong>Sort by date of experience</strong>
+                            <div class="row" style="margin-left: 115px">
+                                <div class="col" style="max-width: fit-content">
+                                    <p
+                                        style="
+                                            font-size: 20px;
+                                            line-height: 25px;
+                                            margin-left: 10px;
+                                        "
+                                    >
+                                        <strong
+                                            >Sort by date of experience</strong
+                                        >
+                                    </p>
+                                </div>
+                                <div class="col" style="max-width: fit-content">
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Use the radio buttons below to sort the results based on time of submission."
+                                    ></mat-icon>
+                                </div>
                             </div>
-                            <div class="row">
+
+                            <div class="row" style="margin-left: 115px">
                                 <mat-radio-group aria-label="Select an option">
                                     <mat-radio-button
                                         value="timeOldest"
