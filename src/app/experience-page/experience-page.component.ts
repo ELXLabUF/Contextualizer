@@ -897,14 +897,13 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
 
-        this.experiences = this.filteredExp.filter(
-            (value: Experience) =>
-                value.experience_title
-                    .toLowerCase()
-                    .includes(this.keywordSearchTerm.toLowerCase()) ||
-                value.experience_description
-                    .toLowerCase()
-                    .includes(this.keywordSearchTerm.toLowerCase())
+        this.experiences = this.filteredExp.filter((value: Experience) =>
+            // value.experience_title
+            //     .toLowerCase()
+            //     .includes(this.keywordSearchTerm.toLowerCase()) ||
+            value.experience_description
+                .toLowerCase()
+                .includes(this.keywordSearchTerm.toLowerCase())
         );
 
         // this.experiences.forEach((experience: any) => {
