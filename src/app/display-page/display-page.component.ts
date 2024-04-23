@@ -201,106 +201,59 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.timeStart = new Date();
         let userIntData: any = [];
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
+        userIntData = JSON.parse(sessionStorage.getItem("userInteractionData") || "[]");
         userIntData.push({
             Action: "Visited",
             Target: "Display LP page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
+        sessionStorage.setItem("userInteractionData",JSON.stringify(userIntData));
         sessionStorage.setItem("timeStart", this.timeStart.toString());
 
         this.fileDownloadURL = sessionStorage.getItem("fileURL");
-        if (this.fileDownloadURL) {
+        const documentId = sessionStorage.getItem("documentId");
+
+        if (documentId) {
             this.firestore
-                .collection("Documents", (ref) =>
-                    ref.orderBy("createdAt", "desc").limit(1)
-                )
+                .collection("Documents")
+                .doc(documentId)
                 .get()
                 .toPromise()
                 .then((querySnapshot) => {
-                    if (querySnapshot && !querySnapshot.empty) {
-                        // console.log("Query Snapshot found");
-                        const doc = querySnapshot.docs[0];
+                    if (querySnapshot && querySnapshot.exists) {
 
-                        this.pdfData = doc.data();
-
+                        this.pdfData = querySnapshot.data();
                         console.log("PDF DATA ->", this.pdfData);
 
-                        this.id = doc.id || "";
+                        // this.id = doc.id || "";
                         this.selectedMainTopic = this.pdfData.mainTopic || "";
                         // this.selectedSubTopic = this.pdfData.subTopic || "";
                         this.created_at = this.pdfData.createdAt.toDate() || "";
 
-                        this.integratedExperiencesForGrade =
-                            this.pdfData["Grade"]?.integrated_experiences || [];
-                        this.integratedExperiencesForSubject =
-                            this.pdfData["Subject"]?.integrated_experiences ||
-                            [];
-                        this.integratedExperiencesForDuration =
-                            this.pdfData["Duration"]?.integrated_experiences ||
-                            [];
-                        this.integratedExperiencesForLesson =
-                            this.pdfData["Lesson Standards & Objectives"]
-                                ?.integrated_experiences || [];
-                        this.integratedExperiencesForMaterials =
-                            this.pdfData["Materials"]?.integrated_experiences ||
-                            [];
-                        this.integratedExperiencesForWarmUp =
-                            this.pdfData["Warm-Up"]?.integrated_experiences ||
-                            [];
-                        this.integratedExperiencesForTeacher =
-                            this.pdfData["Teacher-Led Instruction"]
-                                ?.integrated_experiences || [];
-                        this.integratedExperiencesForStudent =
-                            this.pdfData["Student-Led Learning"]
-                                ?.integrated_experiences || [];
-                        this.integratedExperiencesForWrapUp =
-                            this.pdfData["Wrap-Up/Closure"]
-                                ?.integrated_experiences || [];
+                        this.integratedExperiencesForGrade = this.pdfData["Grade"]?.integrated_experiences || [];
+                        this.integratedExperiencesForSubject = this.pdfData["Subject"]?.integrated_experiences || [];
+                        this.integratedExperiencesForDuration = this.pdfData["Duration"]?.integrated_experiences || [];
+                        this.integratedExperiencesForLesson = this.pdfData["Lesson Standards & Objectives"] ?.integrated_experiences || [];
+                        this.integratedExperiencesForMaterials = this.pdfData["Materials"]?.integrated_experiences || [];
+                        this.integratedExperiencesForWarmUp = this.pdfData["Warm-Up"]?.integrated_experiences || [];
+                        this.integratedExperiencesForTeacher = this.pdfData["Teacher-Led Instruction"]?.integrated_experiences || [];
+                        this.integratedExperiencesForStudent = this.pdfData["Student-Led Learning"]?.integrated_experiences || [];
+                        this.integratedExperiencesForWrapUp = this.pdfData["Wrap-Up/Closure"]?.integrated_experiences || [];
 
-                        this.titleForGrade =
-                            this.pdfData["Grade"]?.title || this.titleForGrade;
-                        this.titleForSubject =
-                            this.pdfData["Subject"]?.title ||
-                            this.titleForSubject;
-                        this.titleForDuration =
-                            this.pdfData["Duration"]?.title ||
-                            this.titleForDuration;
-                        this.titleForLesson =
-                            this.pdfData["Lesson Standards & Objectives"]
-                                ?.title || this.titleForLesson;
-                        this.titleForMaterials =
-                            this.pdfData["Materials"]?.title ||
-                            this.titleForMaterials;
-                        this.titleForWarmUp =
-                            this.pdfData["Warm-Up"]?.title ||
-                            this.titleForWarmUp;
-                        this.titleForTeacher =
-                            this.pdfData["Teacher-Led Instruction"]?.title ||
-                            this.titleForTeacher;
-                        this.titleForStudent =
-                            this.pdfData["Student-Led Learning"]?.title ||
-                            this.titleForStudent;
-                        this.titleForWrapUp =
-                            this.pdfData["Wrap-Up/Closure"]?.title ||
-                            this.titleForWrapUp;
+                        this.titleForGrade = this.pdfData["Grade"]?.title || this.titleForGrade;
+                        this.titleForSubject = this.pdfData["Subject"]?.title || this.titleForSubject;
+                        this.titleForDuration = this.pdfData["Duration"]?.title || this.titleForDuration;
+                        this.titleForLesson = this.pdfData["Lesson Standards & Objectives"]?.title || this.titleForLesson;
+                        this.titleForMaterials = this.pdfData["Materials"]?.title || this.titleForMaterials;
+                        this.titleForWarmUp = this.pdfData["Warm-Up"]?.title || this.titleForWarmUp;
+                        this.titleForTeacher = this.pdfData["Teacher-Led Instruction"]?.title || this.titleForTeacher;
+                        this.titleForStudent = this.pdfData["Student-Led Learning"]?.title || this.titleForStudent;
+                        this.titleForWrapUp = this.pdfData["Wrap-Up/Closure"]?.title || this.titleForWrapUp;
 
-                        this.integratedExperiences =
-                            this.pdfData.integrated_experiences || "";
-
-                        const fieldOrder =
-                            (this.pdfData.fieldOrder as string[]) || [];
-                        if (
-                            !this.pdfData.fieldOrder ||
-                            this.pdfData.fieldOrder.length === 0
-                        ) {
+                        this.integratedExperiences = this.pdfData.integrated_experiences || "";
+                        const fieldOrder = (this.pdfData.fieldOrder as string[]) || [];
+                        if (!this.pdfData.fieldOrder || this.pdfData.fieldOrder.length === 0) {
                             this.setDefaultFieldOrder();
                         } else {
                             this.editableFields = fieldOrder.map(
@@ -321,17 +274,9 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
 
                         this.initializeEditValues();
                         console.log("The ID is " + this.id);
-                        console.log(
-                            "The main topic is " + this.selectedMainTopic
-                        );
-                        // console.log(
-                        //     "The sub topic is " + this.selectedSubTopic
-                        // );
+                        console.log("The main topic is " + this.selectedMainTopic);
                         console.log("The created date is " + this.created_at);
-                        console.log(
-                            "The Integrated Experiences are: " +
-                                this.integratedExperiences
-                        );
+                        console.log("The Integrated Experiences are: " + this.integratedExperiences);
                     }
                 })
                 .catch((err) =>

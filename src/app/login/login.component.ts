@@ -28,6 +28,7 @@ export class LoginComponent {
                 if (sessionStorage.getItem("userInteractionData")) {
                     sessionStorage.removeItem("userInteractionData");
                 }
+                sessionStorage.setItem("username", this.username);
                 this.router.navigate(["/landing"]);
             })
             .catch((error) => {

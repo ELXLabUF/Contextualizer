@@ -285,7 +285,8 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         // this.expLessonPlanService.changeSubTopic(this.selectedSubTopic); // deliver selected sub topic to other components
 
         // const filePath = `${this.selectedMainTopic}/${this.selectedSubTopic}/${this.selectedFile.name}`;
-        const filePath = `${this.selectedMainTopic}/${this.selectedFile.name}`;
+        const username = sessionStorage.getItem("username");
+        const filePath = `${this.selectedMainTopic}/${username}/${this.selectedFile.name}`;
         const fileRef = ref(this.storage, `lesson-files/${filePath}`);
         const uploadTask = uploadBytesResumable(fileRef, this.selectedFile);
 
@@ -326,9 +327,6 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                 const mainTopic =
                                     this.expLessonPlanService
                                         .currentMainTopicValue;
-                                // const subTopic =
-                                //     this.expLessonPlanService
-                                //         .currentSubTopicValue;
 
                                 if (
                                     sessionStorage.getItem("altNavigation") ===

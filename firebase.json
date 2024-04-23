@@ -9,13 +9,28 @@
   "hosting": [
     {
       "target": "Contextualizer",
-      "source": ".",
-      "frameworksBackend": {}
+      "public": ".", 
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/firestoreProxy/**",
+          "function": "proxyToFirestore"
+        }
+      ]
     },
     {
       "target": "pdf-upload",
       "source": ".",
-      "frameworksBackend": {}
+      "public": ".", 
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     }
   ],
   "storage": {
