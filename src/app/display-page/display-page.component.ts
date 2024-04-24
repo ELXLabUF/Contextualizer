@@ -231,7 +231,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                         console.log("PDF DATA ->", this.pdfData);
 
                         // this.id = doc.id || "";
-                        this.id = querySnapshot.id;
+                        this.id = documentId || "";
                         this.selectedMainTopic = this.pdfData.mainTopic || "";
                         // this.selectedSubTopic = this.pdfData.subTopic || "";
                         this.created_at = this.pdfData.createdAt.toDate() || "";
