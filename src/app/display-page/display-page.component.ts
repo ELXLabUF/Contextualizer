@@ -201,14 +201,19 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.timeStart = new Date();
         let userIntData: any = [];
-        userIntData = JSON.parse(sessionStorage.getItem("userInteractionData") || "[]");
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
         userIntData.push({
             Action: "Visited",
             Target: "Display LP page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
-        sessionStorage.setItem("userInteractionData",JSON.stringify(userIntData));
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
         sessionStorage.setItem("timeStart", this.timeStart.toString());
 
         this.fileDownloadURL = sessionStorage.getItem("fileURL");
@@ -222,7 +227,6 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                 .toPromise()
                 .then((querySnapshot) => {
                     if (querySnapshot && querySnapshot.exists) {
-
                         this.pdfData = querySnapshot.data();
                         console.log("PDF DATA ->", this.pdfData);
 
@@ -231,29 +235,68 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                         // this.selectedSubTopic = this.pdfData.subTopic || "";
                         this.created_at = this.pdfData.createdAt.toDate() || "";
 
-                        this.integratedExperiencesForGrade = this.pdfData["Grade"]?.integrated_experiences || [];
-                        this.integratedExperiencesForSubject = this.pdfData["Subject"]?.integrated_experiences || [];
-                        this.integratedExperiencesForDuration = this.pdfData["Duration"]?.integrated_experiences || [];
-                        this.integratedExperiencesForLesson = this.pdfData["Lesson Standards & Objectives"] ?.integrated_experiences || [];
-                        this.integratedExperiencesForMaterials = this.pdfData["Materials"]?.integrated_experiences || [];
-                        this.integratedExperiencesForWarmUp = this.pdfData["Warm-Up"]?.integrated_experiences || [];
-                        this.integratedExperiencesForTeacher = this.pdfData["Teacher-Led Instruction"]?.integrated_experiences || [];
-                        this.integratedExperiencesForStudent = this.pdfData["Student-Led Learning"]?.integrated_experiences || [];
-                        this.integratedExperiencesForWrapUp = this.pdfData["Wrap-Up/Closure"]?.integrated_experiences || [];
+                        this.integratedExperiencesForGrade =
+                            this.pdfData["Grade"]?.integrated_experiences || [];
+                        this.integratedExperiencesForSubject =
+                            this.pdfData["Subject"]?.integrated_experiences ||
+                            [];
+                        this.integratedExperiencesForDuration =
+                            this.pdfData["Duration"]?.integrated_experiences ||
+                            [];
+                        this.integratedExperiencesForLesson =
+                            this.pdfData["Lesson Standards & Objectives"]
+                                ?.integrated_experiences || [];
+                        this.integratedExperiencesForMaterials =
+                            this.pdfData["Materials"]?.integrated_experiences ||
+                            [];
+                        this.integratedExperiencesForWarmUp =
+                            this.pdfData["Warm-Up"]?.integrated_experiences ||
+                            [];
+                        this.integratedExperiencesForTeacher =
+                            this.pdfData["Teacher-Led Instruction"]
+                                ?.integrated_experiences || [];
+                        this.integratedExperiencesForStudent =
+                            this.pdfData["Student-Led Learning"]
+                                ?.integrated_experiences || [];
+                        this.integratedExperiencesForWrapUp =
+                            this.pdfData["Wrap-Up/Closure"]
+                                ?.integrated_experiences || [];
 
-                        this.titleForGrade = this.pdfData["Grade"]?.title || this.titleForGrade;
-                        this.titleForSubject = this.pdfData["Subject"]?.title || this.titleForSubject;
-                        this.titleForDuration = this.pdfData["Duration"]?.title || this.titleForDuration;
-                        this.titleForLesson = this.pdfData["Lesson Standards & Objectives"]?.title || this.titleForLesson;
-                        this.titleForMaterials = this.pdfData["Materials"]?.title || this.titleForMaterials;
-                        this.titleForWarmUp = this.pdfData["Warm-Up"]?.title || this.titleForWarmUp;
-                        this.titleForTeacher = this.pdfData["Teacher-Led Instruction"]?.title || this.titleForTeacher;
-                        this.titleForStudent = this.pdfData["Student-Led Learning"]?.title || this.titleForStudent;
-                        this.titleForWrapUp = this.pdfData["Wrap-Up/Closure"]?.title || this.titleForWrapUp;
+                        this.titleForGrade =
+                            this.pdfData["Grade"]?.title || this.titleForGrade;
+                        this.titleForSubject =
+                            this.pdfData["Subject"]?.title ||
+                            this.titleForSubject;
+                        this.titleForDuration =
+                            this.pdfData["Duration"]?.title ||
+                            this.titleForDuration;
+                        this.titleForLesson =
+                            this.pdfData["Lesson Standards & Objectives"]
+                                ?.title || this.titleForLesson;
+                        this.titleForMaterials =
+                            this.pdfData["Materials"]?.title ||
+                            this.titleForMaterials;
+                        this.titleForWarmUp =
+                            this.pdfData["Warm-Up"]?.title ||
+                            this.titleForWarmUp;
+                        this.titleForTeacher =
+                            this.pdfData["Teacher-Led Instruction"]?.title ||
+                            this.titleForTeacher;
+                        this.titleForStudent =
+                            this.pdfData["Student-Led Learning"]?.title ||
+                            this.titleForStudent;
+                        this.titleForWrapUp =
+                            this.pdfData["Wrap-Up/Closure"]?.title ||
+                            this.titleForWrapUp;
 
-                        this.integratedExperiences = this.pdfData.integrated_experiences || "";
-                        const fieldOrder = (this.pdfData.fieldOrder as string[]) || [];
-                        if (!this.pdfData.fieldOrder || this.pdfData.fieldOrder.length === 0) {
+                        this.integratedExperiences =
+                            this.pdfData.integrated_experiences || "";
+                        const fieldOrder =
+                            (this.pdfData.fieldOrder as string[]) || [];
+                        if (
+                            !this.pdfData.fieldOrder ||
+                            this.pdfData.fieldOrder.length === 0
+                        ) {
                             this.setDefaultFieldOrder();
                         } else {
                             this.editableFields = fieldOrder.map(
@@ -274,9 +317,14 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
 
                         this.initializeEditValues();
                         console.log("The ID is " + this.id);
-                        console.log("The main topic is " + this.selectedMainTopic);
+                        console.log(
+                            "The main topic is " + this.selectedMainTopic
+                        );
                         console.log("The created date is " + this.created_at);
-                        console.log("The Integrated Experiences are: " + this.integratedExperiences);
+                        console.log(
+                            "The Integrated Experiences are: " +
+                                this.integratedExperiences
+                        );
                     }
                 })
                 .catch((err) =>
@@ -458,11 +506,17 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     submitExperienceEdit(field: any) {
         field.experiencesEditingIndex = -1;
         // Update Firestore document
-        const updatedExperiences = [
-            ...this.pdfData[field.key]?.integrated_experiences,
-        ];
-        updatedExperiences[field.experiencesEditingIndex] =
-            field.experiencesEditValue;
+        const updatedExperiences = [...this.pdfData[field.key]?.integrated_experiences,];
+
+        if (field.experiencesEditValue.trim() !== '') {
+            updatedExperiences[field.experiencesEditingIndex] = field.experiencesEditValue;
+        } else {
+            // Prepare to remove the experience but do it after backend confirmation
+            // Mark the experience as empty for now
+            updatedExperiences[field.experiencesEditingIndex] = '';
+        }
+
+        // updatedExperiences[field.experiencesEditingIndex] = field.experiencesEditValue;
 
         const updatedFieldData = {
             ...this.pdfData[field.key],
@@ -473,7 +527,13 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             .doc(`Documents/${this.id}`)
             .update({ [field.key]: updatedFieldData })
             .then(() => {
-                this.pdfData[field.key] = updatedFieldData;
+                console.log("Document successfully updated");
+                if (field.experiencesEditValue.trim() === '') {
+                    const filteredExperiences = updatedFieldData.filter((exp: any) => exp.trim() !== '');
+                    this.pdfData[field.key].integrated_experiences = filteredExperiences;
+                } else {
+                    this.pdfData[field.key] = updatedFieldData;
+                }
             })
             .catch((err) => console.error("Error updating document: ", err));
     }

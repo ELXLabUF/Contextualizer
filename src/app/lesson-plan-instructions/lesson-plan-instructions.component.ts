@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { Router } from '@angular/router';
 
 @Component({
     selector: "app-lesson-plan-instructions",
@@ -11,7 +12,7 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
     timeStart!: Date;
     timeEnd!: Date;
 
-    constructor(private storage: AngularFireStorage) {}
+    constructor(private storage: AngularFireStorage, private router: Router) {}
 
     ngOnInit() {
         this.timeStart = new Date();
@@ -101,5 +102,9 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
             link.click();
             link.remove();
         });
+    }
+
+    goToNextPage() {
+        this.router.navigate(['/lesson']); // Adjust the route as necessary
     }
 }

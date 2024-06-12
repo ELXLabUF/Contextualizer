@@ -239,3 +239,24 @@ button {
 ::ng-deep .cdk-overlay-container {
     z-index: 2000;
 }
+
+.navigation-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    position: relative; /* Ensure positioning context for absolute children */
+    width: 100%;
+}
+
+.navigation-container button{
+        background-color: #47141C;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 10px;
+        padding: 15px 25px;
+        font-size: 25px;
+        cursor: pointer;
+        transform: translateY(40%); /* Center vertically */
+        margin: 10px 0;
+}

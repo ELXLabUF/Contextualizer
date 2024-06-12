@@ -114,3 +114,12 @@ button {
     width: max-content;
     margin-top: 25px;
 }
+
+.navigation-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    position: relative; /* Ensure positioning context for absolute children */
+    width: 100%;
+}

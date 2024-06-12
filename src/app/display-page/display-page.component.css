@@ -5,12 +5,14 @@
 }
 
 body, html {
+    height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 .display-page {
-    height: max-content;
+    height: 85%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -66,26 +68,28 @@ button {
     margin-left: 50%;
 }
 
-.parent-container.flex-parent {
+.parent-container {
     display: flex;   
     flex-direction: row; 
     height: 100%;
-    flex-grow: 1; 
-    overflow: visible;
+    flex: 1; 
+    overflow: hidden;
+}
+
+.content-container, .exp-container {
+    overflow-y: auto; /* Enables scrolling */
+    height: 100%; /* This is critical, ensures they can calculate overflow based on parent's height */
 }
 
 .content-container {
-    flex: 0 0 72%;   
-    overflow-y: auto; 
-    height: calc(100% - 40px);
-    margin: 20px;
+    flex: 0 0 72%; /* Flex-basis of 72%, no grow, no shrink */
+    margin-left: 20px; /* Ensure margin doesn't collapse */
 }
 
 .exp-container {
-    flex: 0 0 25%;   
-    overflow-y: auto;  
-    height: calc(100% - 40px); 
-    padding: 20px 20px 20px 0px;
+    flex: 0 0 25%; /* Flex-basis of 25%, no grow, no shrink */
+    padding: 20px 20px 20px 0; /* Padding right set to 0 */
+    margin: 20px; /* Ensure margin doesn't collapse, remove if unnecessary */
 }
 
 .section {
@@ -185,7 +189,7 @@ li {
 
 /* Style for the custom drag preview */
 /* Add this to make sure the dragged item is visible outside its parent container */
-.display-page {
+/* .display-page {
     overflow: initial;
 }
 
@@ -199,7 +203,7 @@ li {
 
 .exp-container {
     overflow: initial;
-}
+} */
 
 /* Styles for the translucent copy being dragged */
 .custom-preview {
@@ -302,4 +306,25 @@ li {
     padding: 5px 8px;
     border-radius: 50%;
     font-size: 25px;
+}
+
+.navigation-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    position: relative; /* Ensure positioning context for absolute children */
+    width: 100%;
+}
+
+.navigation-container button{
+        background-color: #47141C;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 10px;
+        padding: 15px 25px;
+        font-size: 25px;
+        cursor: pointer;
+        transform: translateY(40%); /* Center vertically */
+        margin-left: 0;
 }
