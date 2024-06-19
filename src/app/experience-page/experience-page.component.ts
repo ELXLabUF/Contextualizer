@@ -1053,6 +1053,24 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
+    onAdvancedSearchFilterButtonClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Advanced Search and Filter' button",
+            Result: "Open advanced search and filter dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
     onFilterByStudentClick() {
         let userIntData: any = [];
         let time = new Date();
@@ -1583,28 +1601,774 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     //     // this.cdr.detectChanges();
     // }
 
+    filterByGenderFemale(event: any) {
+        this.selectedFemale = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for gender 'Female'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByGenderMale(event: any) {
+        this.selectedMale = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for gender 'Male'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByLastTestGradeA(event: any) {
+        this.selectedLastTestGradeA = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for last test grade 'A'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByLastTestGradeB(event: any) {
+        this.selectedLastTestGradeB = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for last test grade 'B'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByLastTestGradeC(event: any) {
+        this.selectedLastTestGradeC = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for last test grade 'C'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByLastTestGradeD(event: any) {
+        this.selectedLastTestGradeD = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for last test grade 'D'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByLastTestGradeF(event: any) {
+        this.selectedLastTestGradeF = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for last test grade 'F'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByOverallGradeA(event: any) {
+        this.selectedOverallGradeA = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for overall grade 'A'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByOverallGradeB(event: any) {
+        this.selectedOverallGradeB = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for overall grade 'B'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByOverallGradeC(event: any) {
+        this.selectedOverallGradeC = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for overall grade 'C'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByOverallGradeD(event: any) {
+        this.selectedOverallGradeD = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for overall grade 'D'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByOverallGradeF(event: any) {
+        this.selectedOverallGradeF = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for overall grade 'F'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByDisabilityADHD(event: any) {
+        this.selectedADHD = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for disability 'ADHD'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByDisabilityAutism(event: any) {
+        this.selectedAutism = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for disability 'Autism'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByDisabilityDyslexia(event: any) {
+        this.selectedDyslexia = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for disability 'Dyslexia'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByDisabilityDyscalculia(event: any) {
+        this.selectedDyscalculia = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for disability 'Dyscalculia'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByDisabilityNone(event: any) {
+        this.selectedNone = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for disability 'None Reported'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByEthnicityAfricanAmerican(event: any) {
+        this.selectedAfricanAmerican = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for ethnicity 'African-American'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByEthnicityAsian(event: any) {
+        this.selectedAsian = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for ethnicity 'Asian'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByEthnicityHispanic(event: any) {
+        this.selectedHispanic = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for ethnicity 'Hispanic'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByEthnicityWhite(event: any) {
+        this.selectedWhite = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for ethnicity 'White'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByAttendance80to84(event: any) {
+        this.selected80to84 = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for attendance '80%-84%'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByAttendance85to89(event: any) {
+        this.selected85to89 = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for attendance '85%-89%'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByAttendance90to94(event: any) {
+        this.selected90to94 = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for attendance '90%-94%'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByAttendance95to99(event: any) {
+        this.selected95to99 = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for attendance '95%-99%'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByAttendance100(event: any) {
+        this.selected100 = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for attendance '100%'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByParticipationLow(event: any) {
+        this.selectedLow = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for participation 'Low'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByParticipationMid(event: any) {
+        this.selectedMid = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for participation 'Mid'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByParticipationHigh(event: any) {
+        this.selectedHigh = event.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for participation 'High'",
+            Result: event.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
     filterByBlue() {
         this.selectedBlue = !this.selectedBlue;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Table with color 'Blue'",
+            Result: this.selectedBlue
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     filterByGreen() {
         this.selectedGreen = !this.selectedGreen;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Table with color 'Green'",
+            Result: this.selectedGreen
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     filterByOrange() {
         this.selectedOrange = !this.selectedOrange;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Table with color 'Orange'",
+            Result: this.selectedOrange
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     filterByPink() {
         this.selectedPink = !this.selectedPink;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Table with color 'Pink'",
+            Result: this.selectedPink
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     filterByPurple() {
         this.selectedPurple = !this.selectedPurple;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Table with color 'Purple'",
+            Result: this.selectedPurple
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     filterByYellow() {
         this.selectedYellow = !this.selectedYellow;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Table with color 'Yellow'",
+            Result: this.selectedYellow
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     sortByTime(event: any) {
@@ -1614,6 +2378,28 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         event.value === "timeNewest"
             ? (this.sortNewToOld = true)
             : (this.sortNewToOld = false);
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                event.value === "timeOldest"
+                    ? "Radio button for filter 'Oldest to Newest'"
+                    : "Radio button for filter 'Newest to Oldest'",
+            Result:
+                event.value === "timeOldest"
+                    ? "Filter experiences using date from oldest to newest"
+                    : "Filter experiences using date from newest to oldest",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     applyAdvancedSearchFilters() {
@@ -1826,6 +2612,22 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                     new Date(b.date).getTime() - new Date(a.date).getTime()
             );
         }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Apply' button",
+            Result: "Apply all selected advanced filters",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
 
         this.cdr.detectChanges();
     }

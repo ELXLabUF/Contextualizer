@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
-import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { Router } from '@angular/router';
+import { AngularFireStorage } from "@angular/fire/compat/storage";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "app-lesson-plan-instructions",
@@ -88,16 +88,16 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-        
-        const fileName = 'Template.pdf';
+
+        const fileName = "Template.pdf";
         const fileRef = this.storage.ref(fileName);
 
-        fileRef.getDownloadURL().subscribe(url => {
+        fileRef.getDownloadURL().subscribe((url) => {
             console.log(url);
-            const link = document.createElement('a');
-            link.setAttribute('target', '_blank');
-            link.setAttribute('href', url);
-            link.setAttribute('download', fileName);
+            const link = document.createElement("a");
+            link.setAttribute("target", "_blank");
+            link.setAttribute("href", url);
+            link.setAttribute("download", fileName);
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -105,6 +105,6 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
     }
 
     goToNextPage() {
-        this.router.navigate(['/lesson']); // Adjust the route as necessary
+        this.router.navigate(["/lesson"]); // Adjust the route as necessary
     }
 }

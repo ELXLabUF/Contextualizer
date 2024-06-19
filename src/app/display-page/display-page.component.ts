@@ -165,6 +165,8 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
 
     currentExperienceTitle: string = "";
     currentExperienceDescription: string = "";
+    currentExperienceDate: string = "";
+    currentStudentName: string = "";
     currentField: any;
 
     currentlyEditing: { fieldKey?: string; containerKey?: string } = {};
@@ -506,14 +508,17 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     submitExperienceEdit(field: any) {
         field.experiencesEditingIndex = -1;
         // Update Firestore document
-        const updatedExperiences = [...this.pdfData[field.key]?.integrated_experiences,];
+        const updatedExperiences = [
+            ...this.pdfData[field.key]?.integrated_experiences,
+        ];
 
-        if (field.experiencesEditValue.trim() !== '') {
-            updatedExperiences[field.experiencesEditingIndex] = field.experiencesEditValue;
+        if (field.experiencesEditValue.trim() !== "") {
+            updatedExperiences[field.experiencesEditingIndex] =
+                field.experiencesEditValue;
         } else {
             // Prepare to remove the experience but do it after backend confirmation
             // Mark the experience as empty for now
-            updatedExperiences[field.experiencesEditingIndex] = '';
+            updatedExperiences[field.experiencesEditingIndex] = "";
         }
 
         // updatedExperiences[field.experiencesEditingIndex] = field.experiencesEditValue;
@@ -528,9 +533,12 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             .update({ [field.key]: updatedFieldData })
             .then(() => {
                 console.log("Document successfully updated");
-                if (field.experiencesEditValue.trim() === '') {
-                    const filteredExperiences = updatedFieldData.filter((exp: any) => exp.trim() !== '');
-                    this.pdfData[field.key].integrated_experiences = filteredExperiences;
+                if (field.experiencesEditValue.trim() === "") {
+                    const filteredExperiences = updatedFieldData.filter(
+                        (exp: any) => exp.trim() !== ""
+                    );
+                    this.pdfData[field.key].integrated_experiences =
+                        filteredExperiences;
                 } else {
                     this.pdfData[field.key] = updatedFieldData;
                 }
@@ -699,10 +707,14 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     onDragStart(
         event: any,
         experience_title: string,
-        experience_description: string
+        experience_description: string,
+        date: string,
+        student_name: string
     ) {
         this.currentExperienceTitle = experience_title;
+        this.currentExperienceDate = date;
         this.currentExperienceDescription = experience_description;
+        this.currentStudentName = student_name;
         event.dataTransfer.setData("text/plain", experience_description);
     }
 
@@ -714,7 +726,13 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Added",
-            Target: "Experience with title " + this.currentExperienceTitle,
+            Target:
+                "Experience with title " +
+                this.currentExperienceTitle +
+                ", date " +
+                this.currentExperienceDate +
+                " and student name " +
+                this.currentStudentName,
             Result: "Box with title " + field.name,
             Time: time.toLocaleString(),
         });

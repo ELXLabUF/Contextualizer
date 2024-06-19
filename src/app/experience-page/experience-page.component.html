@@ -39,12 +39,22 @@
     <!-- DO NOT DELETE! -->
 
     <div class="navigation-container">
-        <button class="forward-arrow" routerLink="/lesson" title="Go to next page">
-            <i class="fas fa-arrow-left"></i> <!-- Font Awesome arrow icon -->
+        <button
+            class="forward-arrow"
+            routerLink="/lesson"
+            title="Go to next page"
+        >
+            <i class="fas fa-arrow-left"></i>
+            <!-- Font Awesome arrow icon -->
         </button>
         <app-dot-navigation></app-dot-navigation>
-        <button class="forward-arrow" routerLink="/display" title="Go to next page">
-            <i class="fas fa-arrow-right"></i> <!-- Font Awesome arrow icon -->
+        <button
+            class="forward-arrow"
+            routerLink="/display"
+            title="Go to next page"
+        >
+            <i class="fas fa-arrow-right"></i>
+            <!-- Font Awesome arrow icon -->
         </button>
     </div>
 
@@ -182,7 +192,11 @@
             </div>
 
             <div class="student-search-filter">
-                <button data-bs-toggle="modal" data-bs-target="#filterModal">
+                <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#filterModal"
+                    (click)="onAdvancedSearchFilterButtonClick()"
+                >
                     Advanced Search and Filter
                 </button>
             </div>
@@ -782,12 +796,12 @@
                             <section class="search-student-gender">
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedFemale = $event.checked"
+                                    (change)="filterByGenderFemale($event)"
                                     >Female</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedMale = $event.checked"
+                                    (change)="filterByGenderMale($event)"
                                     >Male</mat-checkbox
                                 >
                             </section>
@@ -828,37 +842,27 @@
                             <section class="search-student-last-test-grade">
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        selectedLastTestGradeA = $event.checked
-                                    "
+                                    (change)="filterByLastTestGradeA($event)"
                                     >A</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        selectedLastTestGradeB = $event.checked
-                                    "
+                                    (change)="filterByLastTestGradeB($event)"
                                     >B</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        selectedLastTestGradeC = $event.checked
-                                    "
+                                    (change)="filterByLastTestGradeC($event)"
                                     >C</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        selectedLastTestGradeD = $event.checked
-                                    "
+                                    (change)="filterByLastTestGradeD($event)"
                                     >D</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        selectedLastTestGradeF = $event.checked
-                                    "
+                                    (change)="filterByLastTestGradeF($event)"
                                     >F</mat-checkbox
                                 >
                             </section>
@@ -899,37 +903,27 @@
                             <section class="search-student-overall-performance">
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        selectedOverallGradeA = $event.checked
-                                    "
+                                    (change)="filterByOverallGradeA($event)"
                                     >A</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        selectedOverallGradeB = $event.checked
-                                    "
+                                    (change)="filterByOverallGradeB($event)"
                                     >B</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        selectedOverallGradeC = $event.checked
-                                    "
+                                    (change)="filterByOverallGradeC($event)"
                                     >C</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        selectedOverallGradeD = $event.checked
-                                    "
+                                    (change)="filterByOverallGradeD($event)"
                                     >D</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="
-                                        selectedOverallGradeF = $event.checked
-                                    "
+                                    (change)="filterByOverallGradeF($event)"
                                     >F</mat-checkbox
                                 >
                             </section>
@@ -972,29 +966,31 @@
                             <section class="search-student-learning-disability">
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedADHD = $event.checked"
+                                    (change)="filterByDisabilityADHD($event)"
                                     >ADHD</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedAutism = $event.checked"
+                                    (change)="filterByDisabilityAutism($event)"
                                     >Autism</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedDyslexia = $event.checked"
+                                    (change)="
+                                        filterByDisabilityDyslexia($event)
+                                    "
                                     >Dyslexia</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        selectedDyscalculia = $event.checked
+                                        filterByDisabilityDyscalculia($event)
                                     "
                                     >Dyscalculia</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedNone = $event.checked"
+                                    (change)="filterByDisabilityNone($event)"
                                     >None Reported</mat-checkbox
                                 >
                             </section>
@@ -1036,23 +1032,23 @@
                                 <mat-checkbox
                                     class="example-margin"
                                     (change)="
-                                        selectedAfricanAmerican = $event.checked
+                                        filterByEthnicityAfricanAmerican($event)
                                     "
                                     >African-American</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedAsian = $event.checked"
+                                    (change)="filterByEthnicityAsian($event)"
                                     >Asian</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedHispanic = $event.checked"
+                                    (change)="filterByEthnicityHispanic($event)"
                                     >Hispanic</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedWhite = $event.checked"
+                                    (change)="filterByEthnicityWhite($event)"
                                     >White</mat-checkbox
                                 >
                             </section>
@@ -1093,27 +1089,27 @@
                             <section class="search-student-attendance">
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selected80to84 = $event.checked"
+                                    (change)="filterByAttendance80to84($event)"
                                     >80% - 84%</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selected85to89 = $event.checked"
+                                    (change)="filterByAttendance85to89($event)"
                                     >85% - 89%</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selected90to94 = $event.checked"
+                                    (change)="filterByAttendance90to94($event)"
                                     >90% - 94%</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selected95to99 = $event.checked"
+                                    (change)="filterByAttendance95to99($event)"
                                     >95% - 99%</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selected100 = $event.checked"
+                                    (change)="filterByAttendance100($event)"
                                     >100%</mat-checkbox
                                 >
                             </section>
@@ -1154,17 +1150,17 @@
                             <section class="search-student-class-participation">
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedLow = $event.checked"
+                                    (change)="filterByParticipationLow($event)"
                                     >Low</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedMid = $event.checked"
+                                    (change)="filterByParticipationMid($event)"
                                     >Mid</mat-checkbox
                                 >
                                 <mat-checkbox
                                     class="example-margin"
-                                    (change)="selectedHigh = $event.checked"
+                                    (change)="filterByParticipationHigh($event)"
                                     >High</mat-checkbox
                                 >
                             </section>

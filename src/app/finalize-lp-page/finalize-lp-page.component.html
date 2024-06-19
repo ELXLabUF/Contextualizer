@@ -1,7 +1,12 @@
 <div class="finalize-lesson-plan-container">
     <div class="navigation-container">
-        <button class="forward-arrow" routerLink="/display" title="Go to next page">
-            <i class="fas fa-arrow-left"></i> <!-- Font Awesome arrow icon -->
+        <button
+            class="forward-arrow"
+            routerLink="/display"
+            title="Go to next page"
+        >
+            <i class="fas fa-arrow-left"></i>
+            <!-- Font Awesome arrow icon -->
         </button>
         <app-dot-navigation></app-dot-navigation>
     </div>
@@ -22,9 +27,20 @@
                         <p>
                             {{ pdfData[field.key]?.content.content }}
                         </p>
-                        <div class="int-exp" *ngIf="pdfData[field.key]?.integrated_experiences?.length">
+                        <div
+                            class="int-exp"
+                            *ngIf="
+                                pdfData[field.key]?.integrated_experiences
+                                    ?.length
+                            "
+                        >
                             <ul>
-                                <ng-container *ngFor="let exp of pdfData[field.key]?.integrated_experiences">
+                                <ng-container
+                                    *ngFor="
+                                        let exp of pdfData[field.key]
+                                            ?.integrated_experiences
+                                    "
+                                >
                                     <li *ngIf="exp && exp.trim().length > 0">
                                         {{ exp }}
                                     </li>

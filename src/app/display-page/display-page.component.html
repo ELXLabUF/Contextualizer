@@ -1,11 +1,21 @@
 <div class="display-page">
     <div class="navigation-container">
-        <button class="forward-arrow" routerLink="/experience" title="Go to next page">
-            <i class="fas fa-arrow-left"></i> <!-- Font Awesome arrow icon -->
+        <button
+            class="forward-arrow"
+            routerLink="/experience"
+            title="Go to next page"
+        >
+            <i class="fas fa-arrow-left"></i>
+            <!-- Font Awesome arrow icon -->
         </button>
         <app-dot-navigation></app-dot-navigation>
-        <button class="forward-arrow" routerLink="/finalize" title="Go to next page">
-            <i class="fas fa-arrow-right"></i> <!-- Font Awesome arrow icon -->
+        <button
+            class="forward-arrow"
+            routerLink="/finalize"
+            title="Go to next page"
+        >
+            <i class="fas fa-arrow-right"></i>
+            <!-- Font Awesome arrow icon -->
         </button>
     </div>
 
@@ -89,16 +99,61 @@
                     </div>
 
                     <!-- Integrated Experiences -->
-                    <div class="integrated-experiences" *ngIf="pdfData[field.key]?.integrated_experiences?.length">
+                    <div
+                        class="integrated-experiences"
+                        *ngIf="
+                            pdfData[field.key]?.integrated_experiences?.length
+                        "
+                    >
                         <ul>
-                            <ng-container *ngFor="let exp of pdfData[field.key]?.integrated_experiences; let idx = index; trackBy: trackByFn">
-                                <li *ngIf="exp && exp.trim().length > 0 || field.experiencesEditingIndex === idx">
-                                    <div *ngIf="field.experiencesEditingIndex !== idx" class="editable-element" (click)="enableExperienceEditing(field, idx)">
+                            <ng-container
+                                *ngFor="
+                                    let exp of pdfData[field.key]
+                                        ?.integrated_experiences;
+                                    let idx = index;
+                                    trackBy: trackByFn
+                                "
+                            >
+                                <li
+                                    *ngIf="
+                                        (exp && exp.trim().length > 0) ||
+                                        field.experiencesEditingIndex === idx
+                                    "
+                                >
+                                    <div
+                                        *ngIf="
+                                            field.experiencesEditingIndex !==
+                                            idx
+                                        "
+                                        class="editable-element"
+                                        (click)="
+                                            enableExperienceEditing(field, idx)
+                                        "
+                                    >
                                         {{ exp }}
                                     </div>
-                                    <div *ngIf="field.experiencesEditingIndex === idx">
-                                        <textarea [(ngModel)]="pdfData[field.key]?.integrated_experiences[idx]" class="editField"></textarea>
-                                        <button (click)="submitExperienceEdit(field)">Save</button>
+                                    <div
+                                        *ngIf="
+                                            field.experiencesEditingIndex ===
+                                            idx
+                                        "
+                                    >
+                                        <textarea
+                                            [(ngModel)]="
+                                                pdfData[field.key]
+                                                    ?.integrated_experiences[
+                                                    idx
+                                                ]
+                                            "
+                                            class="editField"
+                                        ></textarea>
+                                        <button
+                                            (click)="
+                                                submitExperienceEdit(field)
+                                            "
+                                        >
+                                            Save
+                                        </button>
                                     </div>
                                     <!-- <textarea *ngIf="field.experiencesEditingIndex === idx" [(ngModel)]="pdfData[field.key]?.integrated_experiences[idx]"
                                         (blur)="submitExperienceEdit(field)"
@@ -146,7 +201,9 @@
                         onDragStart(
                             $event,
                             experience.experience_title,
-                            experience.experience_description
+                            experience.experience_description,
+                            experience.date,
+                            experience.student_name
                         )
                     "
                 >
