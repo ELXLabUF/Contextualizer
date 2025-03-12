@@ -1,12 +1,14 @@
-<h1 mat-dialog-title>Enter New Box Name</h1>
-<div mat-dialog-content>
-    <mat-form-field>
-        <input matInput placeholder="Box Name" [(ngModel)]="containerName" />
-    </mat-form-field>
-</div>
-<div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">Cancel</button>
-    <button mat-button (click)="onConfirmClick()" cdkFocusInitial>
-        Confirm
-    </button>
+<div class="input-dialog-container">
+    <h1 mat-dialog-title>Enter New Section Name</h1>
+    <mat-dialog-content class="dialog-content">
+        <!--<mat-form-field>-->
+        <input matInput type="text" [(ngModel)]="sectionName" />
+        <!--</mat-form-field>-->
+    </mat-dialog-content>
+    <mat-dialog-actions class="dialog-actions">
+        <button mat-button (click)="onNoClick()">Cancel</button>
+        <button mat-button (click)="onConfirmClick()" cdkFocusInitial>
+            Confirm
+        </button>
+    </mat-dialog-actions>
 </div>

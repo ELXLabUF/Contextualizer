@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
 }
@@ -11,17 +12,17 @@ body, html {
 }
 
 .dot {
-    width: 10px;
-    height: 10px;
-    border: 1px solid #47141C; /* Hollow dot border */
+    width: 12px;
+    height: 12px;
+    border: 1px solid #ff8800; /* Hollow dot border */
     border-radius: 50%;
     margin: 10px;
-    margin-right: 35px;
+    margin-right: 50px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     display: inline-block;
 }
 
 .dot.active {
-    background-color: #47141C; /* Solid dot color for the active page */
+    background-color: #ff8800; /* Solid dot color for the active page */
 }

@@ -1,32 +1,41 @@
 <div class="finalize-lesson-plan-container">
     <div class="navigation-container">
-        <button
-            class="forward-arrow"
-            routerLink="/display"
-            title="Go to next page"
-        >
+        <button routerLink="/display" title="Go to previous page">
             <i class="fas fa-arrow-left"></i>
-            <!-- Font Awesome arrow icon -->
         </button>
         <app-dot-navigation></app-dot-navigation>
     </div>
 
     <div class="finalize-parent-container">
-        <div class="finalize-container">
-            <p style="font-size: 25px; line-height: 30px; margin-bottom: 30px">
-                Review your contextualized lesson plan. If you are satisfied,
-                download your lesson plan.
-            </p>
+        <div class="title-container"><h1>Review Lesson Plan</h1></div>
 
+        <div class="instructions-container">
+            <p>
+                Review your contextualized lesson plan and download it if
+                satisfied. If you would like to make further edits, use the
+                arrows above to return to prior steps.
+            </p>
+        </div>
+
+        <div class="horizontal-line"><mat-divider></mat-divider></div>
+
+        <div class="finalize-container">
             <div class="finalize-data-container" id="lessonPlan">
                 <div *ngFor="let field of fields">
                     <div class="info">
                         <h3 *ngIf="pdfData[field.key]?.title">
                             {{ pdfData[field.key]?.title }}:
                         </h3>
-                        <p>
-                            {{ pdfData[field.key]?.content.content }}
-                        </p>
+                        <span
+                            *ngFor="
+                                let contentData of pdfData[field.key]?.content
+                                    .content
+                            "
+                        >
+                            <p>
+                                {{ contentData }}
+                            </p>
+                        </span>
                         <div
                             class="int-exp"
                             *ngIf="
@@ -68,14 +77,16 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="buttons-container">
-            <!-- <button (click)="htmlToDOCX()">Download Lesson Plan (as DOCX)</button> -->
-            <!-- <button (click)="htmlToPDF()">Download Lesson Plan (as PDF)</button> -->
-            <button (click)="htmlToPDF()">Download Lesson Plan</button>
-            <button (click)="onBackClick()">Back</button>
-            <button (click)="onHomeClick()">Home</button>
+            <div class="buttons-container">
+                <!-- <button (click)="htmlToDOCX()">Download Lesson Plan (as DOCX)</button> -->
+                <!-- <button (click)="htmlToPDF()">Download Lesson Plan (as PDF)</button> -->
+                <button (click)="htmlToPDF()">
+                    <i class="fa-solid fa-download"></i>
+                </button>
+                <!--<button (click)="onBackClick()">Back</button>-->
+                <!--<button (click)="onHomeClick()">Home</button>-->
+            </div>
         </div>
     </div>
 </div>

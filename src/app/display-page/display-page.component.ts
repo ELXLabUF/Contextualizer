@@ -1,31 +1,29 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import {
+    ChangeDetectorRef,
+    Component,
+    NgZone,
+    OnDestroy,
+    OnInit,
+} from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { Router } from "@angular/router";
-import { IntegrateExperienceService } from "../integrate-experience-service/integrate-experience.service";
-import { PdfReaderService } from "../pdf-reader-service/pdf-reader.service";
 
-import { NgZone } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/compat/firestore"; // import Firestore
+import firebase from "@firebase/app-compat";
+import "@firebase/firestore-compat";
 
 import { Experience } from "../experience";
 import { ExpIntegratedPDF } from "../expIntegratedPDF";
 
-import { Subscription, timestamp } from "rxjs";
-import { AngularFirestore } from "@angular/fire/compat/firestore"; // import Firestore
-import firebase from "@firebase/app-compat";
-import "@firebase/firestore-compat";
-import { ChangeDetectorRef } from "@angular/core";
-import {
-    CdkDragDrop,
-    CdkDragEnter,
-    CdkDragExit,
-    moveItemInArray,
-    transferArrayItem,
-} from "@angular/cdk/drag-drop";
+import { PdfReaderService } from "../pdf-reader-service/pdf-reader.service";
+import { IntegrateExperienceService } from "../integrate-experience-service/integrate-experience.service";
 
 import { MatDialog } from "@angular/material/dialog";
-import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 import { InputDialogComponent } from "../input-dialog/input-dialog.component";
 import { AlertDialogComponent } from "../alert-dialog/alert-dialog.component";
+import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
+
+import { Subscription } from "rxjs";
 
 @Component({
     selector: "app-display-page",
@@ -33,17 +31,18 @@ import { AlertDialogComponent } from "../alert-dialog/alert-dialog.component";
     styleUrls: ["./display-page.component.css"],
 })
 export class DisplayPageComponent implements OnInit, OnDestroy {
+    startNavigationFromExperiences: boolean = false;
     fileDownloadURL: string | null = null;
     pdfText: string = "";
     fieldKey: string = "";
     pdfData: any = null;
     isHighlighted = false;
-    editableFields = [
+    editableFields: any[] = [
         {
             name: "Grade",
             key: "Grade",
             editing: false,
-            editValue: "",
+            editValue: [],
             labelEditing: false,
             labelEditValue: "",
             experiencesEditingIndex: -1,
@@ -53,7 +52,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             name: "Subject",
             key: "Subject",
             editing: false,
-            editValue: "",
+            editValue: [],
             labelEditing: false,
             labelEditValue: "",
             experiencesEditingIndex: -1,
@@ -63,7 +62,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             name: "Duration",
             key: "Duration",
             editing: false,
-            editValue: "",
+            editValue: [],
             labelEditing: false,
             labelEditValue: "",
             experiencesEditingIndex: -1,
@@ -73,7 +72,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             name: "Lesson Standards & Objectives",
             key: "Lesson Standards & Objectives",
             editing: false,
-            editValue: "",
+            editValue: [],
             labelEditing: false,
             labelEditValue: "",
             experiencesEditingIndex: -1,
@@ -83,7 +82,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             name: "Materials",
             key: "Materials",
             editing: false,
-            editValue: "",
+            editValue: [],
             labelEditing: false,
             labelEditValue: "",
             experiencesEditingIndex: -1,
@@ -93,7 +92,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             name: "Warm-Up",
             key: "Warm-Up",
             editing: false,
-            editValue: "",
+            editValue: [],
             labelEditing: false,
             labelEditValue: "",
             experiencesEditingIndex: -1,
@@ -103,7 +102,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             name: "Teacher-Led Instruction",
             key: "Teacher-Led Instruction",
             editing: false,
-            editValue: "",
+            editValue: [],
             labelEditing: false,
             labelEditValue: "",
             experiencesEditingIndex: -1,
@@ -113,17 +112,17 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             name: "Student-Led Learning",
             key: "Student-Led Learning",
             editing: false,
-            editValue: "",
+            editValue: [],
             labelEditing: false,
             labelEditValue: "",
             experiencesEditingIndex: -1,
             experiencesEditValue: "",
         },
         {
-            name: "Wrap-Up/Closure",
-            key: "Wrap-Up/Closure",
+            name: "Wrap-Up Closure",
+            key: "Wrap-Up Closure",
             editing: false,
-            editValue: "",
+            editValue: [],
             labelEditing: false,
             labelEditValue: "",
             experiencesEditingIndex: -1,
@@ -161,7 +160,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     titleForWarmUp: string = "Warm-Up";
     titleForTeacher: string = "Teacher-Led Instruction";
     titleForStudent: string = "Student-Led Learning";
-    titleForWrapUp: string = "Wrap-Up/Closure";
+    titleForWrapUp: string = "Wrap-Up Closure";
 
     currentExperienceTitle: string = "";
     currentExperienceDescription: string = "";
@@ -218,6 +217,16 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         );
         sessionStorage.setItem("timeStart", this.timeStart.toString());
 
+        if (
+            sessionStorage.getItem("altNavigation") === "false" ||
+            (sessionStorage.getItem("fileUploadSuccess") !== null &&
+                sessionStorage.getItem("fileUploadSuccess") === "true")
+        ) {
+            this.startNavigationFromExperiences = false;
+        } else if (sessionStorage.getItem("altNavigation") === "true") {
+            this.startNavigationFromExperiences = true;
+        }
+
         this.fileDownloadURL = sessionStorage.getItem("fileURL");
         const documentId = sessionStorage.getItem("documentId");
 
@@ -261,7 +270,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                             this.pdfData["Student-Led Learning"]
                                 ?.integrated_experiences || [];
                         this.integratedExperiencesForWrapUp =
-                            this.pdfData["Wrap-Up/Closure"]
+                            this.pdfData["Wrap-Up Closure"]
                                 ?.integrated_experiences || [];
 
                         this.titleForGrade =
@@ -288,7 +297,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                             this.pdfData["Student-Led Learning"]?.title ||
                             this.titleForStudent;
                         this.titleForWrapUp =
-                            this.pdfData["Wrap-Up/Closure"]?.title ||
+                            this.pdfData["Wrap-Up Closure"]?.title ||
                             this.titleForWrapUp;
 
                         this.integratedExperiences =
@@ -306,7 +315,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                                     name: this.getFieldName(fieldKey),
                                     key: fieldKey,
                                     editing: false,
-                                    editValue: "",
+                                    editValue: [],
                                     labelEditing: false,
                                     labelEditValue:
                                         this.pdfData[fieldKey]?.title ||
@@ -371,14 +380,14 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             "Warm-Up",
             "Teacher-Led Instruction",
             "Student-Led Learning",
-            "Wrap-Up/Closure",
+            "Wrap-Up Closure",
         ];
 
         this.editableFields = defaultFieldOrder.map((fieldKey) => ({
             name: this.getFieldName(fieldKey),
             key: fieldKey,
             editing: false,
-            editValue: "",
+            editValue: [],
             labelEditing: false,
             labelEditValue: this.pdfData[fieldKey]?.title || "Default Title",
             experiencesEditingIndex: -1, // Assuming -1 indicates no experience is being edited.
@@ -404,8 +413,8 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                 return "Teacher-Led Instruction";
             case "Student-Led Learning":
                 return "Student-Led Learning";
-            case "Wrap-Up/Closure":
-                return "Wrap-Up/Closure";
+            case "Wrap-Up Closure":
+                return "Wrap-Up Closure";
             default:
                 return "Unknown";
         }
@@ -601,7 +610,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
 
     openAlertDialog(title: string, message: string): void {
         this.dialog.open(AlertDialogComponent, {
-            width: "250px",
+            width: "600px",
             data: { title: title, message: message },
         });
     }
@@ -748,12 +757,13 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     }
 
     onDragStarted(event: any) {
-        console.log("Dragging experience title:", event.experience_title);
+        //console.log("Dragging experience title:", event.experience_title);
+        console.log("Dragging experience:", event.transcript);
     }
 
     async addContainer(field: any) {
         const dialogRef = this.dialog.open(InputDialogComponent, {
-            width: "250px",
+            width: "500px",
         });
 
         dialogRef.afterClosed().subscribe(async (result) => {
@@ -777,7 +787,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                     name: containerName,
                     key: containerName,
                     editing: false,
-                    editValue: "",
+                    editValue: [],
                     labelEditing: false,
                     labelEditValue: containerName,
                     experiencesEditingIndex: -1,
@@ -814,7 +824,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                             name: this.getFieldName(fieldKey),
                             key: fieldKey,
                             editing: false,
-                            editValue: "",
+                            editValue: [],
                             labelEditing: false,
                             labelEditValue:
                                 this.pdfData[fieldKey]?.title ||
@@ -836,7 +846,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     deleteContainer(field: any) {
         if (this.pdfData[field.key]) {
             const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-                width: "350px",
+                width: "600px",
                 data: {
                     title: "Delete",
                     message: `Are you sure you want to delete this box: ${

@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpClientModule } from "@angular/common/http";
+import { DatePipe } from "@angular/common";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -9,6 +10,7 @@ import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
 import { LandingPageComponent } from "./landing-page/landing-page.component";
 import { DotNavigationComponent } from "./dot-navigation/dot-navigation.component";
+import { CapturesPageComponent } from "./captures-page/captures-page.component";
 import { LessonPlanInstructionsComponent } from "./lesson-plan-instructions/lesson-plan-instructions.component";
 import { LessonPageComponent } from "./lesson-page/lesson-page.component";
 import { ExperiencePageComponent } from "./experience-page/experience-page.component";
@@ -56,12 +58,11 @@ import { MatInputModule } from "@angular/material/input";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
-import { DatePipe } from "@angular/common";
+import { MatDialogModule } from "@angular/material/dialog";
 
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { PasswordPatternPipe } from "./password-pattern.pipe";
+import { PasswordPatternPipe } from "./password-pattern-pipe/password-pattern.pipe";
 import { ConfirmationDialogComponent } from "./confirmation-dialog/confirmation-dialog.component";
-import { MatDialogModule } from "@angular/material/dialog";
 import { AlertDialogComponent } from "./alert-dialog/alert-dialog.component";
 import { InputDialogComponent } from "./input-dialog/input-dialog.component";
 
@@ -73,6 +74,7 @@ import { InputDialogComponent } from "./input-dialog/input-dialog.component";
         RegisterComponent,
         LandingPageComponent,
         DotNavigationComponent,
+        CapturesPageComponent,
         LessonPlanInstructionsComponent,
         LessonPageComponent,
         ExperiencePageComponent,
@@ -118,8 +120,8 @@ import { InputDialogComponent } from "./input-dialog/input-dialog.component";
         MatRadioModule,
         MatCardModule,
         MatIconModule,
-        DragDropModule,
         MatDialogModule,
+        DragDropModule,
     ],
     providers: [ScreenTrackingService, UserTrackingService, DatePipe],
     bootstrap: [AppComponent],

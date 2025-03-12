@@ -1,57 +1,94 @@
 nav {
     width: 100%;
-    background-color: #47141C; /* Choose your color */
+    background-color: #ff8800;
     padding: 1rem 0;
 }
 
 .nav-wrapper {
     display: flex;
-    /* justify-content: space-evenly;
-    align-items: center; */
+    justify-content: space-between;
+    align-items: center;
     max-width: 100vw;
-    height: 25%;
     margin: 0 auto;
     padding: 0 1rem;
 }
 
-.logo {
+/*.logo {
     display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    justify-content: left;
+    align-items: start;
     width: 70%;
-    margin-left: 50px;
+}*/
+
+.logo {
+    flex: 0 0 auto; /* Don't grow, don't shrink, auto basis */
 }
 
 .logo-image img {
-    max-height: 120px;  /* Adjust based on your logo size */
+    max-height: 100px; /* Adjust based on your logo size */
     width: auto;
-    margin: auto;
+    max-width: 400px;
     cursor: pointer;
 }
 
 .nav-links {
     display: flex;
-    align-items: flex-end;
-    width: 30%;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .nav-links a {
-    right: 5;
-    color: #FFFFFF;
+    /*right: 5;*/
+    color: #ffffff;
     padding: 10px;
     text-decoration: none;
-    margin: auto 10px;
-    font-size: 20px;
-    text-align: right;
+    margin-left: 20px;
+    font-family: "Nova Square", sans-serif;
+    font-size: 30px;
+    /*text-align: right;*/
     white-space: nowrap;
+    transition: font-size 0.2s ease; /* Added for smooth transition on hover */
 }
 
 .nav-links a:hover {
-    font-size: 25px;
+    /*font-size: 35px;*/
     cursor: pointer;
 }
 
-.nav-links a.active{
-    font-size: 25px;
-    color: black;
+.profile-dropdown {
+    position: relative; /* Needed for dropdown positioning */
+}
+
+.profile-dropdown i {
+    color: #ffffff;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+.profile-dropdown i:hover {
+    cursor: pointer;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    position: absolute; /* Position relative to parent */
+    top: 64px; /* Adjust distance from the icon */
+    right: -16px; /* Align to the right of the icon */
+    background-color: #ffaa00;
+    border: 2px solid #ff8800;
+    border-radius: 0;
+    display: none; /* Hidden by default */
+}
+
+.dropdown-menu.show {
+    display: block; /* Show when triggered */
+}
+
+.dropdown-menu a {
+    display: block; /* Stack links vertically */
+    padding: 10px 20px;
+    color: #ffffff;
+    text-decoration: none;
+    font-family: "Nova Square", sans-serif;
+    font-size: 30px;
 }

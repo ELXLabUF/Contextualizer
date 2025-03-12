@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { AuthService } from "../auth.service";
+import { Component, HostListener } from "@angular/core";
+import { AuthService } from "../auth-service/auth.service";
 import { Router } from "@angular/router";
 import { UserInteractionCsvService } from "../user-interaction-csv-service/user-interaction-csv.service";
 import { first } from "rxjs/operators";
@@ -17,9 +17,10 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class NavbarComponent {
     isAccountActive: boolean = false;
     isAboutActive: boolean = false;
-    currentUser$ = this.authService.currentUser.subscribe((user) => {
-        console.log(user);
-    });
+    isDropdownOpen: boolean = false;
+    //currentUser$ = this.authService.currentUser.subscribe((user) => {
+    //    console.log(user);
+    //});
 
     constructor(
         public authService: AuthService,
@@ -194,6 +195,8 @@ export class NavbarComponent {
             sessionStorage.removeItem("fileUploadSuccess");
             sessionStorage.removeItem("documentId");
             sessionStorage.removeItem("fileURL");
+            sessionStorage.removeItem("userID");
+            sessionStorage.removeItem("classroom");
 
             let userInteractionData: any = [];
             userInteractionData = this.getUserInteractionData();
@@ -228,6 +231,18 @@ export class NavbarComponent {
         this.isAboutActive = false;
         this.isAccountActive = true;
         this.router.navigate(["/account"]);
+    }
+
+    //Toggle dropdown open and close
+    toggleDropdown(event: any) {
+        event.stopPropagation(); // Prevent click from propagating to document listener
+        this.isDropdownOpen = !this.isDropdownOpen;
+    }
+
+    //To close dropdown on clicking anywhere else
+    @HostListener("document:click", ["$event"])
+    onClickOutside() {
+        this.isDropdownOpen = false; // Close dropdown when clicking outside
     }
 
     onAboutClick() {

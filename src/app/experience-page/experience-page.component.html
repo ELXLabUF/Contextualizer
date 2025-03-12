@@ -39,98 +39,195 @@
     <!-- DO NOT DELETE! -->
 
     <div class="navigation-container">
-        <button
-            class="forward-arrow"
-            routerLink="/lesson"
-            title="Go to next page"
+        <div
+            *ngIf="!startNavigationFromExperiences; else alt_nav"
+            class="lesson-nav-start"
         >
-            <i class="fas fa-arrow-left"></i>
-            <!-- Font Awesome arrow icon -->
-        </button>
-        <app-dot-navigation></app-dot-navigation>
-        <button
-            class="forward-arrow"
-            routerLink="/display"
-            title="Go to next page"
-        >
-            <i class="fas fa-arrow-right"></i>
-            <!-- Font Awesome arrow icon -->
-        </button>
+            <button routerLink="/lesson" title="Go to previous page">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <app-dot-navigation></app-dot-navigation>
+            <button routerLink="/display" title="Go to next page">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+        <div class="exp-nav-start">
+            <ng-template #alt_nav>
+                <app-dot-navigation></app-dot-navigation>
+                <button routerLink="/instructions" title="Go to next page">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </ng-template>
+        </div>
     </div>
 
     <div class="parent-container flex-parent">
-        <div class="exp-display-container flex-child">
-            <p style="font-size: 25px; text-align: left; margin-bottom: 25px">
-                Select students' experiences to integrate into your lesson plan.
-                Use the filters on the right side of your screen to update the
-                list below.
-            </p>
-            <p style="font-size: 18px; color: #808080">
-                Showing {{ selectedExperiences }} of 168 entries
-            </p>
-            <div
-                style="margin-bottom: 15px"
-                *ngFor="let experience of experiences"
-            >
-                <div class="card card-body">
-                    <div class="card-text-body">
-                        <div class="experience-data">
-                            <!-- <h3>{{ experience.experience_title }}</h3> -->
-                            <p>
-                                {{ experience.experience_description }}
-                            </p>
-                        </div>
-                        <div class="experience-details">
-                            <div class="student-name">
-                                <p>
-                                    Student:
-                                    <a
-                                        (click)="
-                                            displayStudentData(
-                                                $event,
-                                                experience
-                                            )
-                                        "
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#studentModal"
-                                        >{{ experience.student_name }}</a
-                                    >
-                                </p>
-                            </div>
-                            <div class="date-uploaded">
-                                <p>Date: {{ experience.date | date }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-checkbox">
-                        <span
-                            class="checkbox"
-                            (click)="addRemoveMultipleExp(experience)"
-                            [attr.data-checked]="
-                                checkCandidacy(experience) ? true : false
-                            "
-                        ></span>
-                    </div>
-                </div>
+        <div class="page-header-container">
+            <div class="title-container"><h1>Browse Experiences</h1></div>
+
+            <div class="instruction-container">
+                <p>
+                    Select students’ experiences to integrate into your lesson
+                    plan. Use the filters on the right to update the list below.
+                </p>
             </div>
+
+            <div class="horizontal-line"><mat-divider></mat-divider></div>
         </div>
 
-        <div class="options-container flex-child">
-            <div class="search-keyword">
-                <mat-form-field appearance="outline" class="search-keyword">
-                    <mat-label>Search keyword</mat-label>
+        <div class="content-container">
+            <div class="exp-display-container flex-child">
+                <span *ngIf="experiences.length > 0; else noActiveCapture">
+                    <div
+                        style="margin-bottom: 15px"
+                        *ngFor="let experience of experiences"
+                    >
+                        <div class="card card-body">
+                            <div class="card-checkbox">
+                                <span
+                                    class="checkbox"
+                                    (click)="addRemoveMultipleExp(experience)"
+                                    [attr.data-checked]="
+                                        checkCandidacy(experience)
+                                            ? true
+                                            : false
+                                    "
+                                ></span>
+                            </div>
+                            <div class="card-text-body">
+                                <div class="experience-data">
+                                    <h3>
+                                        <!--{{ experience.experience_title }}-->
+                                        {{ experience.title }}
+                                    </h3>
+                                    <p>
+                                        <!--{{ experience.experience_description }}-->
+                                        {{ experience.transcript }}
+                                    </p>
+                                </div>
+                                <div class="experience-details">
+                                    <div class="student-name">
+                                        <p style="font-weight: 600">
+                                            <!--Student:-->
+                                            <a
+                                                (click)="
+                                                    displayStudentData(
+                                                        $event,
+                                                        experience
+                                                    )
+                                                "
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#studentModal"
+                                            >
+                                                <!--{{ experience.student_name }}-->
+                                                {{ experience.name }}
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <div class="date-uploaded">
+                                        <p style="font-weight: 600">
+                                            <!--Date: -->
+                                            {{
+                                                experience.creation_date | date
+                                            }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </span>
+                <ng-template #noActiveCapture>
+                    <h1>
+                        There is no capture active currently or there are no
+                        experiences recorded for the current capture
+                    </h1>
+                </ng-template>
+            </div>
+
+            <div class="options-container flex-child">
+                <p>
+                    Showing {{ selectedExperiences }} of
+                    {{ totalExperiencesLength }} entries
+                </p>
+
+                <button
+                    class="view-all-exp-button"
+                    (click)="getAllExperiences()"
+                >
+                    <span *ngIf="!toggleAllExp; else viewCurrentCaptureExp">
+                        View All Experiences
+                    </span>
+                    <ng-template #viewCurrentCaptureExp>
+                        View Current Capture Experiences
+                    </ng-template>
+                </button>
+
+                <!--<mat-form-field appearance="outline" style="width: 100%">
+                    <mat-label>Get Previous Capture Experiences</mat-label>
+                    <mat-select
+                        (valueChange)="getPreviousCaptureExperiences($event)"
+                        [(ngModel)]="prevCaptureName"
+                    >
+                        <mat-option
+                            *ngFor="let capture of previousCaptures"
+                            [value]="capture"
+                        >
+                            {{ capture.name }} (
+                            {{ capture.start_date | date : "MMM dd, YY" }}
+                            to {{ capture.end_date | date : "MMM dd, YY" }}
+                            )
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>-->
+
+                <div class="view-previous-capture">
+                    <label>View Previous Capture Experiences</label>
+                    <select
+                        class="dropdown-select"
+                        (change)="getPreviousCaptureExperiences()"
+                        [(ngModel)]="prevCaptureName"
+                    >
+                        <option value="" disabled>
+                            Select A Previous Capture
+                        </option>
+                        <option
+                            *ngFor="let capture of previousCaptures"
+                            [value]="capture.capture"
+                        >
+                            {{ capture.name }}
+                            ({{ capture.start_date | date : "MMM dd, YY" }} to
+                            {{ capture.due_date | date : "MMM dd, YY" }})
+                        </option>
+                    </select>
+                </div>
+
+                <!--<div class="search-keyword">
+                    <mat-form-field appearance="outline" class="search-keyword">
+                        <mat-label>Search keyword</mat-label>
+                        <input
+                            matInput
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="keywordSearchTerm"
+                            (input)="filterExperiencesByKeyword()"
+                            (click)="onFilterByKeywordClick()"
+                        />
+                    </mat-form-field>
+                </div>-->
+
+                <div class="search-keyword">
+                    <label>Search Keyword</label>
                     <input
                         type="text"
-                        matInput
-                        class="form-control"
+                        placeholder="Keyword"
                         [(ngModel)]="keywordSearchTerm"
                         (input)="filterExperiencesByKeyword()"
                         (click)="onFilterByKeywordClick()"
                     />
-                </mat-form-field>
-            </div>
+                </div>
 
-            <!-- <div class="search-student">
+                <!-- <div class="search-student">
                 <mat-form-field appearance="outline" class="search-student">
                     <mat-label>Search student</mat-label>
                     <input
@@ -144,7 +241,7 @@
                 </mat-form-field>
             </div> -->
 
-            <!-- <div class="search-date">
+                <!-- <div class="search-date">
                 <mat-form-field appearance="outline" class="search-date">
                     <mat-label>Search date</mat-label>
                     <input
@@ -164,44 +261,67 @@
                 </mat-form-field>
             </div> -->
 
-            <div>
-                <mat-form-field appearance="outline" class="search-date-range">
-                    <mat-label>Search date range</mat-label>
-                    <mat-date-range-input [rangePicker]="rangePicker">
+                <!--<div>
+                    <mat-form-field
+                        appearance="outline"
+                        class="search-date-range"
+                    >
+                        <mat-label>Search date range</mat-label>
+                        <mat-date-range-input [rangePicker]="rangePicker">
+                            <input
+                                matStartDate
+                                placeholder="Start date"
+                                [(ngModel)]="startDateSearchTerm"
+                                (click)="onFilterByDateRangeClick()"
+                                (dateInput)="filterExperiencesByDateRange()"
+                            />
+                            <input
+                                matEndDate
+                                placeholder="End date"
+                                [(ngModel)]="endDateSearchTerm"
+                                (click)="onFilterByDateRangeClick()"
+                                (dateInput)="filterExperiencesByDateRange()"
+                            />
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle
+                            matIconSuffix
+                            [for]="rangePicker"
+                        ></mat-datepicker-toggle>
+                        <mat-date-range-picker
+                            #rangePicker
+                        ></mat-date-range-picker>
+                    </mat-form-field>
+                </div>-->
+
+                <div class="search-date-range">
+                    <label>Search Date</label>
+                    <div class="date-input">
                         <input
-                            matStartDate
-                            placeholder="Start date"
+                            type="date"
                             [(ngModel)]="startDateSearchTerm"
                             (click)="onFilterByDateRangeClick()"
-                            (dateInput)="filterExperiencesByDateRange()"
+                            (input)="filterExperiencesByDateRange()"
                         />
                         <input
-                            matEndDate
-                            placeholder="End date"
+                            type="date"
                             [(ngModel)]="endDateSearchTerm"
                             (click)="onFilterByDateRangeClick()"
-                            (dateInput)="filterExperiencesByDateRange()"
+                            (input)="filterExperiencesByDateRange()"
                         />
-                    </mat-date-range-input>
-                    <mat-datepicker-toggle
-                        matIconSuffix
-                        [for]="rangePicker"
-                    ></mat-datepicker-toggle>
-                    <mat-date-range-picker #rangePicker></mat-date-range-picker>
-                </mat-form-field>
-            </div>
+                    </div>
+                </div>
 
-            <div class="student-search-filter">
-                <button
-                    data-bs-toggle="modal"
-                    data-bs-target="#filterModal"
-                    (click)="onAdvancedSearchFilterButtonClick()"
-                >
-                    Advanced Search and Filter
-                </button>
-            </div>
+                <div class="student-search-filter">
+                    <button
+                        data-bs-toggle="modal"
+                        data-bs-target="#filterModal"
+                        (click)="onAdvancedSearchFilterButtonClick()"
+                    >
+                        Advanced Search
+                    </button>
+                </div>
 
-            <!-- <div class="search-student-gender">
+                <!-- <div class="search-student-gender">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-gender"
@@ -217,7 +337,7 @@
                 </mat-form-field>
             </div> -->
 
-            <!-- <div class="search-student-last-test-grade">
+                <!-- <div class="search-student-last-test-grade">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-last-test-grade"
@@ -238,7 +358,7 @@
                 </mat-form-field>
             </div> -->
 
-            <!-- <div class="search-student-table">
+                <!-- <div class="search-student-table">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-table"
@@ -257,7 +377,7 @@
                 </mat-form-field>
             </div> -->
 
-            <!-- <div class="search-student-overall-performance">
+                <!-- <div class="search-student-overall-performance">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-overall-performance"
@@ -278,7 +398,7 @@
                 </mat-form-field>
             </div> -->
 
-            <!-- <div class="search-student-learning-disability">
+                <!-- <div class="search-student-learning-disability">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-learning-disability"
@@ -299,7 +419,7 @@
                 </mat-form-field>
             </div> -->
 
-            <!-- <div class="search-student-race-ethnicity">
+                <!-- <div class="search-student-race-ethnicity">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-race-ethnicity"
@@ -321,7 +441,7 @@
                 </mat-form-field>
             </div> -->
 
-            <!-- <div class="search-student-attendance">
+                <!-- <div class="search-student-attendance">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-attendance"
@@ -346,7 +466,7 @@
                 </mat-form-field>
             </div> -->
 
-            <!-- <div class="search-student-class-participation">
+                <!-- <div class="search-student-class-participation">
                 <mat-form-field
                     appearance="outline"
                     class="search-student-class-participation"
@@ -365,7 +485,7 @@
                 </mat-form-field>
             </div> -->
 
-            <!-- <div class="sort-experiences">
+                <!-- <div class="sort-experiences">
                 <mat-form-field appearance="outline" class="sort-experiences">
                     <mat-label>Sort By</mat-label>
                     <mat-select (valueChange)="sortExperiences($event)">
@@ -379,21 +499,22 @@
                 </mat-form-field>
             </div> -->
 
-            <div>
-                <button
-                    class="integrate-all-button"
-                    *ngIf="!this.startNavigationFromExperiences"
-                    (click)="integrateMultipleExp()"
-                >
-                    Integrate all selected
-                </button>
-                <button
-                    class="integrate-all-button"
-                    *ngIf="this.startNavigationFromExperiences"
-                    (click)="integrateMultipleExp()"
-                >
-                    Upload lesson plan to Integrate all selected
-                </button>
+                <div>
+                    <button
+                        class="integrate-all-button"
+                        *ngIf="!this.startNavigationFromExperiences"
+                        (click)="integrateMultipleExp()"
+                    >
+                        Integrate all selected
+                    </button>
+                    <button
+                        class="integrate-all-button"
+                        *ngIf="this.startNavigationFromExperiences"
+                        (click)="integrateMultipleExp()"
+                    >
+                        Upload lesson plan to Integrate all selected
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -406,20 +527,15 @@
         aria-labelledby="studentDetailsModal"
         aria-hidden="true"
     >
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 750px">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h1
-                        class="modal-title"
+                        class="modal-title text-center flex-grow-1"
                         id="studentDetailsModal"
-                        style="
-                            display: block;
-                            margin: auto;
-                            margin-left: 45%;
-                            font-size: 35px;
-                        "
                     >
-                        {{ clickedExperience.student_data.student_name }}
+                        <!--{{ clickedExperience.student_data.student_name }}-->
+                        {{ studentData.name }}
                     </h1>
                     <button
                         type="button"
@@ -432,23 +548,26 @@
                     <div class="row" style="margin-bottom: 10px">
                         <p
                             class="col"
-                            style="font-size: 22px; line-height: 25px"
+                            style="font-size: 25px; line-height: 30px"
                         >
                             <strong>Gender:</strong>
-                            {{ clickedExperience.student_data.student_gender }}
+                            <!--{{ clickedExperience.student_data.student_gender }}-->
+                            {{ studentData.gender }}
                         </p>
                         <p
                             class="col"
-                            style="font-size: 22px; line-height: 25px"
+                            style="font-size: 25px; line-height: 30px"
                         >
-                            <strong>Race/Ethnicity:</strong>
-                            {{
+                            <!--<strong>Race/Ethnicity:</strong>-->
+                            <strong>Grade:</strong>
+                            <!--{{
                                 clickedExperience.student_data
                                     .student_race_ethnicity
-                            }}
+                            }}-->
+                            {{ studentData.grade }}
                         </p>
                     </div>
-                    <div class="row" style="margin-bottom: 10px">
+                    <!--<div class="row" style="margin-bottom: 10px">
                         <p
                             class="col"
                             style="font-size: 22px; line-height: 25px"
@@ -669,17 +788,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                        style="font-size: 25px"
-                    >
-                        Close
-                    </button>
+                    <button data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -693,18 +805,12 @@
         aria-labelledby="studentFilterModal"
         aria-hidden="true"
     >
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1
-                        class="modal-title"
+                        class="modal-title text-center flex-grow-1"
                         id="studentFilterModal"
-                        style="
-                            display: block;
-                            margin: auto;
-                            margin-left: 35%;
-                            font-size: 30px;
-                        "
                     >
                         Advanced Search and Filter
                     </h1>
@@ -716,55 +822,23 @@
                     ></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col">
+                    <!--<div class="row">
+                        <div
+                            class="col"
+                            style="
+                                display: block;
+                                margin: 0px auto auto 20px;
+                                width: 300px;
+                            "
+                        >
                             <div class="row">
-                                <div class="col" style="max-width: 75%">
-                                    <p
-                                        style="
-                                            font-size: 20px;
-                                            line-height: 25px;
-                                            padding-left: 10px;
-                                            padding-right: 0px;
-                                            margin-right: 0px;
-                                        "
-                                    >
-                                        <strong>Search by student name</strong>
-                                    </p>
-                                </div>
-                                <div
-                                    class="col"
-                                    style="
-                                        max-width: 25%;
-                                        padding-left: 20px;
-                                        margin-left: 0px;
-                                    "
-                                >
+                                <div class="col" style="max-width: fit-content">
                                     <mat-icon
                                         fontIcon="info"
                                         matTooltip="Use the textbox below to filter the results by the students' names."
                                     ></mat-icon>
                                 </div>
-                            </div>
-                            <mat-form-field
-                                appearance="outline"
-                                class="search-student"
-                            >
-                                <mat-label>Search student</mat-label>
-                                <input
-                                    matInput
-                                    type="text"
-                                    class="form-control"
-                                    [(ngModel)]="studentSearchTerm"
-                                    (input)="filterExperiencesByStudent()"
-                                    (click)="onFilterByStudentClick()"
-                                />
-                            </mat-form-field>
-                        </div>
-
-                        <div class="col">
-                            <div class="row">
-                                <div class="col" style="max-width: 75%">
+                                <div class="col" style="max-width: 200px">
                                     <p
                                         style="
                                             font-size: 20px;
@@ -774,40 +848,124 @@
                                             margin-right: 0px;
                                         "
                                     >
-                                        <strong
-                                            >Search by student gender</strong
-                                        >
+                                        <strong>Name</strong>
                                     </p>
                                 </div>
-                                <div
-                                    class="col"
-                                    style="
-                                        max-width: 25%;
-                                        padding-left: 20px;
-                                        margin-left: 0px;
-                                    "
+                            </div>
+                            <div
+                                class="row"
+                                style="
+                                    justify-content: center;
+                                    align-items: center;
+                                    max-width: 80%;
+                                "
+                            >
+                                <mat-form-field
+                                    appearance="outline"
+                                    class="search-student"
                                 >
+                                    <mat-label>Search student</mat-label>
+                                    <input
+                                        matInput
+                                        type="text"
+                                        class="form-control"
+                                        [(ngModel)]="studentSearchTerm"
+                                        (input)="filterExperiencesByStudent()"
+                                        (click)="onFilterByStudentClick()"
+                                    />
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div
+                            class="col"
+                            style="
+                                display: block;
+                                margin: 0px auto auto 50px;
+                                width: 300px;
+                            "
+                        >
+                            <div class="row">
+                                <div class="col" style="max-width: fit-content">
                                     <mat-icon
                                         fontIcon="info"
                                         matTooltip="Use the checkboxes below to filter the results by the students' gender."
                                     ></mat-icon>
                                 </div>
+                                <div class="col" style="max-width: 200px">
+                                    <p
+                                        style="
+                                            font-size: 20px;
+                                            line-height: 25px;
+                                            padding-left: 10px;
+                                            padding-right: 0px;
+                                            margin-right: 0px;
+                                        "
+                                    >
+                                        <strong> Gender </strong>
+                                    </p>
+                                </div>
                             </div>
-                            <section class="search-student-gender">
-                                <mat-checkbox
-                                    class="example-margin"
-                                    (change)="filterByGenderFemale($event)"
-                                    >Female</mat-checkbox
-                                >
-                                <mat-checkbox
-                                    class="example-margin"
-                                    (change)="filterByGenderMale($event)"
-                                    >Male</mat-checkbox
-                                >
-                            </section>
+                            <div
+                                class="row"
+                                style="
+                                    justify-content: center;
+                                    align-items: center;
+                                    max-width: 80%;
+                                "
+                            >
+                                <section class="search-student-gender">
+                                    <mat-checkbox
+                                        class="example-margin"
+                                        (change)="filterByGenderFemale($event)"
+                                    >
+                                        Female
+                                    </mat-checkbox>
+                                    <mat-checkbox
+                                        class="example-margin"
+                                        (change)="filterByGenderMale($event)"
+                                    >
+                                        Male
+                                    </mat-checkbox>
+                                </section>
+                            </div>
+                        </div>
+                    </div>-->
+
+                    <div class="row-one-filters">
+                        <div class="search-student-name">
+                            <label>Name</label>
+                            <input
+                                type="text"
+                                placeholder="Search Student"
+                                [(ngModel)]="studentSearchTerm"
+                                (input)="filterByStudentName()"
+                                (click)="onFilterByStudentClick()"
+                            />
                         </div>
 
-                        <div class="col">
+                        <div class="search-student-gender">
+                            <label>Gender</label>
+                            <div class="gender-checkbox">
+                                <input
+                                    type="checkbox"
+                                    id="female"
+                                    name="female"
+                                    (change)="filterByGenderFemale($event)"
+                                />
+                                <label for="female">Female</label>
+                                <input
+                                    type="checkbox"
+                                    id="male"
+                                    name="male"
+                                    (change)="filterByGenderMale($event)"
+                                />
+                                <label for="male">Male</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--<div class="col">
                             <div class="row">
                                 <div class="col" style="max-width: 75%">
                                     <p
@@ -866,9 +1024,9 @@
                                     >F</mat-checkbox
                                 >
                             </section>
-                        </div>
+                        </div>-->
 
-                        <div class="col">
+                    <!--<div class="col">
                             <div class="row">
                                 <div class="col" style="max-width: 75%">
                                     <p
@@ -927,11 +1085,168 @@
                                     >F</mat-checkbox
                                 >
                             </section>
+                        </div>-->
+
+                    <!--<div class="row" style="margin-top: 20px">
+                        <div
+                            class="col"
+                            style="
+                                display: block;
+                                margin: 0px auto auto 20px;
+                                width: 300px;
+                            "
+                        >
+                            <div class="row">
+                                <div class="col" style="max-width: fit-content">
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Use the checkboxes below to filter the results by the students' grade."
+                                    ></mat-icon>
+                                </div>
+                                <div class="col" style="max-width: 200px">
+                                    <p
+                                        style="
+                                            font-size: 20px;
+                                            line-height: 25px;
+                                            padding-left: 10px;
+                                            padding-right: 0px;
+                                            margin-right: 0px;
+                                        "
+                                    >
+                                        <strong> Grade </strong>
+                                    </p>
+                                </div>
+                            </div>
+                            <div
+                                class="row"
+                                style="
+                                    justify-content: center;
+                                    align-items: center;
+                                    max-width: 80%;
+                                "
+                            >
+                                <section class="search-student-grade">
+                                    <mat-checkbox
+                                        class="example-margin"
+                                        (change)="filterByGrade6($event)"
+                                    >
+                                        6
+                                    </mat-checkbox>
+                                    <mat-checkbox
+                                        class="example-margin"
+                                        (change)="filterByGrade7($event)"
+                                    >
+                                        7
+                                    </mat-checkbox>
+                                    <mat-checkbox
+                                        class="example-margin"
+                                        (change)="filterByGrade8($event)"
+                                    >
+                                        8
+                                    </mat-checkbox>
+                                </section>
+                            </div>
+                        </div>
+
+                        <div
+                            class="col"
+                            style="
+                                display: block;
+                                margin: 0px auto auto 20px;
+                                width: 300px;
+                            "
+                        >
+                            <div class="row">
+                                <div class="col" style="max-width: fit-content">
+                                    <mat-icon
+                                        fontIcon="info"
+                                        matTooltip="Use the radio buttons below to sort the results based on time of submission."
+                                    ></mat-icon>
+                                </div>
+                                <div class="col" style="max-width: 200px">
+                                    <p
+                                        style="
+                                            font-size: 20px;
+                                            line-height: 25px;
+                                            margin-left: 10px;
+                                        "
+                                    >
+                                        <strong> Experience Date </strong>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <mat-radio-group aria-label="Select an option">
+                                    <mat-radio-button
+                                        value="timeOldest"
+                                        (change)="sortByTime($event)"
+                                    >
+                                        Oldest to Newest
+                                    </mat-radio-button>
+                                    <mat-radio-button
+                                        value="timeNewest"
+                                        (change)="sortByTime($event)"
+                                    >
+                                        Newest to Oldest
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+					</div>-->
+
+                    <div class="row-two-filters">
+                        <div class="search-student-grade">
+                            <label>Grade</label>
+                            <div class="grade-checkbox">
+                                <input
+                                    type="checkbox"
+                                    id="grade6"
+                                    name="grade6"
+                                    (change)="filterByGrade6($event)"
+                                />
+                                <label for="grade6">6</label>
+                                <input
+                                    type="checkbox"
+                                    id="grade7"
+                                    name="grade7"
+                                    (change)="filterByGrade7($event)"
+                                />
+                                <label for="grade7">7</label>
+                                <input
+                                    type="checkbox"
+                                    id="grade8"
+                                    name="grade8"
+                                    (change)="filterByGrade8($event)"
+                                />
+                                <label for="grade8">8</label>
+                            </div>
+                        </div>
+
+                        <div class="sort-experiences">
+                            <label>Sort Experiences</label>
+                            <div class="sort-radio">
+                                <input
+                                    type="radio"
+                                    name="sortExperiences"
+                                    id="oldToNew"
+                                    value="oldToNew"
+                                    (change)="sortByTime($event)"
+                                />
+                                <label for="oldToNew">Old to New</label>
+                                <input
+                                    type="radio"
+                                    name="sortExperiences"
+                                    id="newToOld"
+                                    value="newToOld"
+                                    (change)="sortByTime($event)"
+                                />
+                                <label for="newToOld">New to Old</label>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row" style="margin-top: 20px">
-                        <div class="col">
+                    <!--<div class="col">
                             <div class="row">
                                 <div class="col" style="max-width: 75%">
                                     <p
@@ -994,9 +1309,9 @@
                                     >None Reported</mat-checkbox
                                 >
                             </section>
-                        </div>
+                        </div>-->
 
-                        <div class="col">
+                    <!--<div class="col">
                             <div class="row">
                                 <div class="col" style="max-width: 75%">
                                     <p
@@ -1052,9 +1367,9 @@
                                     >White</mat-checkbox
                                 >
                             </section>
-                        </div>
+                        </div>-->
 
-                        <div class="col">
+                    <!--<div class="col">
                             <div class="row">
                                 <div class="col" style="max-width: 75%">
                                     <p
@@ -1113,9 +1428,9 @@
                                     >100%</mat-checkbox
                                 >
                             </section>
-                        </div>
+                        </div>-->
 
-                        <div class="col">
+                    <!--<div class="col">
                             <div class="row">
                                 <div class="col" style="max-width: 75%">
                                     <p
@@ -1164,12 +1479,11 @@
                                     >High</mat-checkbox
                                 >
                             </section>
-                        </div>
-                    </div>
+                        </div>-->
 
                     <!-- <div class="row" style="text-align: center; margin: 0 auto"> -->
-                    <div class="row" style="margin-top: 20px">
-                        <div class="col">
+                    <!--<div class="row" style="margin-top: 20px">-->
+                    <!--<div class="col">
                             <div class="row" style="margin-left: 125px">
                                 <div class="col" style="max-width: fit-content">
                                     <p
@@ -1328,9 +1642,9 @@
                                     />
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
-                        <div
+                    <!--<div
                             class="col"
                             style="
                                 display: block;
@@ -1374,14 +1688,13 @@
                                     >
                                 </mat-radio-group>
                             </div>
-                        </div>
-                    </div>
+                        </div>-->
+                    <!--</div>-->
                 </div>
 
                 <div class="modal-footer">
                     <button
                         type="button"
-                        class="btn btn-secondary"
                         data-bs-dismiss="modal"
                         (click)="applyAdvancedSearchFilters()"
                     >

@@ -1,7 +1,9 @@
-<h2 mat-dialog-title>{{ data.title }}</h2>
-<mat-dialog-content class="mat-typography">{{
-    data.message
-}}</mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button mat-button (click)="onCloseClick()">OK</button>
-</mat-dialog-actions>
+<div class="alert-dialog-container">
+    <h1 mat-dialog-title>{{ data.title }}</h1>
+    <mat-dialog-content class="dialog-content">
+        {{ data.message }}
+    </mat-dialog-content>
+    <mat-dialog-actions class="dialog-actions">
+        <button mat-button (click)="onCloseClick()">Confirm</button>
+    </mat-dialog-actions>
+</div>

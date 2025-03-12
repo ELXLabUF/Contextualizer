@@ -20,6 +20,7 @@ import { MatDialog } from "@angular/material/dialog";
     styleUrls: ["./lesson-page.component.css"],
 })
 export class LessonPageComponent implements OnInit, OnDestroy {
+    startNavigationFromExperiences: boolean = false;
     selectedFile: File | null = null;
     uploadStatus: string = "";
     uploadProgress: number = 0;
@@ -101,6 +102,16 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
         sessionStorage.setItem("timeStart", this.timeStart.toString());
+
+        if (
+            sessionStorage.getItem("altNavigation") === "false" ||
+            (sessionStorage.getItem("fileUploadSuccess") !== null &&
+                sessionStorage.getItem("fileUploadSuccess") === "true")
+        ) {
+            this.startNavigationFromExperiences = false;
+        } else if (sessionStorage.getItem("altNavigation") === "true") {
+            this.startNavigationFromExperiences = true;
+        }
     }
 
     ngOnDestroy() {
@@ -179,7 +190,7 @@ export class LessonPageComponent implements OnInit, OnDestroy {
 
     openAlertDialog(title: string, message: string): void {
         this.dialog.open(AlertDialogComponent, {
-            width: "250px",
+            width: "600px",
             data: { title: title, message: message },
         });
     }
@@ -418,10 +429,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                                 ],
                                             integrated_experiences: [],
                                         },
-                                        "Wrap-Up/Closure": {
-                                            title: "Wrap-Up/Closure",
+                                        "Wrap-Up Closure": {
+                                            title: "Wrap-Up Closure",
                                             content:
-                                                jsonData["Wrap-Up/Closure"],
+                                                jsonData["Wrap-Up Closure"],
                                             integrated_experiences: [],
                                         },
                                         mainTopic: mainTopic,
@@ -499,10 +510,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                                 ],
                                             integrated_experiences: [],
                                         },
-                                        "Wrap-Up/Closure": {
-                                            title: "Wrap-Up/Closure",
+                                        "Wrap-Up Closure": {
+                                            title: "Wrap-Up Closure",
                                             content:
-                                                jsonData["Wrap-Up/Closure"],
+                                                jsonData["Wrap-Up Closure"],
                                             integrated_experiences: [],
                                         },
                                         mainTopic: mainTopic,

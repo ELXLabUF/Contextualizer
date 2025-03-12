@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     height: 100vh;
 }
 
@@ -8,12 +9,21 @@ html, body {
     align-items: center;
     justify-content: center;
     height: 80vh;
-    margin-top: 80px;
+    margin-top: 30px;
 }
 
-.parent-container h1 {
-    font-weight: bolder;
-    font-size: 40px;
+.title-container {
+    /*border: 6px solid #ff8800;*/
+    border-radius: 20px;
+    margin-bottom: 40px;
+}
+
+.title-container h1 {
+    padding: 20px 40px 5px 40px;
+    font-family: "Nova Square", sans-serif;
+    color: #ff8800;
+    font-size: 55px;
+    line-height: 60px;
     align-items: center;
 }
 
@@ -26,19 +36,18 @@ html, body {
 }
 
 .text-container p {
-    font-size: 25px;
-    margin-top: 20px;
-    line-height: 30px;
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
     text-align: left;
 }
 
 .images-container {
     display: flex;
-    margin: 15px;
 }
 
 .images-container img {
     max-width: 600px;
     max-height: 150px;
-    margin: 25px;
+    margin: 20px;
 }

@@ -1,41 +1,28 @@
 <nav>
     <div class="nav-wrapper">
-        <div class="logo" style="opacity: 0; width: 25%">
-            <a class="logo-image">
-                <img
-                    src="../../assets/WebsiteLogo.png"
-                    style="cursor: auto"
-                    alt="Website Logo"
-                />
-            </a>
-        </div>
-
-        <!-- Logo on the left -->
         <div class="logo">
             <a class="logo-image" (click)="onLogoClick()">
-                <img src="../../assets/WebsiteLogo.png" alt="Website Logo" />
+                <img src="../../assets/Logo_White.png" alt="Website Logo" />
             </a>
         </div>
 
-        <!-- About link on the right -->
+        <!-- Nav links on the right -->
         <div class="nav-links">
-            <a
+            <a (click)="onAboutClick()"> About </a>
+            <!-- Profile Dropdown -->
+            <div
+                class="profile-dropdown"
                 *ngIf="(authService.currentUser | async) !== null"
-                (click)="onHomeClick()"
-                >Home</a
             >
-            <a (click)="onAboutClick()" [class.active]="isAboutActive">About</a>
-            <a
-                *ngIf="(authService.currentUser | async) !== null"
-                (click)="onAccountClick()"
-                [class.active]="isAccountActive"
-                >Account</a
-            >
-            <a
-                *ngIf="(authService.currentUser | async) !== null"
-                (click)="onLogout()"
-                >Log Out</a
-            >
+                <i
+                    class="bi bi-person-circle h1"
+                    (click)="toggleDropdown($event)"
+                ></i>
+                <div class="dropdown-menu" [class.show]="isDropdownOpen">
+                    <a (click)="onAccountClick()"> Account </a>
+                    <a (click)="onLogout()"> Log Out </a>
+                </div>
+            </div>
         </div>
     </div>
 </nav>

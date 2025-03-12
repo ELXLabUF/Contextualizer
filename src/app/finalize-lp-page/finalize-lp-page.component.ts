@@ -56,8 +56,8 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
             key: "Student-Led Learning",
         },
         {
-            name: "Wrap-Up/Closure",
-            key: "Wrap-Up/Closure",
+            name: "Wrap-Up Closure",
+            key: "Wrap-Up Closure",
         },
     ];
 
@@ -164,8 +164,8 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
                 return "Teacher-Led Instruction";
             case "Student-Led Learning":
                 return "Student-Led Learning";
-            case "Wrap-Up/Closure":
-                return "Wrap-Up/Closure";
+            case "Wrap-Up Closure":
+                return "Wrap-Up Closure";
             default:
                 return "Unknown";
         }

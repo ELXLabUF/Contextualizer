@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { AuthService } from "../auth.service";
+import { AuthService } from "../auth-service/auth.service";
 
 @Component({
     selector: "app-account",
@@ -81,13 +81,13 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     async changePassword() {
         if (this.newPassword !== this.confirmPassword) {
-            this.errorMessage = "Password confirmation doesn't match.";
+            this.errorMessage = "Passwords do not match.";
             return;
         }
 
         if (!this.isPasswordValid(this.newPassword)) {
             this.errorMessage =
-                "Password doesn't meet the required conditions.";
+                "Password does not meet all the required conditions.";
             return;
         }
 

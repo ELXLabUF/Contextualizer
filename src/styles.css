@@ -1,7 +1,176 @@
-/* You can add global styles to this file, and also import other style files */
+/* Nova Square Regular */
+@font-face {
+    font-family: "Nova Square";
+    src: url("./assets/fonts/NovaSquare-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Barlow Regular */
+@font-face {
+    font-family: "Barlow";
+    src: url("./assets/fonts/Barlow-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    /*font-display: swap;*/
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Barlow SemiBold */
+@font-face {
+    font-family: "Barlow";
+    src: url("./assets/fonts/Barlow-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    /*font-display: swap;*/
+}
+
+/* Barlow Bold */
+@font-face {
+    font-family: "Barlow";
+    src: url("./assets/fonts/Barlow-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+    /*font-display: swap;*/
+}
+
+html,
+body {
+    height: 100%;
+}
+
+/*
+body {
+	margin: 0;
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+}*/
+
+body {
+    font-family: "Barlow", sans-serif !important;
+}
+
+/* Alert Dialog Box Title */
+.alert-dialog-container h1 {
+    font-family: "Nova Square", sans-serif !important;
+    font-size: 30px !important;
+    color: #3f3734 !important;
+    line-height: 35px !important;
+    text-align: center !important;
+}
+
+/* Alert Dialog Box Content */
+.alert-dialog-container .dialog-content {
+    font-family: "Barlow", sans-serif !important;
+    font-size: 20px !important;
+    line-height: 25px !important;
+    color: #4f4643 !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* Alert Dialog Box Actions */
+.alert-dialog-container .dialog-actions {
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Alert Dialog Box Button */
+.alert-dialog-container button {
+    background-color: #ff8800 !important;
+    border: none !important;
+    border-radius: 15px !important;
+    color: #ffffff !important;
+    padding: 10px !important;
+    margin: 5px !important;
+    font-family: "Nova Square", sans-serif !important;
+    font-size: 25px !important;
+    line-height: 30px !important;
+}
+
+/* Confirmation Dialog Box Title */
+.confirmation-dialog-container h1 {
+    font-family: "Nova Square", sans-serif !important;
+    font-size: 30px !important;
+    color: #3f3734 !important;
+    line-height: 35px !important;
+    text-align: center !important;
+}
+
+/* Confirmation Dialog Box Content */
+.confirmation-dialog-container .dialog-content {
+    font-family: "Barlow", sans-serif !important;
+    font-size: 20px !important;
+    line-height: 25px !important;
+    color: #4f4643 !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* Confirmation Dialog Box Actions */
+.confirmation-dialog-container .dialog-actions {
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Confirmation Dialog Box Button */
+.confirmation-dialog-container button {
+    background-color: #ff8800 !important;
+    border: none !important;
+    border-radius: 15px !important;
+    color: #ffffff !important;
+    padding: 10px !important;
+    margin: 5px !important;
+    font-family: "Nova Square", sans-serif !important;
+    font-size: 25px !important;
+    line-height: 30px !important;
+}
+
+/* Input Dialog Box Title */
+.input-dialog-container h1 {
+    font-family: "Nova Square", sans-serif !important;
+    font-size: 30px !important;
+    color: #3f3734 !important;
+    line-height: 35px !important;
+    text-align: center !important;
+}
+
+/* Input Dialog Box Content */
+.input-dialog-container .dialog-content {
+    font-family: "Barlow", sans-serif !important;
+    font-size: 20px !important;
+    line-height: 25px !important;
+    color: #4f4643 !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* Input Dialog Box Content Input */
+.input-dialog-container .dialog-content input {
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: left !important;
+    background-color: #e2dedc !important;
+    border: 1px solid #3f3734 !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    margin: 5px 0 !important;
+    width: 100% !important;
+}
+
+/* Input Dialog Box Actions */
+.input-dialog-container .dialog-actions {
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Input Dialog Box Button */
+.input-dialog-container button {
+    background-color: #ff8800 !important;
+    border: none !important;
+    border-radius: 15px !important;
+    color: #ffffff !important;
+    padding: 10px !important;
+    margin: 5px !important;
+    font-family: "Nova Square", sans-serif !important;
+    font-size: 25px !important;
+    line-height: 30px !important;
+}

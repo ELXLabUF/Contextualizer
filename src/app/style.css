@@ -1,6 +1,6 @@
 /* Add styles in styles.css (or styles.scss) */
 
-.delete-dialog-container .mat-dialog-title {
+/*.delete-dialog-container .mat-dialog-title {
     font-size: 20px;
 }
 
@@ -36,4 +36,4 @@
 .delete-dialog-container .mat-dialog-container {
     border: 1px solid #888;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+}*/

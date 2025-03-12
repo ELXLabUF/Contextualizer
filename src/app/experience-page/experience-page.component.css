@@ -1,33 +1,34 @@
-html, body {
+html,
+body {
     height: 100vh;
 }
 
-.experiences-container {
+/*.experiences-container {
     display: flex;
-    flex-direction: column; /* Stack child elements vertically */
-    align-items: center;    /* Center children horizontally */
-    justify-content: center;/* Center children vertically */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     height: max-content;
     margin-left: 30px;
-}
+}*/
 
-.page-header-container {
+/*.page-header-container {
     margin: 20px;
-}
+}*/
 
-.upload-csv-file {
+/*.upload-csv-file {
     max-width: fit-content;
     background-color: #EEE;
     padding: 20px;
-    gap: 20px; /* Spacing between input and button */
-    border-radius: 10px; /* rounded corners */
+    gap: 20px;
+    border-radius: 10px;
     display: flex;
-    flex-direction: column; /* Stack children vertically */
-    align-items: center; /* Center children horizontally */
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-}
+}*/
 
-.upload-csv-file button:hover {
+/*.upload-csv-file button:hover {
     background-color: #47141C;
     color: #FFFFFF;
     border: none;
@@ -37,128 +38,131 @@ html, body {
     cursor: pointer;
     width: max-content;
     margin: 10px auto;
-}
+}*/
 
-.file-input-label {
+/*.file-input-label {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 20px; /* Adjust this for padding around the label text */
-    background-color: #F3F3F3; /* Slight gray background for visual feedback */
+    padding: 10px 20px;
+    background-color: #F3F3F3;
     border-radius: 5px;
     cursor: pointer;
-}
+}*/
 
-.file-input-label input[type="file"] {
-    display: none; /* Hide the default input */
-}
+/*.file-input-label input[type="file"] {
+    display: none;
+}*/
 
 .parent-container {
     display: flex;
-    margin: 20px;
-    margin-top: 40px;
+    flex-direction: column;
 }
-  
+
+.page-header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center children horizontally */
+    justify-content: center; /* Center children vertically */
+}
+
+/*.title-container {
+    border: 6px solid #ff8800;
+    border-radius: 20px;
+    margin: 10px auto;
+}*/
+
+.title-container h1 {
+    /*padding: 15px 20px 0px 20px;*/
+    padding-top: 20px;
+    font-family: "Nova Square", sans-serif;
+    color: #ff8800;
+    font-size: 55px;
+    line-height: 60px;
+}
+
+.instruction-container {
+    padding: 0px 20px;
+    width: 50%;
+    text-align: center;
+}
+
+.instruction-container p {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+}
+
+.horizontal-line {
+    width: 80%;
+    margin-top: 10px;
+}
+
+.mat-divider {
+    border-top-color: #ff8800;
+    border-top-width: 6px;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: row;
+    margin: 15px 30px;
+}
+
 .exp-display-container {
     padding: 10px 20px 0px 0px;
     width: 75%;
     /* flex: 1; */
 }
 
-.exp-display-container p {
-    font-size: 22px;
-    word-wrap: break-word;
-    line-height: 28px;
+.exp-display-container h1 {
+    font-family: "Nova Square", sans-serif;
+    font-size: 40px;
+    line-height: 45px;
+    text-align: center;
+    margin: 50px 20px;
 }
 
 .exp-display-container h3 {
-    font-size: 25px;
-    font-weight: 600;
-}
-
-.card.card-body {
-    background-color: #FAB9A1;
-    display: flex;
-    flex-direction: row;
-    padding: 0px;
-}
-
-.card-text-body {
-    width: 95%;
-}
-
-.experience-data {
-    padding: 20px 20px 0px 20px;
-}
-
-.experience-details {
-    background-color: #7F7F7F;
-    display: flex;
-    flex-direction: row;
-}
-
-.student-name {
-    width: 66%;
-    border: 2px solid #000000;
-    text-align: left;
-}
-
-.student-name p a {
-    color: #0000FF;
-    font-size: 22px;
-    text-decoration: underline;
-    text-decoration-thickness: 3px;
-}
-
-.student-name p:hover {
-    cursor: pointer;
-}
-
-.date-uploaded {
-    width: 34%;
-    border: 2px solid #000000;
-    text-align: right;
-}
-
-.student-name p {
-    color: #FFFFFF;
-    padding-left: 20px;
-    padding-top: 10px;
-}
-
-.modal-header h1 {
-    font-size: 25px;
+    font-family: "Barlow", sans-serif;
+    font-size: 30px;
+    line-height: 35px;
     font-weight: bold;
 }
 
-.modal-body p {
-    font-size: 20px;   
+.exp-display-container p {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    word-wrap: break-word;
 }
 
-.modal-footer .button {
-    font-size: 20px;
-}
-
-.date-uploaded p {
-    color: #FFFFFF;
-    padding-right: 20px;
-    padding-top: 10px;
+.card.card-body {
+    display: flex;
+    flex-direction: row;
+    border: none;
+    border-radius: 20px;
+    padding: 0px;
 }
 
 .card-checkbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 5%;
-    background-color: #404040;
+    background-color: #ffffff;
 }
 
 .checkbox {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     position: relative;
     display: inline-block;
     height: 30px;
     width: 30px;
-    border: 2px solid;
+    border: 4px solid #c4c0bf;
     cursor: pointer;
-    margin: 20px 25%;
+    margin: auto 25%;
 }
 
 .checkbox:after {
@@ -170,63 +174,441 @@ html, body {
 }
 
 .checkbox[data-checked="true"]:after {
+    color: #3f3734;
     content: "✓";
 }
 
+.card-text-body {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    background-color: #fff880;
+    border: none;
+    border-radius: 20px;
+    padding: 0px;
+}
+
+.experience-data {
+    padding: 20px 20px 0px 20px;
+}
+
+.experience-details {
+    display: flex;
+    flex-direction: row;
+    background-color: #ffaa00;
+    border: none;
+    border-radius: 0 0 20px 20px;
+    padding: 0px;
+}
+
+.student-name {
+    width: 66%;
+    text-align: left;
+}
+
+.student-name p {
+    color: #ffffff;
+    font-size: 25px;
+    line-height: 30px;
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
+.student-name p:hover {
+    cursor: pointer;
+}
+
+.date-uploaded {
+    width: 34%;
+    text-align: right;
+}
+
+.date-uploaded p {
+    color: #ffffff;
+    font-size: 25px;
+    line-height: 30px;
+    padding-top: 10px;
+    padding-right: 20px;
+}
+
+.modal-header h1 {
+    font-family: "Nova Square", sans-serif;
+    font-size: 30px;
+    line-height: 35px;
+    color: #000000;
+    margin-top: 10px;
+}
+
+.modal-header button {
+    background-color: #ff8800;
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    padding: 10px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.modal-body p {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+}
+
+.modal-footer button {
+    background-color: #ff8800;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 15px;
+    font-family: "Nova Square", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    cursor: pointer;
+    word-wrap: break-word;
+}
+
 .options-container {
-    margin-top: 110px;
-    padding: 20px;
+    padding: 15px 0px;
     width: 25%;
     /* flex: 1; */
 }
 
-/* .search-student input, .search-keyword input, .search-date input, .search-student-gender select, .sort-experiences select {
-    background-color: #D9D9D9;
-    border: 2px solid #787878;
-    border-radius: 10px;
-    margin-bottom: 20px;
+.options-container p {
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    color: #000000;
+}
+
+/*.search-student,
+.search-keyword,
+.search-date,
+.search-date-range,
+.search-student-gender,
+.search-student-grade,
+.search-student-last-test-grade,
+.search-student-table,
+.search-student-overall-performance,
+.search-student-learning-disability,
+.search-student-race-ethnicity,
+.search-student-attendance,
+.search-student-class-participation,
+.sort-experiences {
+    width: 100%;
+}*/
+
+.view-previous-capture label {
+    display: block;
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.dropdown-select {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
     width: 100%;
     height: 60px;
-    font-size: 20px;
-    font-weight: 400;
-    padding: 10px 15px;
-} */
+    margin-bottom: 20px;
+    padding-left: 10px;
+}
 
-.search-student, .search-keyword, .search-date, .search-date-range, .search-student-gender,
-.search-student-last-test-grade, .search-student-table, .search-student-overall-performance,
-.search-student-learning-disability, .search-student-race-ethnicity, .search-student-attendance,
-.search-student-class-participation, .sort-experiences {
-    /* background-color: #D9D9D9; */
-    /* border-radius: 5px; */
-    /* margin-bottom: 20px; */
+option {
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+}
+
+.search-keyword label {
+    display: block;
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.search-keyword input {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    box-sizing: border-box;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
     width: 100%;
-    /* height: 55px; */
+    height: 60px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+}
+
+.search-date-range label {
+    display: block;
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.date-input {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.date-input input {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    box-sizing: border-box;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    width: calc(50% - 5px);
+    height: 60px;
+    margin-bottom: 20px;
+    padding-left: 5px;
+}
+
+.view-all-exp-button {
+    height: max-content;
+    width: 100%;
+    background-color: #ff8800;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 15px;
+    font-family: "Nova Square", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    cursor: pointer;
+    word-wrap: break-word;
+    margin: 0px auto 20px;
 }
 
 .student-search-filter button {
     height: 60px;
     width: 100%;
-    margin: 5px auto;
+    background-color: #ff8800;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    margin-top: 0px;
+    padding: 15px;
+    font-family: "Nova Square", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    cursor: pointer;
+    word-wrap: break-word;
+}
+
+.row-one-filters {
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+    padding: 10px;
+}
+
+.search-student-name {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    gap: 15px;
+}
+
+.search-student-name label {
     display: block;
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 600;
+}
+
+.search-student-name input {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    box-sizing: border-box;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    width: 75%;
+    height: 60px;
+    padding-left: 10px;
+}
+
+.search-student-gender {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-left: 20px;
+}
+
+.search-student-gender label {
+    display: block;
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 600;
+}
+
+.gender-checkbox {
+    display: flex;
+    flex-direction: row;
+    padding-left: 10px;
+}
+
+.gender-checkbox label {
+    display: block;
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 400;
+    margin: 10px 25px 0px 0px;
+}
+
+.gender-checkbox input {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    box-sizing: border-box;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    width: 100%;
+    height: fit-content;
+}
+
+.gender-checkbox input[type="checkbox"] {
+    transform: scale(2);
+    margin: 20px 15px 0px 0px;
+}
+
+.row-two-filters {
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+    padding: 10px;
+    gap: 125px;
+}
+
+.search-student-grade {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.search-student-grade label {
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 600;
+}
+
+.grade-checkbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-left: 10px;
+}
+
+.grade-checkbox label {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 400;
+    margin: 10px 25px 0px 0px;
+}
+
+.grade-checkbox input {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    box-sizing: border-box;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    width: 100%;
+    height: fit-content;
+}
+
+.grade-checkbox input[type="checkbox"] {
+    transform: scale(2);
+    margin: 20px 15px 0px 0px;
+}
+
+.sort-experiences {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-left: 20px;
+}
+
+.sort-experiences label {
+    display: block;
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 600;
+}
+
+.sort-radio {
+    display: flex;
+    flex-direction: row;
+    padding-left: 5px;
+}
+
+.sort-radio label {
+    display: block;
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 400;
+    margin: 10px 25px 0px 0px;
+}
+
+.sort-radio input {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    box-sizing: border-box;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    height: fit-content;
+}
+
+.sort-radio input[type="radio"] {
+    transform: scale(2);
+    margin: 20px 15px 0px 0px;
 }
 
 .integrate-all-button {
-    background-color: #47141C;
-    color: #FFFFFF;
+    background-color: #ff8800;
+    color: #ffffff;
     border: none;
-    border-radius: 10px;
+    border-radius: 20px;
     padding: 20px;
+    font-family: "Nova Square", sans-serif;
     font-size: 30px;
+    line-height: 35px;
     cursor: pointer;
     width: 100%;
-    line-height: 35px;
     word-wrap: break-word;
     margin-top: 30px;
 }
 
 button {
-    background-color: #47141C;
-    color: #FFFFFF;
+    background-color: #47141c;
+    color: #ffffff;
     border: none;
     border-radius: 10px;
     padding: 10px 20px;
@@ -242,21 +624,36 @@ button {
 
 .navigation-container {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: 10px;
     position: relative; /* Ensure positioning context for absolute children */
+    margin-right: 10px;
     width: 100%;
 }
 
-.navigation-container button{
-        background-color: #47141C;
-        color: #FFFFFF;
-        border: none;
-        border-radius: 10px;
-        padding: 15px 25px;
-        font-size: 25px;
-        cursor: pointer;
-        transform: translateY(40%); /* Center vertically */
-        margin: 10px 0;
+.exp-nav-start {
+    margin: none;
+    padding: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.lesson-nav-start {
+    margin: none;
+    padding: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.navigation-container button {
+    background-color: #ff8800;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 40px;
+    cursor: pointer;
+    transform: translateY(20%); /* Center vertically */
+    margin: 10px 0;
 }

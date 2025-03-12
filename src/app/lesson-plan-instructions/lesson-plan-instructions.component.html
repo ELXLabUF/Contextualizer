@@ -1,17 +1,30 @@
 <div class="lesson-instructions-container">
     <div class="navigation-container">
-        <app-dot-navigation></app-dot-navigation>
-        <button
-            class="forward-arrow"
-            routerLink="/lesson"
-            title="Go to next page"
+        <div
+            *ngIf="!startNavigationFromExperiences; else alt_nav"
+            class="lesson-nav-start"
         >
-            <i class="fas fa-arrow-right"></i>
-            <!-- Font Awesome arrow icon -->
-        </button>
+            <app-dot-navigation></app-dot-navigation>
+            <button routerLink="/lesson" title="Go to next page">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+        <div class="exp-nav-start">
+            <ng-template #alt_nav>
+                <button routerLink="/experience" title="Go to previous page">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <app-dot-navigation></app-dot-navigation>
+                <button routerLink="/lesson" title="Go to next page">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </ng-template>
+        </div>
     </div>
 
     <div class="instructions-container">
+        <div class="title-container"><h1>Create Lesson Plan</h1></div>
+
         <div class="instruction-div">
             <p>
                 Create a lesson plan to start. Make sure that your lesson plan
@@ -26,8 +39,8 @@
             <div class="paragraph-box">
                 <h3>Requirements for Lesson Plan Structure</h3>
                 <p>
-                    The lesson plan needs to contain explicitly at least the
-                    following subtitles:
+                    The lesson plan needs to contain exactly the following
+                    subtitles:
                 </p>
                 <ul>
                     <li>Grade</li>
@@ -38,7 +51,7 @@
                     <li>Warm-Up</li>
                     <li>Teacher-Led Instruction</li>
                     <li>Student-Led Learning</li>
-                    <li>Wrap-Up/Closure</li>
+                    <li>Wrap-Up Closure</li>
                 </ul>
             </div>
 
@@ -47,8 +60,9 @@
             </div>
 
             <div class="download-section">
-                <h3>Download</h3>
-                <button (click)="downloadFile()">Lesson Plan Template</button>
+                <button (click)="downloadFile()">
+                    Download Lesson Plan Template
+                </button>
             </div>
         </div>
     </div>

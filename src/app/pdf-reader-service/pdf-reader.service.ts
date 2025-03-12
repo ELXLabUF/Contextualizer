@@ -142,12 +142,12 @@ export class PdfReaderService {
                                                         ),
                                                     integrated_experiences: [],
                                                 },
-                                                "Wrap-Up/Closure": {
-                                                    title: "Wrap-Up/Closure",
+                                                "Wrap-Up Closure": {
+                                                    title: "Wrap-Up Closure",
                                                     content:
                                                         this.transformArray(
                                                             transformedJSONData[
-                                                                "Wrap-Up/Closure"
+                                                                "Wrap-Up Closure"
                                                             ]
                                                         ),
                                                     integrated_experiences: [],
@@ -234,7 +234,7 @@ export class PdfReaderService {
             "Warm-Up:",
             "Teacher-Led Instruction:",
             "Student-Led Learning:",
-            "Wrap-Up/Closure:",
+            "Wrap-Up Closure:",
         ];
 
         const result: { [key: string]: any } = {};

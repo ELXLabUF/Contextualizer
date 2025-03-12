@@ -1,0 +1,387 @@
+html,
+body {
+    height: 100vh;
+}
+
+.parent-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center children horizontally */
+    justify-content: center; /* Center children vertically */
+    margin: 50px 0px;
+}
+
+.title-container {
+    display: flex;
+    flex-direction: row;
+    max-width: 80%;
+    gap: 40px;
+}
+
+.title-container h1 {
+    /*border: 6px solid #ff8800;*/
+    border-radius: 20px;
+    margin: 20px;
+    padding: 15px;
+    font-family: "Nova Square", sans-serif;
+    color: #ff8800;
+    font-size: 55px;
+    line-height: 60px;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    gap: 40px;
+}
+
+.data-container {
+    align-items: center;
+    justify-content: center;
+    min-width: 80%;
+    margin-bottom: 30px;
+}
+
+.capture-data {
+    display: flex;
+    flex-direction: column;
+    background-color: #ff8800;
+    border: 4px solid #ff8800;
+    border-radius: 20px;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.current-capture-data {
+    display: flex;
+    flex-direction: row;
+    background-color: #ffffff;
+    border-width: 0px 0px 4px 0px;
+    border-style: solid;
+    border-color: #ff8800;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 100px;
+}
+
+.current-capture-data h1 {
+    margin: 20px;
+    padding: 20px;
+    font-family: "Nova Square", sans-serif;
+    font-size: 35px;
+    line-height: 40px;
+    color: #000000;
+}
+
+.current-capture-data p {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    margin: 20px;
+}
+
+.current-capture-data button {
+    width: fit-content;
+    margin: 20px;
+}
+
+.capture-stories {
+    background-color: #ffffff;
+    border-width: 0px 0px 4px 0px;
+    border-style: solid;
+    border-color: #ff8800;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 20px 15px 0px 15px;
+}
+
+.card.card-body {
+    border: none;
+    border-radius: 20px;
+    padding: 0px 10px;
+}
+
+.card-text-body {
+    background-color: #fff880;
+    /*background-color: #f7efeb;*/
+    border: none;
+    border-radius: 20px;
+    padding: 0px;
+}
+
+.capture-stories p {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    word-wrap: break-word;
+}
+
+.experience-data {
+    padding: 20px 20px 0px 20px;
+}
+
+.experience-details {
+    display: flex;
+    flex-direction: row;
+    background-color: #ffaa00;
+    border: none;
+    border-radius: 0 0 20px 20px;
+    padding: 0px;
+}
+
+.student-name {
+    width: 66%;
+    text-align: left;
+}
+
+.student-name p {
+    color: #ffffff;
+    font-size: 25px;
+    line-height: 30px;
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
+.date-uploaded {
+    width: 34%;
+    text-align: right;
+}
+
+.date-uploaded p {
+    color: #ffffff;
+    font-size: 25px;
+    line-height: 30px;
+    padding-top: 10px;
+    padding-right: 20px;
+}
+
+.capture-stories-button {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: none;
+    border-radius: 20px;
+    min-height: 50px;
+}
+
+.capture-stories-button button {
+    font-family: "Nova Square", sans-serif;
+    font-size: 30px;
+    line-height: 35px;
+}
+
+.no-active-capture {
+    background-color: #fff880;
+    border: none;
+    border-radius: 20px;
+    justify-content: center;
+    text-align: center;
+}
+
+.no-active-capture p {
+    font-family: "Barlow", sans-serif;
+    font-size: 30px;
+    line-height: 35px;
+    word-wrap: break-word;
+    margin: 30px auto;
+}
+
+.recent-capture-data {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #ff8800;
+    border: none;
+    border-radius: 20px;
+    width: 100%;
+    min-height: 50px;
+}
+
+.recent-capture-data button {
+    font-family: "Nova Square", sans-serif;
+    font-size: 30px;
+    line-height: 35px;
+}
+
+.modal-header h1 {
+    font-family: "Nova Square", sans-serif;
+    font-size: 35px;
+    line-height: 40px;
+    color: #000000;
+    font-weight: bold;
+}
+
+.set-capture-type {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+
+.set-capture-type p {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 600;
+    margin: 10px 10px;
+    margin-left: 0px;
+    width: 25%;
+}
+
+.set-capture-data {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    gap: 20px;
+    width: 60%;
+}
+
+.capture-radio {
+    display: flex;
+    flex-direction: row;
+    padding-left: 10px;
+}
+
+.capture-radio label {
+    display: block;
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 400;
+    margin: 10px 25px 0px 0px;
+}
+
+.capture-radio input {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    box-sizing: border-box;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    height: fit-content;
+}
+
+.capture-radio input[type="radio"] {
+    transform: scale(2);
+    margin: 20px 15px 0px 0px;
+}
+
+.specific-capture-input input {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    box-sizing: border-box;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    width: 80%;
+    height: 60px;
+    padding-left: 10px;
+}
+
+.set-capture-date-range {
+    display: flex;
+    flex-direction: row;
+}
+
+.set-capture-date-range p {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 600;
+    margin: 10px 10px;
+    margin-left: 0px;
+    width: 25%;
+}
+
+.set-date-range {
+    gap: 20px;
+    width: 70%;
+    margin-left: 35px;
+}
+
+.set-date-range input {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    box-sizing: border-box;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    width: calc(45% - 10px);
+    height: 60px;
+    margin: 10px;
+    padding-left: 5px;
+}
+
+table {
+    border: 4px solid #ff8800;
+    border-radius: 20px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+thead {
+    background-color: #ffaa00;
+}
+
+th {
+    font-family: "Nova Square", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    border: 2px solid #3f3734;
+    border-top: none;
+    padding: 8px 10px;
+    cursor: pointer;
+}
+
+td {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    border: 2px solid #3f3734;
+    padding: 8px 10px;
+}
+
+tbody > tr:nth-of-type(even) {
+    background-color: #e2dedc;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+}
+
+.modal-footer .button {
+    font-size: 20px;
+}
+
+button {
+    background-color: #ff8800;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 15px;
+    font-family: "Nova Square", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+::ng-deep .cdk-overlay-container {
+    z-index: 2000;
+}

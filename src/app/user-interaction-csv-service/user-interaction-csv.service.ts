@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { AuthService } from "../auth.service";
-import { Firestore } from "@angular/fire/firestore";
+import { AuthService } from "../auth-service/auth.service";
+//import { Firestore } from "@angular/fire/firestore";
 import {
     Storage,
     ref,
@@ -19,7 +19,7 @@ export class UserInteractionCsvService {
     });
 
     constructor(
-        private angularFireStore: Firestore,
+        //private angularFireStore: Firestore,
         private storage: Storage,
         public authService: AuthService
     ) {}

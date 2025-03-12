@@ -1,37 +1,58 @@
 <div class="display-page">
     <div class="navigation-container">
-        <button
-            class="forward-arrow"
-            routerLink="/experience"
-            title="Go to next page"
+        <div
+            *ngIf="!startNavigationFromExperiences; else alt_nav"
+            class="lesson-nav-start"
         >
-            <i class="fas fa-arrow-left"></i>
-            <!-- Font Awesome arrow icon -->
-        </button>
-        <app-dot-navigation></app-dot-navigation>
-        <button
-            class="forward-arrow"
-            routerLink="/finalize"
-            title="Go to next page"
-        >
-            <i class="fas fa-arrow-right"></i>
-            <!-- Font Awesome arrow icon -->
-        </button>
+            <button routerLink="/experience" title="Go to previous page">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <app-dot-navigation></app-dot-navigation>
+            <button routerLink="/finalize" title="Go to next page">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+        <div class="exp-nav-start">
+            <ng-template #alt_nav>
+                <button routerLink="/lesson" title="Go to previous page">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <app-dot-navigation></app-dot-navigation>
+                <button routerLink="/finalize" title="Go to next page">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </ng-template>
+        </div>
     </div>
 
     <div class="page-header-container flex-parent">
+        <div class="title-container"><h1>Customize Lesson Plan</h1></div>
+
         <div class="instruction-container flex-child">
             <p>
                 Drag-and-drop your experiences where you want them in your
-                lesson plan. You can also use the CTRL (or CMD) + C keys on your
-                keyboard to copy text from experiences and paste them in your
-                lesson plan using CTRL (or CMD) + V keys. You can edit any parts
-                of your lesson plan as needed.
+                lesson plan. You can edit any parts of your lesson plan as
+                needed.
             </p>
         </div>
-        <div class="buttons-container flex-child">
-            <button (click)="onBrowseExpClick()">Browse Experiences</button>
-            <button (click)="onFinalizeLPClick()">Finalize Lesson Plan</button>
+
+        <div class="horizontal-line"><mat-divider></mat-divider></div>
+
+        <div class="instructions-button-container">
+            <div class="extra-instructions-container">
+                <p>
+                    You can also use the CTRL (or CMD) + C keys on your keyboard
+                    to copy text from experiences and paste them in your lesson
+                    plan using CTRL (or CMD) + V keys.
+                </p>
+            </div>
+
+            <div class="buttons-container flex-child">
+                <button (click)="onBrowseExpClick()">Browse Experiences</button>
+                <button (click)="onFinalizeLPClick()">
+                    Finalize Lesson Plan
+                </button>
+            </div>
         </div>
     </div>
 
@@ -49,18 +70,20 @@
                         (drop)="onDrop($event, field)"
                         (dragover)="allowDrop($event)"
                     >
-                        <div class="content-header">
+                        <div class="section-header">
                             <div
                                 *ngIf="!field.labelEditing"
                                 (click)="enableLabelEditing(field)"
                             >
-                                <p
-                                    class="editable-element"
-                                    style="font-size: 22px; font-weight: bold"
-                                >
-                                    {{ pdfData[field.key]?.title }}:
-                                </p>
+                                <h3>{{ pdfData[field.key]?.title }}:</h3>
                             </div>
+                            <span *ngIf="field.labelEditing">
+                                <input
+                                    *ngIf="field.labelEditing"
+                                    [(ngModel)]="field.labelEditValue"
+                                    (blur)="submitLabelEdit(field)"
+                                />
+                            </span>
                             <div class="content-controls">
                                 <i
                                     class="fas fa-arrow-up"
@@ -74,28 +97,47 @@
                                 ></i>
                             </div>
                         </div>
-                        <input
-                            *ngIf="field.labelEditing"
-                            [(ngModel)]="field.labelEditValue"
-                            (blur)="submitLabelEdit(field)"
-                            class="editable-element"
-                        />
 
                         <div
                             *ngIf="!field.editing"
                             (click)="enableEditing(field)"
+                            class="section-content"
                         >
-                            <p class="editable-element" style="font-size: 18px">
+                            <!--<p class="editable-element" style="font-size: 18px">
                                 {{ pdfData[field.key]?.content.content }}
-                            </p>
+                            </p>-->
+                            <span
+                                *ngFor="
+                                    let contentData of pdfData[field.key]
+                                        ?.content.content
+                                "
+                            >
+                                <p>
+                                    {{ contentData }}
+                                </p>
+                            </span>
                         </div>
 
-                        <textarea
+                        <!--<textarea
                             *ngIf="field.editing"
                             class="editField"
                             [(ngModel)]="field.editValue"
                             (blur)="submitEdit(field)"
-                        ></textarea>
+                        ></textarea>-->
+                        <div *ngIf="field.editing" class="section-content-edit">
+                            <span
+                                *ngFor="
+                                    let value of field.editValue;
+                                    let idx = index;
+                                    trackBy: trackByFn
+                                "
+                            >
+                                <textarea
+                                    [(ngModel)]="field.editValue[idx]"
+                                    (blur)="submitEdit(field)"
+                                ></textarea>
+                            </span>
+                        </div>
                     </div>
 
                     <!-- Integrated Experiences -->
@@ -125,7 +167,6 @@
                                             field.experiencesEditingIndex !==
                                             idx
                                         "
-                                        class="editable-element"
                                         (click)="
                                             enableExperienceEditing(field, idx)
                                         "
@@ -145,7 +186,6 @@
                                                     idx
                                                 ]
                                             "
-                                            class="editField"
                                         ></textarea>
                                         <button
                                             (click)="
@@ -174,7 +214,7 @@
                 <!-- Button below the Main Container -->
                 <button
                     *ngIf="pdfData[field.key]"
-                    class="add-experience-btn"
+                    class="add-section-button"
                     (click)="addContainer(field)"
                 >
                     +
@@ -200,31 +240,34 @@
                     (dragstart)="
                         onDragStart(
                             $event,
-                            experience.experience_title,
-                            experience.experience_description,
-                            experience.date,
-                            experience.student_name
+                            experience.title,
+                            experience.transcript,
+                            experience.creation_date,
+                            experience.name
                         )
                     "
                 >
                     <mat-expansion-panel-header>
                         <mat-panel-title class="exp-title">
-                            {{ experience.experience_title }}
+                            <!--{{ experience.experience_title }}-->
+                            {{ experience.title }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <p>{{ experience.experience_description }}</p>
+                    <!--<p>{{ experience.experience_description }}</p>-->
+                    <p>{{ experience.transcript }}</p>
                     <div class="meta-data d-flex align-items-center">
                         <div class="flex align-self-stretch">
                             <i class="bi bi-person"></i>
                         </div>
                         <div class="flex-grow-1 ms-2 me-2">
-                            <p>{{ experience.student_name }}</p>
+                            <!--<p>{{ experience.student_name }}</p>-->
+                            <p>{{ experience.name }}</p>
                         </div>
                         <div class="flex align-self-stretch">
                             <i class="bi bi-calendar3"></i>
                         </div>
                         <div class="flex-grow-1 ms-2 me-2">
-                            <p>{{ experience.date | date }}</p>
+                            <p>{{ experience.creation_date | date }}</p>
                         </div>
                     </div>
                 </mat-expansion-panel>

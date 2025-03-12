@@ -1,43 +1,91 @@
-html, body {
+html,
+body {
     height: 100vh;
 }
 
 .finalize-lesson-plan-container {
     display: flex;
-    flex-direction: column;  /* Stack child elements vertically */
-    align-items: center;     /* Center children horizontally */
+    flex-direction: column; /* Stack child elements vertically */
+    align-items: center; /* Center children horizontally */
     justify-content: center; /* Center children vertically */
     height: max-content;
 }
 
 .finalize-parent-container {
     display: flex;
+    flex-direction: column; /* Stack child elements vertically */
+    align-items: center; /* Center children horizontally */
+    justify-content: center; /* Center children vertically */
     margin: 20px;
     width: 75%;
 }
 
-.finalize-container {
+/*.title-container {
+    border: 6px solid #ff8800;
+    border-radius: 20px;
+    margin: 10px auto;
+}*/
+
+.title-container h1 {
+    /*padding: 15px 20px 0px 20px;*/
+    font-family: "Nova Square", sans-serif;
+    color: #ff8800;
+    font-size: 55px;
+    line-height: 60px;
+}
+
+.instructions-container {
     width: 80%;
+    text-align: center;
+    line-height: 30px;
+}
+
+.instructions-container p {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    margin-bottom: 15px;
+}
+
+.horizontal-line {
+    width: 110%;
+    margin-top: 10px;
+}
+
+.mat-divider {
+    border-top-color: #ff8800;
+    border-top-width: 6px;
+}
+
+.finalize-container {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
     margin: 30px;
+    gap: 30px;
 }
 
 .finalize-data-container {
     padding: 30px;
-    border: 2px solid #000000;
+    border: 6px solid #ff8800;
+    border-radius: 20px;
 }
 
 .info h3 {
+    font-family: "Barlow", sans-serif;
     font-size: 25px;
-    font-weight: bold;
+    font-weight: 600;
     line-height: 30px;
 }
 
 .info p {
+    font-family: "Barlow", sans-serif;
     font-size: 20px;
     line-height: 25px;
 }
 
 .int-exp li {
+    font-family: "Barlow", sans-serif;
     font-size: 20px;
     line-height: 25px;
 }
@@ -47,22 +95,18 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    margin-left: 20px;
-    margin-top: 120px;
     width: 20%;
-    gap: 40px;
 }
 
 .buttons-container button {
-    background-color: #47141C;
-    color: #FFFFFF;
+    background-color: #ff8800;
+    color: #ffffff;
     border: none;
     border-radius: 10px;
-    padding: 20px 20px;
-    font-size: 25px;
+    padding: 15px;
+    font-size: 35px;
     line-height: 30px;
     cursor: pointer;
-    width: 225px;
 }
 
 .navigation-container {
@@ -74,14 +118,13 @@ html, body {
     width: 100%;
 }
 
-.navigation-container button{
-        background-color: #47141C;
-        color: #FFFFFF;
-        border: none;
-        border-radius: 10px;
-        padding: 15px 25px;
-        font-size: 25px;
-        cursor: pointer;
-        transform: translateY(40%); /* Center vertically */
-        margin-left: 0;
+.navigation-container button {
+    background-color: #ff8800;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 40px;
+    cursor: pointer;
+    transform: translateY(20%); /* Center vertically */
 }

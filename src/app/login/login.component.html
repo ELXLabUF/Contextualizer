@@ -1,47 +1,59 @@
 <div class="wrapper">
-    <div class="text-area">
-        <div class="logos">
-            <img
-                src="../../assets/ELXLabLogo.png"
-                alt="ELX Lab Logo"
-                style="width: 250px; height: 60px"
-            />
-            <img src="../../assets/NSFLogo.png" alt="NSF Logo" />
+    <div class="main-body">
+        <div class="text-area">
+            <div class="text">
+                <p>
+                    <span style="font-weight: bold">Contextualizer</span> is a
+                    lesson planner assistant that helps teachers and instructors
+                    modify their lesson plans to include life experiences from
+                    their students
+                </p>
+            </div>
         </div>
-        <div class="text">
+        <div class="login-form">
+            <!--<h1>Sign In</h1>-->
+            <form (ngSubmit)="login()">
+                <div class="username-password">
+                    <label>Username:</label>
+                    <input
+                        type="text"
+                        [(ngModel)]="username"
+                        name="username"
+                        required
+                    />
+
+                    <label>Password:</label>
+                    <input
+                        type="password"
+                        [(ngModel)]="password"
+                        name="password"
+                        required
+                    />
+                </div>
+                <button type="submit">Log In</button>
+            </form>
             <p>
-                <span style="font-weight: bold">Contextualizer</span> is a
-                lesson planner assistant that helps teachers and instructors
-                modify their lesson plans to include life experiences from their
-                students.
+                Don't have an account? Register
+                <span routerLink="/register">here</span>.
             </p>
+            <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
         </div>
     </div>
-    <div class="login-form">
-        <h1>Sign In</h1>
-        <form (ngSubmit)="login()">
-            <div class="username-password">
-                <label>Enter your username</label>
-                <input
-                    type="text"
-                    [(ngModel)]="username"
-                    placeholder="username"
-                    name="username"
-                    required
-                />
-
-                <label>Enter your password</label>
-                <input
-                    type="password"
-                    [(ngModel)]="password"
-                    placeholder="password"
-                    name="password"
-                    required
-                />
-            </div>
-            <button type="submit">Sign In</button>
-        </form>
-        <a routerLink="/register">Don't have an account? Register here.</a>
-        <p *ngIf="errorMessage">{{ errorMessage }}</p>
+    <div class="logo-container">
+        <img
+            src="../../assets/UFLogo.png"
+            alt="University of Florida Logo"
+            style="width: 220px; height: 130px"
+        />
+        <img
+            src="../../assets/ELXLabLogo.png"
+            alt="ELX Lab Logo"
+            style="width: 300px; height: 80px; margin-top: 25px"
+        />
+        <img
+            src="../../assets/NSFLogo.png"
+            alt="NSF Logo"
+            style="width: 100px; height: 100px; margin-top: 15px"
+        />
     </div>
 </div>

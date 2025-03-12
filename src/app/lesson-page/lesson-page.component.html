@@ -1,26 +1,36 @@
 <div class="lesson-container">
     <div class="navigation-container">
-        <button
-            class="forward-arrow"
-            routerLink="/instructions"
-            title="Go to next page"
+        <div
+            *ngIf="!startNavigationFromExperiences; else alt_nav"
+            class="lesson-nav-start"
         >
-            <i class="fas fa-arrow-left"></i>
-            <!-- Font Awesome arrow icon -->
-        </button>
-        <app-dot-navigation></app-dot-navigation>
-        <button
-            class="forward-arrow"
-            routerLink="/experience"
-            title="Go to next page"
-        >
-            <i class="fas fa-arrow-right"></i>
-            <!-- Font Awesome arrow icon -->
-        </button>
+            <button routerLink="/instructions" title="Go to previous page">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <app-dot-navigation></app-dot-navigation>
+            <button routerLink="/experience" title="Go to next page">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+        <div class="exp-nav-start">
+            <ng-template #alt_nav>
+                <button routerLink="/instructions" title="Go to previous page">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <app-dot-navigation></app-dot-navigation>
+                <button routerLink="/display" title="Go to next page">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </ng-template>
+        </div>
     </div>
 
     <div class="upload-file-container">
-        <h3>Upload your lesson plan below</h3>
+        <div class="title-container"><h1>Upload Lesson Plan</h1></div>
+
+        <p>Upload your lesson plan from the previous step below.</p>
+
+        <div class="horizontal-line"><mat-divider></mat-divider></div>
 
         <!-- Main Topic Dropdown -->
         <select
@@ -28,8 +38,14 @@
             class="dropdown-select"
             (click)="onMainTopicDropdownClick()"
         >
-            <option value="" disabled>Select a science unit</option>
-            <option *ngFor="let mainTopic of mainTopics" [value]="mainTopic">
+            <option value="" disabled style="font-family: 'Barlow', sans-serif">
+                Select a science unit
+            </option>
+            <option
+                *ngFor="let mainTopic of mainTopics"
+                [value]="mainTopic"
+                style="font-family: 'Barlow', sans-serif"
+            >
                 {{ mainTopic }}
             </option>
         </select>
@@ -75,6 +91,8 @@
             </label>
         </div>
 
-        <button (click)="onUpload()">Upload</button>
+        <div class="upload-button">
+            <button (click)="onUpload()">Upload</button>
+        </div>
     </div>
 </div>

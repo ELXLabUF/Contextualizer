@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { AngularFireStorage } from "@angular/fire/compat/storage";
 import { Router } from "@angular/router";
 
@@ -9,6 +8,7 @@ import { Router } from "@angular/router";
     styleUrls: ["./lesson-plan-instructions.component.css"],
 })
 export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
+    startNavigationFromExperiences: boolean = false;
     timeStart!: Date;
     timeEnd!: Date;
 
@@ -34,6 +34,16 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
         sessionStorage.setItem("timeStart", this.timeStart.toString());
+
+        if (
+            sessionStorage.getItem("altNavigation") === "false" ||
+            (sessionStorage.getItem("fileUploadSuccess") !== null &&
+                sessionStorage.getItem("fileUploadSuccess") === "true")
+        ) {
+            this.startNavigationFromExperiences = false;
+        } else if (sessionStorage.getItem("altNavigation") === "true") {
+            this.startNavigationFromExperiences = true;
+        }
     }
 
     ngOnDestroy() {
@@ -102,9 +112,5 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
             link.click();
             link.remove();
         });
-    }
-
-    goToNextPage() {
-        this.router.navigate(["/lesson"]); // Adjust the route as necessary
     }
 }

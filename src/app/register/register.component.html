@@ -1,58 +1,40 @@
 <div class="wrapper">
-    <div class="text-area">
-        <div class="logos">
-            <img
-                src="../../assets/ELXLabLogo.png"
-                alt="ELX Lab Logo"
-                style="width: 250px; height: 60px"
-            />
-            <img src="../../assets/NSFLogo.png" alt="NSF Logo" />
-        </div>
-        <div class="text">
-            <p>
-                <span style="font-weight: bold">Contextualizer</span> is a
-                lesson planner assistant that helps teachers and instructors
-                modify their lesson plans to include life experiences from their
-                students.
-            </p>
-        </div>
-    </div>
     <div class="login-form">
-        <h1>Register</h1>
+        <h1>Register New Account</h1>
         <form (ngSubmit)="register()">
+            <label>Username:</label>
             <input
                 type="text"
                 [(ngModel)]="username"
-                placeholder="username"
                 name="username"
                 required
             />
+
+            <label>Password:</label>
             <input
                 type="password"
                 [(ngModel)]="password"
-                placeholder="password"
                 name="password"
                 required
             />
+
+            <label>Confirm Password:</label>
             <input
                 type="password"
                 [(ngModel)]="confirmPassword"
-                placeholder="confirm password"
                 name="confirmPassword"
                 required
             />
+
+            <p>Password must include:</p>
             <ul>
-                <li
-                    [class.valid]="password && password.length > 8"
-                    style="font-size: 20px; line-height: 25px"
-                >
+                <li [class.valid]="password && password.length > 8">
                     More than 8 characters
                 </li>
                 <li
                     [class.valid]="
                         password && (password | passwordPattern : '[A-Z]')
                     "
-                    style="font-size: 20px; line-height: 25px"
                 >
                     At least one uppercase letter
                 </li>
@@ -60,7 +42,6 @@
                     [class.valid]="
                         password && (password | passwordPattern : '[0-9]')
                     "
-                    style="font-size: 20px; line-height: 25px"
                 >
                     At least one number
                 </li>
@@ -68,12 +49,11 @@
                     [class.valid]="
                         password && (password | passwordPattern : '[!@#$%^&*]')
                     "
-                    style="font-size: 20px; line-height: 25px"
                 >
                     At least one special character
                 </li>
             </ul>
-            <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+            <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
             <button type="submit">Register</button>
         </form>
     </div>

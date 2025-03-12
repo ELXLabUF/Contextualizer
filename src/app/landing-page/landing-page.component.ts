@@ -1,4 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { AuthService } from "../auth-service/auth.service";
+import { collection, Firestore, getDocs } from "@angular/fire/firestore";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
@@ -14,9 +16,14 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     timeStart!: Date;
     timeEnd!: Date;
 
-    constructor(public dialog: MatDialog, private router: Router) {}
+    constructor(
+        public authService: AuthService,
+        private angularFireStore: Firestore,
+        public dialog: MatDialog,
+        private router: Router
+    ) {}
 
-    ngOnInit() {
+    async ngOnInit() {
         this.timeStart = new Date();
         let userIntData: any = [];
         userIntData = JSON.parse(
@@ -36,6 +43,54 @@ export class LandingPageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
         sessionStorage.setItem("timeStart", this.timeStart.toString());
+
+        //Get UID from Firebase auth and store it
+        if (
+            sessionStorage.getItem("userID") === null ||
+            sessionStorage.getItem("userID") === undefined
+        ) {
+            this.authService.currentUser.subscribe((user) => {
+                if (user) {
+                    const currUserID = user?.uid || "";
+                    if (currUserID !== undefined) {
+                        sessionStorage.setItem("userID", currUserID);
+                    }
+                } else {
+                    console.log("No data for user!");
+                }
+            });
+        }
+
+        //Get the teacher data from list of all teachers (Firebase collection)
+        //using UID and get classroom name from the teacher's data
+        if (
+            sessionStorage.getItem("classroom") === null ||
+            sessionStorage.getItem("classroom") === undefined
+        ) {
+            const teachersCollectionRef = collection(
+                this.angularFireStore,
+                "Teachers"
+            );
+            const collectionSnapshot = await getDocs(teachersCollectionRef);
+
+            const allTeachers = collectionSnapshot.docs.map((doc) => ({
+                id: doc.id,
+                classroom: doc.data()["classroom"],
+                name: doc.data()["name"],
+                user_id: doc.data()["user_id"],
+            }));
+
+            const index = allTeachers.findIndex(
+                (item: any) => item.user_id === sessionStorage.getItem("userID")
+            );
+
+            const currTeacher = allTeachers[index];
+            //Stores the path to the current teacher's classroom document in Firestore (Classroom/ClassroomName)
+            sessionStorage.setItem(
+                "classroom",
+                currTeacher["classroom"]["path"]
+            );
+        }
     }
 
     ngOnDestroy() {
@@ -68,6 +123,10 @@ export class LandingPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+    }
+
+    onExperienceCapturesClick() {
+        this.router.navigate(["/captures"]);
     }
 
     onPersonalizeLessonClick() {
@@ -250,7 +309,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
     openConfirmDialog(title: string, message: string): Observable<boolean> {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-            width: "250px",
+            width: "600px",
             data: { title, message },
         });
 

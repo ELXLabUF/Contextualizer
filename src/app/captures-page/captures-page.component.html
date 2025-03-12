@@ -1,0 +1,374 @@
+<div class="parent-container">
+    <div class="title-container">
+        <h1>Current Capture</h1>
+        <div class="buttons-container">
+            <button data-bs-toggle="modal" data-bs-target="#newCaptureModal">
+                Start New
+            </button>
+            <button
+                data-bs-toggle="modal"
+                data-bs-target="#pastCapturesModal"
+                (click)="getPastCaptures()"
+            >
+                Capture Library
+            </button>
+        </div>
+    </div>
+    <div class="data-container">
+        <div class="capture-data">
+            <span *ngIf="isCaptureActive; else noActiveCapture">
+                <div class="current-capture-data">
+                    <h1>{{ currCaptureName }}</h1>
+                    <p>
+                        Capture from
+                        {{ currCaptureStartDate | date : "MM/dd/yy" }} to
+                        {{ currCaptureEndDate | date : "MM/dd/yy" }}
+                    </p>
+                    <button
+                        (click)="endCurrentCapture()"
+                        *ngIf="!showRecentCapture"
+                    >
+                        End Capture
+                    </button>
+                </div>
+                <div *ngIf="toggleCaptureStories" class="capture-stories">
+                    <div
+                        style="margin-bottom: 15px"
+                        *ngFor="let experience of experiences"
+                    >
+                        <div class="card card-body">
+                            <div class="card-text-body">
+                                <div class="experience-data">
+                                    <p>
+                                        {{ experience.transcript }}
+                                    </p>
+                                </div>
+                                <div class="experience-details">
+                                    <div class="student-name">
+                                        <p style="font-weight: 600">
+                                            {{ experience.name }}
+                                        </p>
+                                    </div>
+                                    <div class="date-uploaded">
+                                        <p style="font-weight: 600">
+                                            {{
+                                                experience.creation_date | date
+                                            }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="capture-stories-button">
+                    <button (click)="showCaptureStories()">
+                        {{ buttonText }} Stories ({{ experiencesLength }})
+                    </button>
+                </div>
+            </span>
+            <ng-template #noActiveCapture>
+                <div class="no-active-capture">
+                    <p>
+                        You do not have any current captures. Click "Start New"
+                        to begin a new capture.
+                    </p>
+                </div>
+                <div class="recent-capture-data">
+                    <button (click)="getMostRecentCapture()">
+                        View Most Recent Capture
+                    </button>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="newCaptureModal"
+        tabindex="-1"
+        aria-labelledby="startNewCapture"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-lg" style="max-width: 700px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1
+                        class="modal-title text-center flex-grow-1"
+                        id="startNewCapture"
+                    >
+                        Start New Capture
+                    </h1>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <div class="set-capture-type">
+                        <p>Capture Type:</p>
+                        <div class="set-capture-data">
+                            <!--<mat-radio-group
+                                aria-label="Select a type"
+                                [(ngModel)]="specificSelected"
+                            >
+                                <mat-radio-button [value]="true">
+                                    Specific
+                                </mat-radio-button>
+                                <mat-radio-button [value]="false">
+                                    General
+                                </mat-radio-button>
+                            </mat-radio-group>-->
+                            <div class="capture-radio">
+                                <input
+                                    type="radio"
+                                    name="captureType"
+                                    id="specificCapture"
+                                    [(ngModel)]="specificSelected"
+                                    [value]="true"
+                                />
+                                <label for="specificCapture">Specific</label>
+                                <input
+                                    type="radio"
+                                    name="captureType"
+                                    id="generalCapture"
+                                    [(ngModel)]="specificSelected"
+                                    [value]="false"
+                                />
+                                <label for="generalCapture">General</label>
+                            </div>
+
+                            <!--<mat-form-field
+                                appearance="outline"
+                                class="set-type"
+                            >
+                                <input
+                                    matInput
+                                    matTooltip="Please limit the topic length to 20 characters"
+                                    placeholder="Specific Topic"
+                                    [disabled]="!specificSelected"
+                                    [(ngModel)]="specificTopic"
+                                />
+                            </mat-form-field>-->
+                            <div class="specific-capture-input">
+                                <input
+                                    type="text"
+                                    placeholder="Topic Name"
+                                    [disabled]="!specificSelected"
+                                    [(ngModel)]="specificTopic"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="set-capture-date-range">
+                        <p>Date:</p>
+                        <!--<mat-form-field
+                            appearance="outline"
+                            class="set-date-range"
+                        >
+                            <mat-label>Date Range</mat-label>
+                            <mat-date-range-input [rangePicker]="rangePicker">
+                                <input
+                                    matStartDate
+                                    placeholder="Start date"
+                                    [(ngModel)]="dateRangeStartDate"
+                                    (click)="rangePicker.open()"
+                                />
+                                <input
+                                    matEndDate
+                                    placeholder="End date"
+                                    [(ngModel)]="dateRangeEndDate"
+                                    (click)="rangePicker.open()"
+                                />
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle
+                                matIconSuffix
+                                [for]="rangePicker"
+                            ></mat-datepicker-toggle>
+                            <mat-date-range-picker
+                                #rangePicker
+                            ></mat-date-range-picker>
+                        </mat-form-field>-->
+                        <div class="set-date-range">
+                            <input
+                                type="date"
+                                [(ngModel)]="dateRangeStartDate"
+                            />
+                            <input type="date" [(ngModel)]="dateRangeEndDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal">Close</button>
+                    <button
+                        type="button"
+                        data-bs-dismiss="modal"
+                        (click)="startNewCapture()"
+                    >
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="pastCapturesModal"
+        tabindex="-1"
+        aria-labelledby="viewPastCaptures"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-lg" style="max-width: 700px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1
+                        class="modal-title text-center flex-grow-1"
+                        id="viewPastCaptures"
+                    >
+                        Past Captures
+                    </h1>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body" style="overflow-y: auto; height: 400px">
+                    <!--<table
+                        mat-table
+                        matSort
+                        matSortDisableClear
+                        matSortActive="id"
+                        matSortDirection="desc"
+                        class="mat-elevation-z8"
+                        [dataSource]="previousCaptures"
+                        (matSortChange)="sortTable($event)"
+                    >
+                        <ng-container matColumnDef="id">
+                            <th
+                                mat-header-cell
+                                *matHeaderCellDef
+                                mat-sort-header
+                            >
+                                No.
+                            </th>
+                            <td mat-cell *matCellDef="let capture">
+                                {{ capture.id + 1 }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="capture_name">
+                            <th
+                                mat-header-cell
+                                *matHeaderCellDef
+                                mat-sort-header
+                            >
+                                Capture Name
+                            </th>
+                            <td mat-cell *matCellDef="let capture">
+                                {{ capture.capture_name }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="start_date">
+                            <th
+                                mat-header-cell
+                                *matHeaderCellDef
+                                mat-sort-header
+                            >
+                                Start Date
+                            </th>
+                            <td mat-cell *matCellDef="let capture">
+                                {{ capture.start_date | date : "MMM dd, yyyy" }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="end_date">
+                            <th
+                                mat-header-cell
+                                *matHeaderCellDef
+                                mat-sort-header
+                            >
+                                End Date
+                            </th>
+                            <td mat-cell *matCellDef="let capture">
+                                {{ capture.end_date | date : "MMM dd, yyyy" }}
+                            </td>
+                        </ng-container>
+
+                        <tr
+                            mat-header-row
+                            *matHeaderRowDef="displayedColumns"
+                        ></tr>
+                        <tr
+                            mat-row
+                            *matRowDef="let row; columns: displayedColumns"
+                        ></tr>
+                    </table>-->
+                    <table>
+                        <thead>
+                            <tr>
+                                <th
+                                    *ngFor="
+                                        let col of displayedColumns;
+                                        index as idx
+                                    "
+                                    (click)="sortTable(col)"
+                                >
+                                    <span
+                                        style="
+                                            display: flex;
+                                            flex-direction: row;
+                                        "
+                                    >
+                                        {{ col }}
+                                        <i
+                                            class="bi bi-caret-down-fill"
+                                            *ngIf="
+                                                activeSortColumn === idx &&
+                                                columnSortState[idx] === 'desc'
+                                            "
+                                            style="transform: scale(0.5)"
+                                        ></i>
+                                        <i
+                                            class="bi bi-caret-up-fill"
+                                            *ngIf="
+                                                activeSortColumn === idx &&
+                                                columnSortState[idx] === 'asc'
+                                            "
+                                            style="transform: scale(0.5)"
+                                        ></i>
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let capture of previousCaptures">
+                                <td>{{ capture.id + 1 }}</td>
+                                <td>{{ capture.capture_name }}</td>
+                                <td>
+                                    {{
+                                        capture.start_date
+                                            | date : "MMM dd, yyyy"
+                                    }}
+                                </td>
+                                <td>
+                                    {{
+                                        capture.due_date | date : "MMM dd, yyyy"
+                                    }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

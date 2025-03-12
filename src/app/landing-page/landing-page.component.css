@@ -1,30 +1,51 @@
 /* This will ensure that the entire view height is occupied by the landing-container */
-html, body {
+html,
+body {
     height: 100vh;
+}
+
+body {
+    font-family: "Nova Square", sans-serif;
 }
 
 /* Centering everything in the landing-container */
 .landing-container {
     display: flex;
-    align-items: center;     /* Center children horizontally */
+    flex-direction: column;
+    align-items: center; /* Center children horizontally */
     justify-content: center; /* Center children vertically */
-    height: 60vh;
+    height: 80vh;
+}
+
+.title-container {
+    /*border: 6px solid #ff8800;*/
+    /*border-radius: 20px;*/
+    margin-bottom: 40px;
+}
+
+.title-container h1 {
+    /*padding: 20px 45px 5px 45px;*/
+    font-family: "Nova Square", sans-serif;
+    color: #ff8800;
+    font-size: 55px;
+    line-height: 60px;
 }
 
 /* Aligning buttons in a column */
 .button-group {
     display: flex;
     flex-direction: column;
-    gap: 50px; /* Spacing between buttons, adjust as needed */
+    gap: 20px; /* Spacing between buttons, adjust as needed */
 }
 
 button {
-    background-color: #47141C;
-    color: #FFFFFF;
+    background-color: #ff8800;
+    color: #ffffff;
     border: none;
-    border-radius: 10px;
+    border-radius: 20px;
     padding: 30px 30px;
-    font-size: 45px;
-    font-weight: bold;
+    font-family: "Nova Square", sans-serif;
+    font-size: 40px;
+    /*font-weight: bold;*/
     cursor: pointer;
 }
