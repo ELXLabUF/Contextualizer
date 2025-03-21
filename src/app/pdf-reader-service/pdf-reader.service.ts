@@ -221,7 +221,22 @@ export class PdfReaderService {
             output.push(currentPoint.trim());
         }
 
-        return output;
+        //return output;
+
+        //Separates the text based on bullet points.
+        //Better presentation on customize lesson plan page.
+        let finalOutput: string[] = [];
+
+        output.forEach((element) => {
+            const items = element.split("• ");
+            items.forEach((item) => {
+                if (item) {
+                    finalOutput.push("• " + item.trim());
+                }
+            });
+        });
+
+        return finalOutput;
     }
 
     private arrayToJSON(arr: string[]) {

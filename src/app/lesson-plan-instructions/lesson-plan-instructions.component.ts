@@ -99,7 +99,8 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
 
-        const fileName = "Template.pdf";
+        //const fileName = "Template.pdf";
+        const fileName = "Template.docx";
         const fileRef = this.storage.ref(fileName);
 
         fileRef.getDownloadURL().subscribe((url) => {
