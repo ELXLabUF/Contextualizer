@@ -45,24 +45,24 @@ export class PdfReaderService {
                                 .get(response.url!, { responseType: "text" })
                                 .subscribe({
                                     next: (jsonData) => {
-                                        console.log(
-                                            "Received JSON ->",
-                                            jsonData
-                                        );
+                                        //console.log(
+                                        //    "Received JSON ->",
+                                        //    jsonData
+                                        //);
 
                                         const transormedData =
                                             this.transformData(jsonData);
-                                        console.log(
-                                            "Transformed Data ->",
-                                            transormedData
-                                        );
+                                        //console.log(
+                                        //    "Transformed Data ->",
+                                        //    transormedData
+                                        //);
 
                                         const transformedJSONData =
                                             this.arrayToJSON(transormedData);
-                                        console.log(
-                                            "Transformed JSON Data ->",
-                                            transformedJSONData
-                                        );
+                                        //console.log(
+                                        //    "Transformed JSON Data ->",
+                                        //    transformedJSONData
+                                        //);
 
                                         if (transformedJSONData) {
                                             const result = {
@@ -153,7 +153,7 @@ export class PdfReaderService {
                                                     integrated_experiences: [],
                                                 },
                                             };
-                                            console.log("Result ->", result);
+                                            //console.log("Result ->", result);
                                             resolve(result);
                                         } else {
                                             console.error(
