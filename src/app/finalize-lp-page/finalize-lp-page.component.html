@@ -21,61 +21,68 @@
 
         <div class="finalize-container">
             <div class="finalize-data-container" id="lessonPlan">
-                <div *ngFor="let field of fields">
-                    <div class="info">
-                        <h3 *ngIf="pdfData[field.key]?.title">
-                            {{ pdfData[field.key]?.title }}:
-                        </h3>
-                        <span
-                            *ngFor="
-                                let contentData of pdfData[field.key]?.content
-                                    .content
-                            "
-                        >
-                            <p>
-                                {{ contentData }}
-                            </p>
-                        </span>
+                <span *ngIf="pdfData">
+                    <div *ngFor="let field of fields">
+                        <div class="info">
+                            <h3 *ngIf="pdfData[field.key]?.title">
+                                {{ pdfData[field.key]?.title }}:
+                            </h3>
+                            <span
+                                *ngFor="
+                                    let contentData of pdfData[field.key]
+                                        ?.content.content
+                                "
+                            >
+                                <p>
+                                    {{ contentData }}
+                                </p>
+                            </span>
+                            <div
+                                class="int-exp"
+                                *ngIf="
+                                    pdfData[field.key]?.integrated_experiences
+                                        ?.length
+                                "
+                            >
+                                <ul>
+                                    <ng-container
+                                        *ngFor="
+                                            let exp of pdfData[field.key]
+                                                ?.integrated_experiences
+                                        "
+                                    >
+                                        <li
+                                            *ngIf="exp && exp.trim().length > 0"
+                                        >
+                                            {{ exp }}
+                                        </li>
+                                    </ng-container>
+                                </ul>
+                            </div>
+                        </div>
                         <div
-                            class="int-exp"
-                            *ngIf="
-                                pdfData[field.key]?.integrated_experiences
-                                    ?.length
+                            class="info"
+                            *ngFor="
+                                let key of getAdditionalContainerKeysForField(
+                                    field
+                                )
                             "
                         >
+                            <h3>{{ key }}:</h3>
                             <ul>
-                                <ng-container
+                                <li
                                     *ngFor="
-                                        let exp of pdfData[field.key]
-                                            ?.integrated_experiences
+                                        let item of pdfData[field.key][key]
+                                            ?.list
                                     "
+                                    style="font-size: 20px"
                                 >
-                                    <li *ngIf="exp && exp.trim().length > 0">
-                                        {{ exp }}
-                                    </li>
-                                </ng-container>
+                                    {{ item }}
+                                </li>
                             </ul>
                         </div>
                     </div>
-                    <div
-                        class="info"
-                        *ngFor="
-                            let key of getAdditionalContainerKeysForField(field)
-                        "
-                    >
-                        <h3>{{ key }}:</h3>
-                        <ul>
-                            <li
-                                *ngFor="
-                                    let item of pdfData[field.key][key]?.list
-                                "
-                                style="font-size: 20px"
-                            >
-                                {{ item }}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                </span>
             </div>
 
             <div class="buttons-container">

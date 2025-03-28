@@ -50,7 +50,7 @@ body {
     border-top-width: 6px;
 }
 
-.dropdown-select {
+.topic-input {
     background-color: #d9d9d9;
     border: 2px solid #787878;
     border-radius: 20px;
@@ -61,6 +61,18 @@ body {
     font-size: 20px;
     padding: 10px 15px;
 }
+
+/*.dropdown-select {
+    background-color: #d9d9d9;
+    border: 2px solid #787878;
+    border-radius: 20px;
+    margin: 25px auto;
+    width: 600px;
+    height: 50px;
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    padding: 10px 15px;
+}*/
 
 /*.file-input-label {
     display: flex;

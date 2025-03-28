@@ -28,45 +28,39 @@ export class LessonPageComponent implements OnInit, OnDestroy {
     labelText: string = "No file selected";
     uploadInProgress: boolean = false;
 
-    // mainTopics: string[] = [
-    //     "Life Science",
-    //     "Physical Science",
-    //     "Earth and Space Science",
-    //     "Nature of Science",
-    // ];
-
-    mainTopics: string[] = [
+    /*mainTopics: string[] = [
         "Adaptation",
         "Carbon Cycle",
         "Energy Flow",
         "Friction",
         "Gravity",
-    ];
+    ];*/
 
-    // subTopics: { [key: string]: string[] } = {
-    //     "Life Science": [
-    //         "Organization and Development of Living Organisms",
-    //         "Diversity and Evolution of Living Organism",
-    //         "Interdependence",
-    //     ],
-    //     "Physical Science": [
-    //         "Properties of Matter",
-    //         "Changes in Matter",
-    //         "Forms of Energy",
-    //         "Energy Transfer and Transformations",
-    //         "Forces and Changes in Motion",
-    //     ],
-    //     "Earth and Space Science": [
-    //         "Earth in Space and Time",
-    //         "Earth Systems and Patterns",
-    //     ],
-    //     "Nature of Science": [
-    //         "The Practice of Science",
-    //         "The Characteristics of Scientific Knowledge",
-    //     ],
-    // };
+    /*subTopics: { [key: string]: string[] } = {
+		"Life Science": [
+			"Organization and Development of Living Organisms",
+			"Diversity and Evolution of Living Organism",
+			"Interdependence",
+		],
+		"Physical Science": [
+			"Properties of Matter",
+			"Changes in Matter",
+			"Forms of Energy",
+			"Energy Transfer and Transformations",
+			"Forces and Changes in Motion",
+		],
+		"Earth and Space Science": [
+			"Earth in Space and Time",
+			"Earth Systems and Patterns",
+		],
+		"Nature of Science": [
+			"The Practice of Science",
+			"The Characteristics of Scientific Knowledge",
+		],
+	};*/
 
-    selectedMainTopic: string = "";
+    topicName: string = "";
+    //selectedMainTopic: string = "";
     // selectedSubTopic: string = "";
 
     timeStart!: Date;
@@ -146,7 +140,25 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         );
     }
 
-    onMainTopicDropdownClick() {
+    onTopicInputClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Enter a science topic' input",
+            Result: "Enter the science topic name",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    /*onMainTopicDropdownClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -165,28 +177,28 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-    }
+    }*/
 
-    // onSubTopicDropdownClick() {
-    //     let userIntData: any = [];
-    //     let time = new Date();
-    //     userIntData = JSON.parse(
-    //         sessionStorage.getItem("userInteractionData") || "[]"
-    //     );
-    //     userIntData.push(
-    //         {
-    //             Action: "Clicked",
-    //             Target: "'Select a sub-topic' dropdown menu",
-    //             Result: "Select the sub-topic",
-    //             Time: time.toLocaleString(),
-    //         }
-    //         // "Clicked 'Select a sub-topic' at " + time.toLocaleString()
-    //     );
-    //     sessionStorage.setItem(
-    //         "userInteractionData",
-    //         JSON.stringify(userIntData)
-    //     );
-    // }
+    /*onSubTopicDropdownClick() {
+		let userIntData: any = [];
+		let time = new Date();
+		userIntData = JSON.parse(
+			sessionStorage.getItem("userInteractionData") || "[]"
+		);
+		userIntData.push(
+			{
+				Action: "Clicked",
+				Target: "'Select a sub-topic' dropdown menu",
+				Result: "Select the sub-topic",
+				Time: time.toLocaleString(),
+			}
+			// "Clicked 'Select a sub-topic' at " + time.toLocaleString()
+		);
+		sessionStorage.setItem(
+			"userInteractionData",
+			JSON.stringify(userIntData)
+		);
+	}*/
 
     openAlertDialog(title: string, message: string): void {
         this.dialog.open(AlertDialogComponent, {
@@ -272,32 +284,58 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
 
-        // if (!this.selectedMainTopic || !this.selectedSubTopic) {
-        if (!this.selectedMainTopic) {
+        //if (!this.selectedMainTopic) {
+        /*if(!this.topicName) {
             if (!this.selectedFile) {
                 this.uploadStatus =
-                    "Please select both topic and sub-topic and a file";
+                    "Please enter a science topic and your lesson plan file";
                 console.log(this.uploadStatus);
                 return;
             } else {
-                this.uploadStatus = "Please select both topic and sub-topic";
+                this.uploadStatus = "Please enter a science topic";
                 return;
             }
-        }
+        }*/
 
-        if (!this.selectedFile) {
-            this.uploadStatus = "No file selected";
-            this.uploadInProgress = true;
-            console.log(this.uploadStatus);
+        if (!this.topicName && !this.selectedFile) {
+            this.openAlertDialog(
+                "Incomplete Data",
+                "Please enter a science topic and select the PDF of your lesson plan to upload."
+            );
+            this.resetUploadState();
             return;
         }
 
-        this.expLessonPlanService.changeMainTopic(this.selectedMainTopic); // deliver selected main topic to other components
+        if (!this.topicName) {
+            this.openAlertDialog(
+                "Incomplete Data",
+                "Please enter a science topic."
+            );
+            this.resetUploadState();
+            return;
+        }
+
+        if (!this.selectedFile) {
+            //this.uploadStatus = "No file selected";
+            //this.uploadInProgress = true;
+            //console.log(this.uploadStatus);
+            //return;
+            this.openAlertDialog(
+                "Incomplete Data",
+                "Please select the PDF of your lesson plan to upload."
+            );
+            this.resetUploadState();
+            return;
+        }
+
+        //this.expLessonPlanService.changeMainTopic(this.selectedMainTopic); // deliver selected main topic to other components
+        this.expLessonPlanService.changeMainTopic(this.topicName); // deliver selected main topic to other components
         // this.expLessonPlanService.changeSubTopic(this.selectedSubTopic); // deliver selected sub topic to other components
 
         // const filePath = `${this.selectedMainTopic}/${this.selectedSubTopic}/${this.selectedFile.name}`;
         const username = sessionStorage.getItem("username");
-        const filePath = `${this.selectedMainTopic}/${username}/${this.selectedFile.name}`;
+        //const filePath = `${this.selectedMainTopic}/${username}/${this.selectedFile.name}`;
+        const filePath = `${this.topicName}/${username}/${this.selectedFile.name}`;
         const fileRef = ref(this.storage, `lesson-files/${filePath}`);
         const uploadTask = uploadBytesResumable(fileRef, this.selectedFile);
 
@@ -589,7 +627,8 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         this.uploadStatus = "";
         this.uploadProgress = 0;
         this.fileDownloadURL = "";
-        this.selectedMainTopic = "";
+        this.topicName = "";
+        //this.selectedMainTopic = "";
         // this.selectedSubTopic = "";
     }
 }

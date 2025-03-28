@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { AuthService } from "../auth-service/auth.service";
-import { collection, Firestore, getDocs } from "@angular/fire/firestore";
 import { Router } from "@angular/router";
+import { AuthService } from "../auth-service/auth.service";
 import { MatDialog } from "@angular/material/dialog";
+import { AlertDialogComponent } from "../alert-dialog/alert-dialog.component";
 import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 import { Observable } from "rxjs";
 
@@ -12,15 +12,16 @@ import { Observable } from "rxjs";
     styleUrls: ["./landing-page.component.css"],
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
+    allClassrooms: string[] = [];
+    classroom: string = "";
     startNavigationFromExperiences: boolean = false;
     timeStart!: Date;
     timeEnd!: Date;
 
     constructor(
+        private router: Router,
         public authService: AuthService,
-        private angularFireStore: Firestore,
-        public dialog: MatDialog,
-        private router: Router
+        public dialog: MatDialog
     ) {}
 
     async ngOnInit() {
@@ -29,67 +30,29 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Visited",
-                Target: "Landing page",
-                Result: "",
-                Time: this.timeStart.toLocaleString(),
-            }
-            // "Visited Landing Page at " + this.timeStart.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Visited",
+            Target: "Landing page",
+            Result: "",
+            Time: this.timeStart.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
         );
         sessionStorage.setItem("timeStart", this.timeStart.toString());
 
-        //Get UID from Firebase auth and store it
+        //Get all classrooms assocaited with current user
+        this.allClassrooms = JSON.parse(
+            sessionStorage.getItem("allClassrooms") || ""
+        );
+
         if (
-            sessionStorage.getItem("userID") === null ||
-            sessionStorage.getItem("userID") === undefined
+            sessionStorage.getItem("classroom") &&
+            sessionStorage.getItem("classroom") !== ""
         ) {
-            this.authService.currentUser.subscribe((user) => {
-                if (user) {
-                    const currUserID = user?.uid || "";
-                    if (currUserID !== undefined) {
-                        sessionStorage.setItem("userID", currUserID);
-                    }
-                } else {
-                    console.log("No data for user!");
-                }
-            });
-        }
-
-        //Get the teacher data from list of all teachers (Firebase collection)
-        //using UID and get classroom name from the teacher's data
-        if (
-            sessionStorage.getItem("classroom") === null ||
-            sessionStorage.getItem("classroom") === undefined
-        ) {
-            const teachersCollectionRef = collection(
-                this.angularFireStore,
-                "Teachers"
-            );
-            const collectionSnapshot = await getDocs(teachersCollectionRef);
-
-            const allTeachers = collectionSnapshot.docs.map((doc) => ({
-                id: doc.id,
-                classroom: doc.data()["classroom"],
-                name: doc.data()["name"],
-                user_id: doc.data()["user_id"],
-            }));
-
-            const index = allTeachers.findIndex(
-                (item: any) => item.user_id === sessionStorage.getItem("userID")
-            );
-
-            const currTeacher = allTeachers[index];
-            //Stores the path to the current teacher's classroom document in Firestore (Classroom/ClassroomName)
-            sessionStorage.setItem(
-                "classroom",
-                currTeacher["classroom"]["path"]
-            );
+            this.classroom =
+                sessionStorage.getItem("classroom")?.slice(10) || "";
         }
     }
 
@@ -101,32 +64,62 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Left",
-                Target: "Landing page",
-                Result: "",
-                Time: this.timeEnd.toLocaleString(),
-            }
-            // "Left Landing Page at " + this.timeEnd.toLocaleString()
-        );
-        userIntData.push(
-            {
-                Action: "Time spent",
-                Target: "Landing page",
-                Result: "",
-                Time: duration + " seconds",
-            }
-            // "Time spent on Landing Page: " + duration + " seconds"
-        );
+        userIntData.push({
+            Action: "Left",
+            Target: "Landing page",
+            Result: "",
+            Time: this.timeEnd.toLocaleString(),
+        });
+        userIntData.push({
+            Action: "Time spent",
+            Target: "Landing page",
+            Result: "",
+            Time: duration + " seconds",
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
         );
     }
 
+    setClassroom() {
+        for (const clroom of this.allClassrooms) {
+            if (clroom.slice(10) === this.classroom) {
+                sessionStorage.setItem("classroom", clroom);
+            }
+        }
+    }
+
     onExperienceCapturesClick() {
-        this.router.navigate(["/captures"]);
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Student Experience Capture' button",
+            Result: "Navigate to Captures page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        if (
+            !sessionStorage.getItem("classroom") ||
+            sessionStorage.getItem("classroom") === "" ||
+            sessionStorage.getItem("classroom") === null ||
+            sessionStorage.getItem("classroom") === undefined
+        ) {
+            this.openAlertDialog(
+                "Warning: No Classroom Selected",
+                "Please select a classroom to proceed further."
+            );
+        } else {
+            this.router.navigate(["/captures"]);
+        }
     }
 
     onPersonalizeLessonClick() {
@@ -135,15 +128,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Personalize Lesson' button",
-                Result: "Navigate to LP Instructions page",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked on 'Personalize Lesson' at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Personalize Lesson' button",
+            Result: "Navigate to LP Instructions page",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -178,15 +168,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                     userIntData = JSON.parse(
                         sessionStorage.getItem("userInteractionData") || "[]"
                     );
-                    userIntData.push(
-                        {
-                            Action: "Clicked",
-                            Target: "'Yes, Confirm' button on dialog box",
-                            Result: "Navigate to LP Instructions page",
-                            Time: time.toLocaleString(),
-                        }
-                        // "Clicked 'Yes, Confirm' at " + time.toLocaleString()
-                    );
+                    userIntData.push({
+                        Action: "Clicked",
+                        Target: "'Yes, Confirm' button on dialog box",
+                        Result: "Navigate to LP Instructions page",
+                        Time: time.toLocaleString(),
+                    });
                     sessionStorage.setItem(
                         "userInteractionData",
                         JSON.stringify(userIntData)
@@ -198,15 +185,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                     userIntData = JSON.parse(
                         sessionStorage.getItem("userInteractionData") || "[]"
                     );
-                    userIntData.push(
-                        {
-                            Action: "Clicked",
-                            Target: "'No, Go Back' button on dialog box",
-                            Result: "Deny new LP contextualization",
-                            Time: time.toLocaleString(),
-                        }
-                        // "Clicked 'No, Go Back' at " + time.toLocaleString()
-                    );
+                    userIntData.push({
+                        Action: "Clicked",
+                        Target: "'No, Go Back' button on dialog box",
+                        Result: "Deny new LP contextualization",
+                        Time: time.toLocaleString(),
+                    });
                     sessionStorage.setItem(
                         "userInteractionData",
                         JSON.stringify(userIntData)
@@ -214,7 +198,19 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
-            this.router.navigate(["/instructions"]);
+            if (
+                !sessionStorage.getItem("classroom") ||
+                sessionStorage.getItem("classroom") === "" ||
+                sessionStorage.getItem("classroom") === null ||
+                sessionStorage.getItem("classroom") === undefined
+            ) {
+                this.openAlertDialog(
+                    "Warning: No Classroom Selected",
+                    "Please select a classroom to proceed further."
+                );
+            } else {
+                this.router.navigate(["/instructions"]);
+            }
         }
     }
 
@@ -224,15 +220,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Browse Experiences' button",
-                Result: "Navigate to Experiences page",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked on 'Browse Experiences' at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Browse Experiences' button",
+            Result: "Navigate to Experiences page",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -267,15 +260,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                     userIntData = JSON.parse(
                         sessionStorage.getItem("userInteractionData") || "[]"
                     );
-                    userIntData.push(
-                        {
-                            Action: "Clicked",
-                            Target: "'Yes, Confirm' button on dialog box",
-                            Result: "Navigate to Experiences page",
-                            Time: time.toLocaleString(),
-                        }
-                        // "Clicked 'Yes, Confirm' at " + time.toLocaleString()
-                    );
+                    userIntData.push({
+                        Action: "Clicked",
+                        Target: "'Yes, Confirm' button on dialog box",
+                        Result: "Navigate to Experiences page",
+                        Time: time.toLocaleString(),
+                    });
                     sessionStorage.setItem(
                         "userInteractionData",
                         JSON.stringify(userIntData)
@@ -287,15 +277,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                     userIntData = JSON.parse(
                         sessionStorage.getItem("userInteractionData") || "[]"
                     );
-                    userIntData.push(
-                        {
-                            Action: "Clicked",
-                            Target: "'No, Go Back' button on dialog box",
-                            Result: "Deny new LP contextualization",
-                            Time: time.toLocaleString(),
-                        }
-                        // "Clicked 'No, Go Back' at " + time.toLocaleString()
-                    );
+                    userIntData.push({
+                        Action: "Clicked",
+                        Target: "'No, Go Back' button on dialog box",
+                        Result: "Deny new LP contextualization",
+                        Time: time.toLocaleString(),
+                    });
                     sessionStorage.setItem(
                         "userInteractionData",
                         JSON.stringify(userIntData)
@@ -303,8 +290,27 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
-            this.router.navigate(["/experience"]);
+            if (
+                !sessionStorage.getItem("classroom") ||
+                sessionStorage.getItem("classroom") === "" ||
+                sessionStorage.getItem("classroom") === null ||
+                sessionStorage.getItem("classroom") === undefined
+            ) {
+                this.openAlertDialog(
+                    "Warning: No Classroom Selected",
+                    "Please select a classroom to proceed further."
+                );
+            } else {
+                this.router.navigate(["/experience"]);
+            }
         }
+    }
+
+    openAlertDialog(title: string, message: string): void {
+        this.dialog.open(AlertDialogComponent, {
+            width: "600px",
+            data: { title: title, message: message },
+        });
     }
 
     openConfirmDialog(title: string, message: string): Observable<boolean> {

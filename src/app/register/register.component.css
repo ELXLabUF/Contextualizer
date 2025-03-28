@@ -99,6 +99,12 @@ html {
     margin-top: 10px;
 }
 
+.username-tooltip p {
+    font-family: "Barlow", sans-serif;
+    font-size: 15px;
+    line-height: 20px;
+}
+
 .login-form button {
     background-color: #ff8800;
     color: #ffffff;

@@ -32,8 +32,18 @@
 
         <div class="horizontal-line"><mat-divider></mat-divider></div>
 
+        <!-- Topic Title Field -->
+        <input
+            [(ngModel)]="topicName"
+            class="topic-input"
+            (click)="onTopicInputClick()"
+            placeholder="Enter a science topic"
+            type="text"
+            required
+        />
+
         <!-- Main Topic Dropdown -->
-        <select
+        <!--<select
             [(ngModel)]="selectedMainTopic"
             class="dropdown-select"
             (click)="onMainTopicDropdownClick()"
@@ -48,7 +58,7 @@
             >
                 {{ mainTopic }}
             </option>
-        </select>
+        </select>-->
 
         <!-- Sub-Topic Dropdown -->
         <!-- <select

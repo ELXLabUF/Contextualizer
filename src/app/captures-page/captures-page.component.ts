@@ -48,8 +48,9 @@ export class CapturesPageComponent implements OnInit {
         "Capture Name",
         "Start Date",
         "End Date",
+        "Count",
     ];
-    columnSortState: string[] = ["asc", "asc", "asc", "asc"];
+    columnSortState: string[] = ["asc", "asc", "asc", "asc", "asc"];
 
     constructor(
         public dialog: MatDialog,
@@ -58,6 +59,7 @@ export class CapturesPageComponent implements OnInit {
 
     async ngOnInit() {
         await this.getCurrentCapture();
+        await this.setSubmissionOpen();
         await this.getCaptureStories();
 
         //Check if current capture has ended and set the correct values in Firestore
@@ -72,7 +74,16 @@ export class CapturesPageComponent implements OnInit {
             await this.setEndCaptureDataInFirestore();
         }
 
-        await this.setSubmissionOpen();
+        //Check if a future capture can be started if there is no active capture
+        if (
+            this.currCaptureEndDate.getTime().toString().slice(0, 9) ===
+            new Date("January 02, 2020 00:00:00")
+                .getTime()
+                .toString()
+                .slice(0, 9)
+        ) {
+            await this.setCurrentCaptureFromFutureCaptures();
+        }
 
         //Check if there is a capture currently active
         if (
@@ -159,58 +170,6 @@ export class CapturesPageComponent implements OnInit {
         }
     }
 
-    async setEndCaptureDataInFirestore() {
-        //Get classroom data
-        const classroom = sessionStorage.getItem("classroom") || "";
-        const classroomDocRef = doc(this.angularFireStore, classroom);
-        const classroomDocSnap = await getDoc(classroomDocRef);
-        let previous_captures: any = {};
-        let students: any = {};
-        let teacher: any = {};
-
-        if (classroomDocSnap.exists()) {
-            previous_captures =
-                classroomDocSnap.data()["previous_captures"] || {};
-            const length = Object.keys(previous_captures).length || 0;
-            previous_captures[classroom.slice(10) + length.toString()] = {
-                name: this.currCaptureName,
-                start_date: this.currCaptureStartDate,
-                due_date: this.currCaptureEndDate,
-            };
-            students = classroomDocSnap.data()["students"];
-            teacher = classroomDocSnap.data()["teacher"];
-        } else {
-            console.log("No such document!");
-        }
-
-        //Rewrite classroom data to reflect end of capture
-        await setDoc(doc(this.angularFireStore, classroom), {
-            id: classroom.slice(10),
-            selected_topic: "",
-            start_date: new Date("January 01, 2020 00:00:00"),
-            due_date: new Date("January 02, 2020 00:00:00"),
-            submission_open: false,
-            previous_captures: previous_captures,
-            teacher: teacher,
-            students: students,
-        });
-
-        const classroomApp = classroom + "App";
-
-        //Rewrite classroom data in ClassroomApp document to reflect end of capture
-        await setDoc(doc(this.angularFireStore, classroomApp), {
-            selected_topic: "",
-            start_date: new Date("January 01, 2020 00:00:00"),
-            due_date: new Date("January 02, 2020 00:00:00"),
-            submission_open: false,
-        });
-
-        this.currCaptureName = "";
-        this.currCaptureStartDate = new Date("January 01, 2020 00:00:00");
-        this.currCaptureEndDate = new Date("January 02, 2020 00:00:00");
-        this.isCaptureActive = false;
-    }
-
     async setSubmissionOpen() {
         //Get classroom data
         const classroom = sessionStorage.getItem("classroom") || "";
@@ -220,6 +179,7 @@ export class CapturesPageComponent implements OnInit {
         let selectedTopic: string = "";
         let startDate: Date = new Date();
         let endDate: Date = new Date();
+        let future_captures: any = {};
         let previous_captures: any = {};
         let submissionOpen: boolean = false;
         let students: any = {};
@@ -231,6 +191,7 @@ export class CapturesPageComponent implements OnInit {
             selectedTopic = classroomDocSnap.data()["selected_topic"] || "";
             startDate = classroomDocSnap.data()["start_date"] || new Date();
             endDate = classroomDocSnap.data()["due_date"] || new Date();
+            future_captures = classroomDocSnap.data()["future_captures"] || {};
             previous_captures =
                 classroomDocSnap.data()["previous_captures"] || {};
             submissionOpen =
@@ -258,6 +219,7 @@ export class CapturesPageComponent implements OnInit {
                 selected_topic: selectedTopic,
                 start_date: startDate,
                 due_date: endDate,
+                future_captures: future_captures,
                 previous_captures: previous_captures,
                 submission_open: true,
                 students: students,
@@ -273,6 +235,61 @@ export class CapturesPageComponent implements OnInit {
                 submission_open: true,
             });
         }
+    }
+
+    async setEndCaptureDataInFirestore() {
+        //Get classroom data
+        const classroom = sessionStorage.getItem("classroom") || "";
+        const classroomDocRef = doc(this.angularFireStore, classroom);
+        const classroomDocSnap = await getDoc(classroomDocRef);
+        let future_captures: any = {};
+        let previous_captures: any = {};
+        let students: any = {};
+        let teacher: any = {};
+
+        if (classroomDocSnap.exists()) {
+            future_captures = classroomDocSnap.data()["future_captures"] || {};
+            previous_captures =
+                classroomDocSnap.data()["previous_captures"] || {};
+            const length = Object.keys(previous_captures).length || 0;
+            previous_captures[classroom.slice(10) + length.toString()] = {
+                name: this.currCaptureName,
+                start_date: this.currCaptureStartDate,
+                due_date: this.currCaptureEndDate,
+            };
+            students = classroomDocSnap.data()["students"];
+            teacher = classroomDocSnap.data()["teacher"];
+        } else {
+            console.log("No such document!");
+        }
+
+        //Rewrite classroom data to reflect end of capture
+        await setDoc(doc(this.angularFireStore, classroom), {
+            id: classroom.slice(10),
+            selected_topic: "",
+            start_date: new Date("January 01, 2020 00:00:00"),
+            due_date: new Date("January 02, 2020 00:00:00"),
+            submission_open: false,
+            future_captures: future_captures,
+            previous_captures: previous_captures,
+            teacher: teacher,
+            students: students,
+        });
+
+        const classroomApp = classroom + "App";
+
+        //Rewrite classroom data in ClassroomApp document to reflect end of capture
+        await setDoc(doc(this.angularFireStore, classroomApp), {
+            selected_topic: "",
+            start_date: new Date("January 01, 2020 00:00:00"),
+            due_date: new Date("January 02, 2020 00:00:00"),
+            submission_open: false,
+        });
+
+        this.currCaptureName = "";
+        this.currCaptureStartDate = new Date("January 01, 2020 00:00:00");
+        this.currCaptureEndDate = new Date("January 02, 2020 00:00:00");
+        this.isCaptureActive = false;
     }
 
     endCurrentCapture() {
@@ -295,7 +312,116 @@ export class CapturesPageComponent implements OnInit {
         });
     }
 
+    async setCurrentCaptureFromFutureCaptures() {
+        //Get classroom data
+        const classroom = sessionStorage.getItem("classroom") || "";
+        const classroomDocRef = doc(this.angularFireStore, classroom);
+        const classroomDocSnap = await getDoc(classroomDocRef);
+        let captureID: string = "";
+        let selectedTopic: string = "";
+        let startDate: Date = new Date();
+        let endDate: Date = new Date();
+        let future_captures: any = {};
+        let previous_captures: any = {};
+        let length: Number = 0;
+        let students: any = {};
+        let teacher: any = {};
+        const classroomApp = classroom + "App";
+
+        if (classroomDocSnap.exists()) {
+            future_captures = classroomDocSnap.data()["future_captures"] || {};
+            previous_captures =
+                classroomDocSnap.data()["previous_captures"] || {};
+            length = Object.keys(previous_captures).length || 0;
+            teacher = classroomDocSnap.data()["teacher"];
+            students = classroomDocSnap.data()["students"];
+        } else {
+            console.log("No such document!");
+        }
+
+        for (const key in future_captures) {
+            const date = new Date(
+                future_captures[key]["start_date"].seconds * 1000 +
+                    future_captures[key]["start_date"].nanoseconds / 1000000
+            );
+            if (date.getTime() <= new Date().getTime()) {
+                selectedTopic = future_captures[key]["name"];
+                startDate = new Date(
+                    future_captures[key]["start_date"].seconds * 1000 +
+                        future_captures[key]["start_date"].nanoseconds / 1000000
+                );
+                endDate = new Date(
+                    future_captures[key]["due_date"].seconds * 1000 +
+                        future_captures[key]["due_date"].nanoseconds / 1000000
+                );
+            }
+            delete future_captures[key];
+            break;
+        }
+
+        captureID = classroom.slice(10) + length.toString();
+
+        //Rewrite classroom data to reflect submission open
+        await setDoc(doc(this.angularFireStore, classroom), {
+            id: classroom.slice(10),
+            capture: captureID,
+            selected_topic: selectedTopic,
+            start_date: startDate,
+            due_date: endDate,
+            future_captures: future_captures,
+            previous_captures: previous_captures,
+            submission_open: true,
+            students: students,
+            teacher: teacher,
+        });
+
+        //Rewrite classroom data in ClassroomApp document to reflect submission open
+        await setDoc(doc(this.angularFireStore, classroomApp), {
+            capture: captureID,
+            selected_topic: selectedTopic,
+            start_date: startDate,
+            due_date: endDate,
+            submission_open: true,
+        });
+
+        this.currCaptureName = selectedTopic;
+        this.currCaptureStartDate = startDate;
+        this.currCaptureEndDate = endDate;
+        this.noActiveCapture = false;
+        this.experiences = [];
+
+        //Get all exp with Capture ID equal to captureID and
+        //Show Teacher field as true
+        this.experiences = await getDocs(
+            query(
+                collection(this.angularFireStore, "NewExperiences"),
+                where("capture", "==", captureID),
+                where("show_to_teacher", "==", true)
+            )
+        ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
+
+        //Convert date into correct format for display and
+        //assign each experience the correct student name
+        //based on the Device ID associated with it
+        this.experiences.forEach((exp: any) => {
+            let date = exp["creation_date"];
+            exp["creation_date"] = new Date(
+                date.seconds * 1000 + date.nanoseconds / 1000000
+            ).toLocaleDateString();
+            exp["name"] = this.students[exp["device_id"]]["name"];
+            exp["grade"] = this.students[exp["device_id"]]["grade"];
+            exp["gender"] = this.students[exp["device_id"]]["gender"];
+        });
+
+        this.experiencesLength = Object.keys(this.experiences).length;
+    }
+
     showCaptureStories() {
+        //Make button inert if there are no stories to show for current capture
+        if (this.experiencesLength === 0) {
+            return;
+        }
+
         this.toggleCaptureStories = !this.toggleCaptureStories;
         this.buttonText = this.toggleCaptureStories ? "Hide" : "Show";
     }
@@ -359,60 +485,150 @@ export class CapturesPageComponent implements OnInit {
         this.experiencesLength = Object.keys(this.experiences).length;
     }
 
-    async setCurrentCaptureDataInFirestore(
+    async setCaptureDataInFirestore(
         captureName: string,
         startDate: Date,
-        endDate: Date
+        endDate: Date,
+        activeCapture: boolean
     ) {
         //Get classroom data
         const classroom = sessionStorage.getItem("classroom") || "";
         const currClassroomDocRef = doc(this.angularFireStore, classroom);
         const classroomDocSnap = await getDoc(currClassroomDocRef);
+        let captureID: string = "";
+        let selectedTopic: string = "";
+        let currCaptureStartDate: Date = new Date();
+        let currCaptureEndDate: Date = new Date();
+        let isSubmissionOpen: boolean = false;
+        let future_captures: any = {};
         let previous_captures: any = {};
         let length: Number = 0;
         let teacher: any = {};
         let students: any = {};
-        let isSubmissionOpen = false;
 
-        if (startDate.getTime() <= new Date().getTime()) {
-            isSubmissionOpen = true;
+        if (!activeCapture) {
+            if (startDate.getTime() <= new Date().getTime()) {
+                isSubmissionOpen = true;
+            }
         }
 
         if (classroomDocSnap.exists()) {
+            future_captures =
+                classroomDocSnap.data()["future_captures"] || null;
             previous_captures =
                 classroomDocSnap.data()["previous_captures"] || null;
             length = Object.keys(previous_captures).length || 0;
             teacher = classroomDocSnap.data()["teacher"] || {};
             students = classroomDocSnap.data()["students"] || {};
+            if (activeCapture) {
+                captureID = classroomDocSnap.data()["capture"] || "";
+                isSubmissionOpen =
+                    classroomDocSnap.data()["submission_open"] || false;
+                selectedTopic = classroomDocSnap.data()["selected_topic"] || "";
+                currCaptureStartDate =
+                    classroomDocSnap.data()["start_date"] || new Date();
+                currCaptureEndDate =
+                    classroomDocSnap.data()["due_date"] || new Date();
+            }
         } else {
             console.log("No such document!");
         }
 
-        //Rewrite classroom data to reflect start of new capture
-        await setDoc(doc(this.angularFireStore, classroom), {
-            id: classroom.slice(10),
-            capture: classroom.slice(10) + length.toString(),
-            selected_topic: captureName,
-            start_date: startDate,
-            due_date: endDate,
-            submission_open: isSubmissionOpen,
-            previous_captures: previous_captures,
-            teacher: teacher,
-            students: students,
-        });
+        if (!activeCapture) {
+            //Rewrite classroom data to reflect start of new capture
+            await setDoc(doc(this.angularFireStore, classroom), {
+                id: classroom.slice(10),
+                capture: classroom.slice(10) + length.toString(),
+                selected_topic: captureName,
+                start_date: startDate,
+                due_date: endDate,
+                submission_open: isSubmissionOpen,
+                future_capture: future_captures,
+                previous_captures: previous_captures,
+                teacher: teacher,
+                students: students,
+            });
 
-        const classroomApp = classroom + "App";
+            const classroomApp = classroom + "App";
 
-        //Rewrite classroom data in ClassroomApp document
-        await setDoc(doc(this.angularFireStore, classroomApp), {
-            capture: classroom.slice(10) + length.toString(),
-            selected_topic: captureName,
-            start_date: startDate,
-            due_date: endDate,
-            submission_open: isSubmissionOpen,
-        });
+            //Rewrite classroom data in ClassroomApp document
+            await setDoc(doc(this.angularFireStore, classroomApp), {
+                capture: classroom.slice(10) + length.toString(),
+                selected_topic: captureName,
+                start_date: startDate,
+                due_date: endDate,
+                submission_open: isSubmissionOpen,
+            });
 
-        this.noActiveCapture = false;
+            this.noActiveCapture = false;
+        } else {
+            const futureCapture: any = {
+                name: captureName,
+                start_date: startDate,
+                due_date: endDate,
+            };
+
+            let captureOverlap: boolean = false;
+
+            for (const key in future_captures) {
+                const beginDate = new Date(
+                    future_captures[key]["start_date"].seconds * 1000 +
+                        future_captures[key]["start_date"].nanoseconds / 1000000
+                );
+                const finishDate = new Date(
+                    future_captures[key]["due_date"].seconds * 1000 +
+                        future_captures[key]["due_date"].nanoseconds / 1000000
+                );
+
+                if (
+                    (beginDate.getTime() <= endDate.getTime() &&
+                        finishDate.getTime() >= endDate.getTime()) ||
+                    (beginDate.getTime() <= startDate.getTime() &&
+                        finishDate.getTime() >= startDate.getTime()) ||
+                    (beginDate.getTime() === startDate.getTime() &&
+                        finishDate.getTime() === endDate.getTime())
+                ) {
+                    captureOverlap = true;
+                    break;
+                }
+            }
+
+            if (
+                (this.currCaptureStartDate.getTime() <= endDate.getTime() &&
+                    this.currCaptureEndDate.getTime() >= endDate.getTime()) ||
+                (this.currCaptureStartDate.getTime() <= startDate.getTime() &&
+                    this.currCaptureEndDate.getTime() >= startDate.getTime()) ||
+                (this.currCaptureStartDate.getTime() === startDate.getTime() &&
+                    this.currCaptureEndDate.getTime() === endDate.getTime())
+            ) {
+                captureOverlap = true;
+            }
+
+            if (captureOverlap) {
+                this.openAlertDialog(
+                    "Warning: Capture Date Overlap",
+                    "The dates you have entered for this capture overlap with another capture. Please re-enter the dates."
+                );
+                return;
+            } else {
+                const futureCapturesLength =
+                    Object.keys(future_captures).length || 0;
+                future_captures[futureCapturesLength] = futureCapture;
+
+                await setDoc(doc(this.angularFireStore, classroom), {
+                    id: classroom.slice(10),
+                    capture: captureID,
+                    selected_topic: selectedTopic,
+                    start_date: currCaptureStartDate,
+                    due_date: currCaptureEndDate,
+                    submission_open: isSubmissionOpen,
+                    future_captures: future_captures,
+                    previous_captures: previous_captures,
+                    teacher: teacher,
+                    students: students,
+                });
+            }
+        }
     }
 
     removeTimeZoneOffset(inputDate: string) {
@@ -454,14 +670,6 @@ export class CapturesPageComponent implements OnInit {
             return;
         }
 
-        if (this.isCaptureActive && !this.showRecentCapture) {
-            this.openAlertDialog(
-                "Warning: Previous Capture Active",
-                "The previous capture has yet to end. Please click on 'End Capture' before starting a new capture."
-            );
-            return;
-        }
-
         this.dateRangeStartDate = this.removeTimeZoneOffset(
             this.dateRangeStartDate
         );
@@ -469,23 +677,42 @@ export class CapturesPageComponent implements OnInit {
             this.dateRangeEndDate
         );
 
-        this.currCaptureName = this.specificSelected
-            ? this.specificTopic
-            : "General";
-        this.currCaptureStartDate =
-            new Date(this.dateRangeStartDate) || new Date();
-        this.currCaptureEndDate = new Date(this.dateRangeEndDate) || new Date();
+        if (!this.isCaptureActive) {
+            this.currCaptureName = this.specificSelected
+                ? this.specificTopic
+                : "General";
+            this.currCaptureStartDate =
+                new Date(this.dateRangeStartDate) || new Date();
+            this.currCaptureEndDate =
+                new Date(this.dateRangeEndDate) || new Date();
 
-        await this.setCurrentCaptureDataInFirestore(
-            this.currCaptureName,
-            this.currCaptureStartDate,
-            this.currCaptureEndDate
-        );
+            await this.setCaptureDataInFirestore(
+                this.currCaptureName,
+                this.currCaptureStartDate,
+                this.currCaptureEndDate,
+                this.isCaptureActive
+            );
 
-        this.toggleCaptureStories = false;
-        this.buttonText = "Show";
+            this.toggleCaptureStories = false;
+            this.buttonText = "Show";
 
-        await this.getCaptureStories();
+            await this.getCaptureStories();
+        } else {
+            const futureCaptureName = this.specificSelected
+                ? this.specificTopic
+                : "General";
+            const futureCaptureStartDate =
+                new Date(this.dateRangeStartDate) || new Date();
+            const futureCaptureEndDate =
+                new Date(this.dateRangeEndDate) || new Date();
+
+            await this.setCaptureDataInFirestore(
+                futureCaptureName,
+                futureCaptureStartDate,
+                futureCaptureEndDate,
+                this.isCaptureActive
+            );
+        }
 
         this.specificSelected = null;
         this.specificTopic = "";
@@ -523,11 +750,23 @@ export class CapturesPageComponent implements OnInit {
                 previous_captures[key]["due_date"].seconds * 1000 +
                     previous_captures[key]["due_date"].nanoseconds / 1000000
             );
+
+            let captureExperiences = await getDocs(
+                query(
+                    collection(this.angularFireStore, "NewExperiences"),
+                    where("capture", "==", key),
+                    where("show_to_teacher", "==", true)
+                )
+            ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
+
+            const expLength: Number = captureExperiences.length || 0;
+
             this.previousCaptures[idx] = {
                 id: idx,
                 capture_name: previous_captures[key]["name"],
                 start_date: startDate,
                 due_date: endDate,
+                count: expLength,
             };
         }
 
@@ -552,6 +791,10 @@ export class CapturesPageComponent implements OnInit {
             this.columnSortState[3] =
                 this.columnSortState[3] === "desc" ? "asc" : "desc";
             this.activeSortColumn = 3;
+        } else if (column === "Count") {
+            this.columnSortState[4] =
+                this.columnSortState[4] === "desc" ? "asc" : "desc";
+            this.activeSortColumn = 4;
         }
 
         if (column === "No.") {
@@ -596,6 +839,16 @@ export class CapturesPageComponent implements OnInit {
                     (a: any, b: any) =>
                         new Date(b.due_date).getTime() -
                         new Date(a.due_date).getTime()
+                );
+            }
+        } else if (column === "Count") {
+            if (this.columnSortState[4] === "asc") {
+                this.previousCaptures.sort(
+                    (a: any, b: any) => a.count - b.count
+                );
+            } else if (this.columnSortState[4] === "desc") {
+                this.previousCaptures.sort(
+                    (a: any, b: any) => b.count - a.count
                 );
             }
         }

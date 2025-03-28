@@ -20,7 +20,7 @@ body {
 .title-container {
     /*border: 6px solid #ff8800;*/
     /*border-radius: 20px;*/
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 }
 
 .title-container h1 {
@@ -29,6 +29,25 @@ body {
     color: #ff8800;
     font-size: 55px;
     line-height: 60px;
+}
+
+.dropdown-select {
+    font-family: "Nova Square", sans-serif;
+    font-size: 40px;
+    line-height: 45px;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    height: 75px;
+    width: 580px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+option {
+    font-family: "Nova Square", sans-serif;
+    font-size: 40px;
+    line-height: 45px;
 }
 
 /* Aligning buttons in a column */

@@ -8,6 +8,16 @@
         <label>Current Password: </label>
         <input type="password" [(ngModel)]="currentPassword" />
 
+        <label> New Password:</label>
+        <input type="password" [(ngModel)]="newPassword" />
+
+        <label> Confirm New Password:</label>
+        <input
+            type="password"
+            [(ngModel)]="confirmPassword"
+            style="margin-bottom: 10px"
+        />
+
         <ul class="password-requirements">
             <li [class.valid]="newPassword && newPassword.length > 8">
                 More than 8 characters
@@ -35,16 +45,6 @@
                 At least one special character
             </li>
         </ul>
-
-        <label> New Password:</label>
-        <input type="password" [(ngModel)]="newPassword" />
-
-        <label> Confirm New Password:</label>
-        <input
-            type="password"
-            [(ngModel)]="confirmPassword"
-            style="margin-bottom: 10px"
-        />
         <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
         <button (click)="changePassword()">Submit</button>
     </div>

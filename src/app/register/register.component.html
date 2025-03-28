@@ -4,11 +4,16 @@
         <form (ngSubmit)="register()">
             <label>Username:</label>
             <input
+                style="margin-bottom: 5px"
+                title="Username must be an email address"
                 type="text"
                 [(ngModel)]="username"
                 name="username"
                 required
             />
+            <span class="username-tooltip">
+                <p>Username must be an email address</p>
+            </span>
 
             <label>Password:</label>
             <input

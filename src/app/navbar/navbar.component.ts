@@ -1,13 +1,13 @@
 import { Component, HostListener } from "@angular/core";
-import { AuthService } from "../auth-service/auth.service";
 import { Router } from "@angular/router";
+import { AuthService } from "../auth-service/auth.service";
 import { UserInteractionCsvService } from "../user-interaction-csv-service/user-interaction-csv.service";
 import { first } from "rxjs/operators";
 
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+//pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
     selector: "app-navbar",
@@ -15,22 +15,18 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     styleUrls: ["./navbar.component.css"],
 })
 export class NavbarComponent {
-    isAccountActive: boolean = false;
-    isAboutActive: boolean = false;
     isDropdownOpen: boolean = false;
     //currentUser$ = this.authService.currentUser.subscribe((user) => {
     //    console.log(user);
     //});
 
     constructor(
-        public authService: AuthService,
         private router: Router,
+        public authService: AuthService,
         private userIntCSVService: UserInteractionCsvService
     ) {}
 
     onLogoClick() {
-        this.isAccountActive = false;
-        this.isAboutActive = false;
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -45,6 +41,10 @@ export class NavbarComponent {
                     Result: "Navigate to Landing page",
                     Time: time.toLocaleString(),
                 });
+
+                //if (sessionStorage.getItem("passwordReset") === "true") {
+                //    this.router.navigate(["/landing"]);
+                //}
                 this.router.navigate(["/landing"]);
             } else {
                 userIntData.push({
@@ -184,6 +184,7 @@ export class NavbarComponent {
     }
 
     async onLogout() {
+        //if (sessionStorage.getItem("passwordReset") === "true") {
         try {
             await this.authService.logout();
             sessionStorage.removeItem("instructionsDot");
@@ -196,7 +197,9 @@ export class NavbarComponent {
             sessionStorage.removeItem("documentId");
             sessionStorage.removeItem("fileURL");
             sessionStorage.removeItem("userID");
+            sessionStorage.removeItem("allClassrooms");
             sessionStorage.removeItem("classroom");
+            //sessionStorage.removeItem("passwordReset");
 
             let userInteractionData: any = [];
             userInteractionData = this.getUserInteractionData();
@@ -209,6 +212,7 @@ export class NavbarComponent {
         } catch (error) {
             console.error("Logout error:", error);
         }
+        //}
     }
 
     onAccountClick() {
@@ -228,8 +232,9 @@ export class NavbarComponent {
             JSON.stringify(userIntData)
         );
 
-        this.isAboutActive = false;
-        this.isAccountActive = true;
+        //if (sessionStorage.getItem("passwordReset") === "true") {
+        //    this.router.navigate(["/account"]);
+        //}
         this.router.navigate(["/account"]);
     }
 
@@ -262,30 +267,9 @@ export class NavbarComponent {
             JSON.stringify(userIntData)
         );
 
-        this.isAboutActive = true;
-        this.isAccountActive = false;
+        //if (sessionStorage.getItem("passwordReset") === "true") {
+        //    this.router.navigate(["/about"]);
+        //}
         this.router.navigate(["/about"]);
-    }
-
-    onHomeClick() {
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push({
-            Action: "Clicked",
-            Target: "'Home' on navbar",
-            Result: "Navigate to landing page",
-            Time: time.toLocaleString(),
-        });
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-
-        this.isAboutActive = false;
-        this.isAccountActive = false;
-        this.router.navigate(["/landing"]);
     }
 }

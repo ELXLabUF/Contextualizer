@@ -8,7 +8,7 @@ import { saveAs } from "file-saver";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+//pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
     selector: "app-finalize-lp-page",
@@ -710,11 +710,22 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
 
+        pdfMake.fonts = {
+            Roboto: {
+                normal: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf",
+                bold: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf",
+                italics:
+                    "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf",
+                bolditalics:
+                    "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf",
+            },
+        };
+
         const documentDefinition = this.getDocumentDefinition();
         pdfMake.createPdf(documentDefinition).download("Lesson_Plan_PDF.pdf");
     }
 
-    onBackClick() {
+    /*onBackClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -731,9 +742,9 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
         this.router.navigate(["/display"]);
-    }
+    }*/
 
-    onHomeClick() {
+    /*onHomeClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -750,5 +761,5 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
         this.router.navigate(["/landing"]);
-    }
+    }*/
 }

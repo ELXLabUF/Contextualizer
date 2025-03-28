@@ -196,6 +196,7 @@
                                 type="date"
                                 [(ngModel)]="dateRangeStartDate"
                             />
+                            <p>to</p>
                             <input type="date" [(ngModel)]="dateRangeEndDate" />
                         </div>
                     </div>
@@ -221,7 +222,7 @@
         aria-labelledby="viewPastCaptures"
         aria-hidden="true"
     >
-        <div class="modal-dialog modal-lg" style="max-width: 700px">
+        <div class="modal-dialog modal-lg" style="max-width: 800px">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1
@@ -361,6 +362,7 @@
                                         capture.due_date | date : "MMM dd, yyyy"
                                     }}
                                 </td>
+                                <td>{{ capture.count }}</td>
                             </tr>
                         </tbody>
                     </table>
