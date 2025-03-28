@@ -339,81 +339,85 @@ export class CapturesPageComponent implements OnInit {
             console.log("No such document!");
         }
 
-        for (const key in future_captures) {
-            const date = new Date(
-                future_captures[key]["start_date"].seconds * 1000 +
-                    future_captures[key]["start_date"].nanoseconds / 1000000
-            );
-            if (date.getTime() <= new Date().getTime()) {
-                selectedTopic = future_captures[key]["name"];
-                startDate = new Date(
+        if (Object.keys(future_captures).length !== 0) {
+            for (const key in future_captures) {
+                const date = new Date(
                     future_captures[key]["start_date"].seconds * 1000 +
                         future_captures[key]["start_date"].nanoseconds / 1000000
                 );
-                endDate = new Date(
-                    future_captures[key]["due_date"].seconds * 1000 +
-                        future_captures[key]["due_date"].nanoseconds / 1000000
-                );
+                if (date.getTime() <= new Date().getTime()) {
+                    selectedTopic = future_captures[key]["name"];
+                    startDate = new Date(
+                        future_captures[key]["start_date"].seconds * 1000 +
+                            future_captures[key]["start_date"].nanoseconds /
+                                1000000
+                    );
+                    endDate = new Date(
+                        future_captures[key]["due_date"].seconds * 1000 +
+                            future_captures[key]["due_date"].nanoseconds /
+                                1000000
+                    );
+                }
+                delete future_captures[key];
+                break;
             }
-            delete future_captures[key];
-            break;
+
+            captureID = classroom.slice(10) + length.toString();
+
+            //Rewrite classroom data to reflect submission open
+            await setDoc(doc(this.angularFireStore, classroom), {
+                id: classroom.slice(10),
+                capture: captureID,
+                selected_topic: selectedTopic,
+                start_date: startDate,
+                due_date: endDate,
+                future_captures: future_captures,
+                previous_captures: previous_captures,
+                submission_open: true,
+                students: students,
+                teacher: teacher,
+            });
+
+            //Rewrite classroom data in ClassroomApp document to reflect submission open
+            await setDoc(doc(this.angularFireStore, classroomApp), {
+                capture: captureID,
+                selected_topic: selectedTopic,
+                start_date: startDate,
+                due_date: endDate,
+                submission_open: true,
+            });
+
+            this.currCaptureName = selectedTopic;
+            this.currCaptureStartDate = startDate;
+            this.currCaptureEndDate = endDate;
+            this.noActiveCapture = false;
+            this.experiences = [];
+
+            //Get all exp with Capture ID equal to captureID and
+            //Show Teacher field as true
+            this.experiences = await getDocs(
+                query(
+                    collection(this.angularFireStore, "NewExperiences"),
+                    where("capture", "==", captureID),
+                    where("show_to_teacher", "==", true)
+                )
+            ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
+
+            //Convert date into correct format for display and
+            //assign each experience the correct student name
+            //based on the Device ID associated with it
+            this.experiences.forEach((exp: any) => {
+                let date = exp["creation_date"];
+                exp["creation_date"] = new Date(
+                    date.seconds * 1000 + date.nanoseconds / 1000000
+                ).toLocaleDateString();
+                exp["name"] = this.students[exp["device_id"]]["name"];
+                exp["grade"] = this.students[exp["device_id"]]["grade"];
+                exp["gender"] = this.students[exp["device_id"]]["gender"];
+            });
+
+            this.experiencesLength = Object.keys(this.experiences).length;
         }
-
-        captureID = classroom.slice(10) + length.toString();
-
-        //Rewrite classroom data to reflect submission open
-        await setDoc(doc(this.angularFireStore, classroom), {
-            id: classroom.slice(10),
-            capture: captureID,
-            selected_topic: selectedTopic,
-            start_date: startDate,
-            due_date: endDate,
-            future_captures: future_captures,
-            previous_captures: previous_captures,
-            submission_open: true,
-            students: students,
-            teacher: teacher,
-        });
-
-        //Rewrite classroom data in ClassroomApp document to reflect submission open
-        await setDoc(doc(this.angularFireStore, classroomApp), {
-            capture: captureID,
-            selected_topic: selectedTopic,
-            start_date: startDate,
-            due_date: endDate,
-            submission_open: true,
-        });
-
-        this.currCaptureName = selectedTopic;
-        this.currCaptureStartDate = startDate;
-        this.currCaptureEndDate = endDate;
-        this.noActiveCapture = false;
-        this.experiences = [];
-
-        //Get all exp with Capture ID equal to captureID and
-        //Show Teacher field as true
-        this.experiences = await getDocs(
-            query(
-                collection(this.angularFireStore, "NewExperiences"),
-                where("capture", "==", captureID),
-                where("show_to_teacher", "==", true)
-            )
-        ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
-
-        //Convert date into correct format for display and
-        //assign each experience the correct student name
-        //based on the Device ID associated with it
-        this.experiences.forEach((exp: any) => {
-            let date = exp["creation_date"];
-            exp["creation_date"] = new Date(
-                date.seconds * 1000 + date.nanoseconds / 1000000
-            ).toLocaleDateString();
-            exp["name"] = this.students[exp["device_id"]]["name"];
-            exp["grade"] = this.students[exp["device_id"]]["grade"];
-            exp["gender"] = this.students[exp["device_id"]]["gender"];
-        });
-
-        this.experiencesLength = Object.keys(this.experiences).length;
     }
 
     showCaptureStories() {
