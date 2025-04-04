@@ -4,11 +4,9 @@ import {
     addDoc,
     collection,
     doc,
-    docData,
     updateDoc,
 } from "@angular/fire/firestore";
 import { ExpIntegratedPDF } from "../expIntegratedPDF";
-import { Observable } from "rxjs";
 
 @Injectable({
     providedIn: "root",

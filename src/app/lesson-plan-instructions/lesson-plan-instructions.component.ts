@@ -20,15 +20,12 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Visited",
-                Target: "LP Instructions page",
-                Result: "",
-                Time: this.timeStart.toLocaleString(),
-            }
-            // "Visited LP Instructions Page at " + this.timeStart.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Visited",
+            Target: "LP Instructions page",
+            Result: "",
+            Time: this.timeStart.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -54,24 +51,18 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Left",
-                Target: "LP Instructions page",
-                Result: "",
-                Time: this.timeEnd.toLocaleString(),
-            }
-            // "Left LP Instructions Page at " + this.timeEnd.toLocaleString()
-        );
-        userIntData.push(
-            {
-                Action: "Time spent",
-                Target: "LP Instructions page",
-                Result: "",
-                Time: duration + " seconds",
-            }
-            // "Time spent on LP Instructions Page: " + duration + " seconds"
-        );
+        userIntData.push({
+            Action: "Left",
+            Target: "LP Instructions page",
+            Result: "",
+            Time: this.timeEnd.toLocaleString(),
+        });
+        userIntData.push({
+            Action: "Time spent",
+            Target: "LP Instructions page",
+            Result: "",
+            Time: duration + " seconds",
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -84,16 +75,12 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Download Lesson Plan Template' button",
-                Result: "Download LP template",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Download Lesson Plan Template' at " +
-            // time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Download Lesson Plan Template' button",
+            Result: "Download LP template",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)

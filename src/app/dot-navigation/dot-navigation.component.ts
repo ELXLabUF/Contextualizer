@@ -17,26 +17,6 @@ export class DotNavigationComponent implements OnInit {
     constructor(private router: Router) {}
 
     ngOnInit(): void {
-        // if (sessionStorage.getItem("instructionsDot") !== null) {
-        //     this.instructionsDot = true;
-        // }
-
-        // if (sessionStorage.getItem("uploadFileDot") !== null) {
-        //     this.uploadFileDot = true;
-        // }
-
-        // if (sessionStorage.getItem("experiencesDot") !== null) {
-        //     this.experiencesDot = true;
-        // }
-
-        // if (sessionStorage.getItem("displayPageDot") !== null) {
-        //     this.displayPageDot = true;
-        // }
-
-        // if (sessionStorage.getItem("finalizePageDot") !== null) {
-        //     this.finalizePageDot = true;
-        // }
-
         this.instructionsDot =
             sessionStorage.getItem("instructionsDot") === "true" ? true : false;
         this.uploadFileDot =
@@ -141,18 +121,12 @@ export class DotNavigationComponent implements OnInit {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: dotNumber + " navigation dot",
-                Result: "Navigate to LP Instructions page",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked " +
-            //     dotNumber +
-            //     " navigation dot to navigate to LP Instructions page at " +
-            //     time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: dotNumber + " navigation dot",
+            Result: "Navigate to LP Instructions page",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -177,18 +151,12 @@ export class DotNavigationComponent implements OnInit {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: dotNumber + " navigation dot",
-                Result: "Navigate to Upload LP page",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked " +
-            //     dotNumber +
-            //     " navigation dot to navigate to Upload LP page at " +
-            //     time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: dotNumber + " navigation dot",
+            Result: "Navigate to Upload LP page",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -211,18 +179,12 @@ export class DotNavigationComponent implements OnInit {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: dotNumber + " navigation dot",
-                Result: "Navigate to Experiences page",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked " +
-            //     dotNumber +
-            //     " navigation dot to navigate to Experience page at " +
-            //     time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: dotNumber + " navigation dot",
+            Result: "Navigate to Experiences page",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -244,16 +206,12 @@ export class DotNavigationComponent implements OnInit {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "Fourth navigation dot",
-                Result: "Navigate to Display LP page",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked fourth navigation dot to navigate to Display LP page at " +
-            //     time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Fourth navigation dot",
+            Result: "Navigate to Display LP page",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -273,16 +231,12 @@ export class DotNavigationComponent implements OnInit {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "Fifth navigation dot",
-                Result: "Navigate to Finalize LP page",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked fifth navigation dot to navigate to Finalize LP page at " +
-            //     time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Fifth navigation dot",
+            Result: "Navigate to Finalize LP page",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)

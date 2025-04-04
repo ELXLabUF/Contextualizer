@@ -42,52 +42,6 @@
             required
         />
 
-        <!-- Main Topic Dropdown -->
-        <!--<select
-            [(ngModel)]="selectedMainTopic"
-            class="dropdown-select"
-            (click)="onMainTopicDropdownClick()"
-        >
-            <option value="" disabled style="font-family: 'Barlow', sans-serif">
-                Select a science unit
-            </option>
-            <option
-                *ngFor="let mainTopic of mainTopics"
-                [value]="mainTopic"
-                style="font-family: 'Barlow', sans-serif"
-            >
-                {{ mainTopic }}
-            </option>
-        </select>-->
-
-        <!-- Sub-Topic Dropdown -->
-        <!-- <select
-            [(ngModel)]="selectedSubTopic"
-            class="dropdown-select"
-            (click)="onSubTopicDropdownClick()"
-        >
-            <option value="" disabled>Select a sub-topic</option>
-            <option
-                *ngFor="let subTopic of subTopics[selectedMainTopic]"
-                [value]="subTopic"
-            >
-                {{ subTopic }}
-            </option>
-        </select> -->
-
-        <!-- File Upload -->
-        <!-- <label class="file-input-label">
-            {{ labelText }}
-            <input type="file" (change)="onFileSelected($event)" />
-        </label> -->
-
-        <!-- <input
-            (change)="onFileSelected($event)"
-            class="form-control"
-            type="file"
-            id="formFile"
-        /> -->
-
         <div class="file-input">
             <input
                 class="choose-file"
@@ -99,6 +53,10 @@
                 Browse Files...
                 <input type="file" (change)="onFileSelected($event)" />
             </label>
+        </div>
+
+        <div class="spinner-overlay" *ngIf="loading">
+            <div class="spinner"></div>
         </div>
 
         <div class="upload-button">

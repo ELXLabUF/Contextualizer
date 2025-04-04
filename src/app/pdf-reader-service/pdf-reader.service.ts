@@ -295,7 +295,7 @@ export class PdfReaderService {
         const transformedData: any[] = [];
 
         pages.forEach((page: any) => {
-            //   console.log(page);
+            //console.log(page);
 
             const rows = page.row
                 ? Array.isArray(page.row)
@@ -311,17 +311,17 @@ export class PdfReaderService {
                     : [];
 
                 columns.forEach((column: any) => {
-                    //   console.log(column);
+                    //console.log(column);
 
                     if (column.text && column.text["#text"]) {
-                        // console.log(column.text["#text"]);
+                        //console.log(column.text["#text"]);
                         transformedData.push(column.text["#text"]);
                     }
                 });
             });
         });
 
-        // console.log(transformedData);
+        //console.log(transformedData);
         return transformedData;
     }
 

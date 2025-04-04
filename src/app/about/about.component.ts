@@ -15,15 +15,12 @@ export class AboutComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Visited",
-                Target: "About page",
-                Result: "",
-                Time: this.timeStart.toLocaleString(),
-            }
-            // "Visited About Page at " + this.timeStart.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Visited",
+            Target: "About page",
+            Result: "",
+            Time: this.timeStart.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -39,24 +36,18 @@ export class AboutComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Left",
-                Target: "About page",
-                Result: "",
-                Time: this.timeEnd.toLocaleString(),
-            }
-            // "Left About Page at " + this.timeEnd.toLocaleString()
-        );
-        userIntData.push(
-            {
-                Action: "Time spent",
-                Target: "About page",
-                Result: "",
-                Time: duration + " seconds",
-            }
-            // "Time spent on About Page: " + duration + " seconds"
-        );
+        userIntData.push({
+            Action: "Left",
+            Target: "About page",
+            Result: "",
+            Time: this.timeEnd.toLocaleString(),
+        });
+        userIntData.push({
+            Action: "Time spent",
+            Target: "About page",
+            Result: "",
+            Time: duration + " seconds",
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)

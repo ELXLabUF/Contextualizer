@@ -188,7 +188,7 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
             });
     }
 
-    countNumberOfSections() {
+    /*countNumberOfSections() {
         let totalFieldCount = 0;
 
         for (const field of this.fields) {
@@ -208,9 +208,9 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
             }
         }
         sessionStorage.setItem("totalFieldCount", totalFieldCount.toString());
-    }
+    }*/
 
-    generateSection(): Paragraph {
+    /*generateSection(): Paragraph {
         this.currFieldNum += 1;
 
         if (
@@ -585,9 +585,9 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         } else {
             return new Paragraph("");
         }
-    }
+    }*/
 
-    htmlToDOCX() {
+    /*htmlToDOCX() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -644,7 +644,7 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
             saveAs(blob, "Lesson_Plan_DOCX.docx");
             console.log("Document created successfully");
         });
-    }
+    }*/
 
     getDocumentDefinition() {
         const content = [];

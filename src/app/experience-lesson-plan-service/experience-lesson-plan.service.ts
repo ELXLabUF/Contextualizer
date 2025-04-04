@@ -14,11 +14,8 @@ export class ExperienceLessonPlanService {
     currentDocumentId = this.latestDocumentIdSource.asObservable();
 
     mainTopic: string = "";
-    // subTopic: string = "";
     private mainTopicSource = new BehaviorSubject<string>("");
-    // private subTopicSource = new BehaviorSubject<string>("");
     currentMainTopic = this.mainTopicSource.asObservable();
-    // currentSubTopic = this.subTopicSource.asObservable();
 
     constructor() {
         const storedId = sessionStorage.getItem("documentId");
@@ -30,10 +27,6 @@ export class ExperienceLessonPlanService {
     get currentMainTopicValue(): string {
         return this.mainTopicSource.getValue();
     }
-
-    // get currentSubTopicValue(): string {
-    //     return this.subTopicSource.getValue();
-    // }
 
     setLatestDocumentId(id: string = "") {
         console.log("Setting ID");
@@ -52,8 +45,4 @@ export class ExperienceLessonPlanService {
     changeMainTopic(selectedMainTopic: string) {
         this.mainTopicSource.next(selectedMainTopic);
     }
-
-    // changeSubTopic(selectedSubTopic: string) {
-    //     this.subTopicSource.next(selectedSubTopic);
-    // }
 }

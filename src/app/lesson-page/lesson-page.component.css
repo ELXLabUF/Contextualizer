@@ -62,57 +62,6 @@ body {
     padding: 10px 15px;
 }
 
-/*.dropdown-select {
-    background-color: #d9d9d9;
-    border: 2px solid #787878;
-    border-radius: 20px;
-    margin: 25px auto;
-    width: 600px;
-    height: 50px;
-    font-family: "Barlow", sans-serif;
-    font-size: 20px;
-    padding: 10px 15px;
-}*/
-
-/*.file-input-label {
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    background-color: #D9D9D9;
-    border: 2px solid #787878;
-    border-radius: 10px;
-    cursor: pointer;
-    width: 600px;
-    height: 60px;
-    margin-bottom: 25px;
-	font-family: "Barlow", sans-serif;
-    font-size: 20px;
-    font-weight: 400;
-    padding: 10px 15px;
-}*/
-
-/*.file-input-label input[type="file"] {
-    display: none;
-}*/
-
-/*input {
-    margin-bottom: 25px;
-	font-family: "Barlow", sans-serif;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 25px;
-    background-color: #E2DEDC;
-    border: 2px solid #4F4643;
-    border-radius: 20px;
-}*/
-
-/*input[type="text"][disabled] {
-    color: #000000;
-	font-family: "Barlow", sans-serif;
-    font-size: 20px;
-    font-weight: 400;
-}*/
-
 .choose-file {
     background-color: #e2dedc;
     border: 2px solid #4f4643;
@@ -142,6 +91,34 @@ body {
 
 .file-label input[type="file"] {
     display: none; /* Hide the default input */
+}
+
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 6px solid #ffffff;
+    border-top-color: #ff8800;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .upload-button button {

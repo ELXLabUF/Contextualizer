@@ -27,41 +27,8 @@ export class LessonPageComponent implements OnInit, OnDestroy {
     fileDownloadURL: string | null = null;
     labelText: string = "No file selected";
     uploadInProgress: boolean = false;
-
-    /*mainTopics: string[] = [
-        "Adaptation",
-        "Carbon Cycle",
-        "Energy Flow",
-        "Friction",
-        "Gravity",
-    ];*/
-
-    /*subTopics: { [key: string]: string[] } = {
-		"Life Science": [
-			"Organization and Development of Living Organisms",
-			"Diversity and Evolution of Living Organism",
-			"Interdependence",
-		],
-		"Physical Science": [
-			"Properties of Matter",
-			"Changes in Matter",
-			"Forms of Energy",
-			"Energy Transfer and Transformations",
-			"Forces and Changes in Motion",
-		],
-		"Earth and Space Science": [
-			"Earth in Space and Time",
-			"Earth Systems and Patterns",
-		],
-		"Nature of Science": [
-			"The Practice of Science",
-			"The Characteristics of Scientific Knowledge",
-		],
-	};*/
-
+    loading: boolean = false;
     topicName: string = "";
-    //selectedMainTopic: string = "";
-    // selectedSubTopic: string = "";
 
     timeStart!: Date;
     timeEnd!: Date;
@@ -82,15 +49,12 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Visited",
-                Target: "Upload LP page",
-                Result: "",
-                Time: this.timeStart.toLocaleString(),
-            }
-            // "Visited Upload LP Page at " + this.timeStart.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Visited",
+            Target: "Upload LP page",
+            Result: "",
+            Time: this.timeStart.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -116,24 +80,18 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Left",
-                Target: "Upload LP page",
-                Result: "",
-                Time: this.timeEnd.toLocaleString(),
-            }
-            // "Left Upload LP Page at " + this.timeEnd.toLocaleString()
-        );
-        userIntData.push(
-            {
-                Action: "Time spent",
-                Target: "Upload LP page",
-                Result: "",
-                Time: duration + " seconds",
-            }
-            // "Time spent on Upload LP Page: " + duration + " seconds"
-        );
+        userIntData.push({
+            Action: "Left",
+            Target: "Upload LP page",
+            Result: "",
+            Time: this.timeEnd.toLocaleString(),
+        });
+        userIntData.push({
+            Action: "Time spent",
+            Target: "Upload LP page",
+            Result: "",
+            Time: duration + " seconds",
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -158,48 +116,6 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         );
     }
 
-    /*onMainTopicDropdownClick() {
-        let userIntData: any = [];
-        let time = new Date();
-        userIntData = JSON.parse(
-            sessionStorage.getItem("userInteractionData") || "[]"
-        );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Select a science unit' dropdown menu",
-                Result: "Select the main topic",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Select a science unit' at " + time.toLocaleString()
-        );
-        sessionStorage.setItem(
-            "userInteractionData",
-            JSON.stringify(userIntData)
-        );
-    }*/
-
-    /*onSubTopicDropdownClick() {
-		let userIntData: any = [];
-		let time = new Date();
-		userIntData = JSON.parse(
-			sessionStorage.getItem("userInteractionData") || "[]"
-		);
-		userIntData.push(
-			{
-				Action: "Clicked",
-				Target: "'Select a sub-topic' dropdown menu",
-				Result: "Select the sub-topic",
-				Time: time.toLocaleString(),
-			}
-			// "Clicked 'Select a sub-topic' at " + time.toLocaleString()
-		);
-		sessionStorage.setItem(
-			"userInteractionData",
-			JSON.stringify(userIntData)
-		);
-	}*/
-
     openAlertDialog(title: string, message: string): void {
         this.dialog.open(AlertDialogComponent, {
             width: "600px",
@@ -213,15 +129,12 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Browse Files...' button",
-                Result: "Open window to browse files",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Browse Files...' at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Browse Files...' button",
+            Result: "Open window to browse files",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -270,15 +183,12 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push(
-            {
-                Action: "Clicked",
-                Target: "'Upload' button",
-                Result: "Upload selected LP file",
-                Time: time.toLocaleString(),
-            }
-            // "Clicked 'Upload' at " + time.toLocaleString()
-        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Upload' button",
+            Result: "Upload selected LP file",
+            Time: time.toLocaleString(),
+        });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -330,9 +240,7 @@ export class LessonPageComponent implements OnInit, OnDestroy {
 
         //this.expLessonPlanService.changeMainTopic(this.selectedMainTopic); // deliver selected main topic to other components
         this.expLessonPlanService.changeMainTopic(this.topicName); // deliver selected main topic to other components
-        // this.expLessonPlanService.changeSubTopic(this.selectedSubTopic); // deliver selected sub topic to other components
 
-        // const filePath = `${this.selectedMainTopic}/${this.selectedSubTopic}/${this.selectedFile.name}`;
         const username = sessionStorage.getItem("username");
         //const filePath = `${this.selectedMainTopic}/${username}/${this.selectedFile.name}`;
         const filePath = `${this.topicName}/${username}/${this.selectedFile.name}`;
@@ -361,6 +269,7 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             () => {
                 // On success
                 this.uploadStatus = "Uploaded";
+                this.loading = true;
 
                 getDownloadURL(fileRef)
                     .then((downloadURL: string) => {
@@ -474,29 +383,24 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                             integrated_experiences: [],
                                         },
                                         mainTopic: mainTopic,
-                                        // subTopic: subTopic,
                                         createdAt: new Date(),
                                         integrated_experiences: [
                                             ...multipleIntegrate,
                                         ],
                                     };
 
-                                    console.log(
-                                        "At Upload, Main Topic: ",
-                                        mainTopic
-                                    );
-                                    // console.log(
-                                    //     "At Upload, Sub Topic: ",
-                                    //     subTopic
-                                    // );
-                                    console.log(
-                                        "At Upload, Created At: ",
-                                        new Date()
-                                    );
-                                    console.log(
-                                        "At Upload, Integrated Experiences: ",
-                                        multipleIntegrate
-                                    );
+                                    //console.log(
+                                    //    "At Upload, Main Topic: ",
+                                    //    mainTopic
+                                    //);
+                                    //console.log(
+                                    //    "At Upload, Created At: ",
+                                    //    new Date()
+                                    //);
+                                    //console.log(
+                                    //    "At Upload, Integrated Experiences: ",
+                                    //    multipleIntegrate
+                                    //);
                                 } else {
                                     jsonData = {
                                         Grade: {
@@ -555,27 +459,22 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                             integrated_experiences: [],
                                         },
                                         mainTopic: mainTopic,
-                                        // subTopic: subTopic,
                                         createdAt: new Date(),
                                         integrated_experiences: [],
                                     };
 
-                                    console.log(
-                                        "At Upload, Main Topic: ",
-                                        mainTopic
-                                    );
-                                    // console.log(
-                                    //     "At Upload, Sub Topic: ",
-                                    //     subTopic
-                                    // );
-                                    console.log(
-                                        "At Upload, Created At: ",
-                                        new Date()
-                                    );
-                                    console.log(
-                                        "At Upload, Integrated Experiences: ",
-                                        []
-                                    );
+                                    //console.log(
+                                    //    "At Upload, Main Topic: ",
+                                    //    mainTopic
+                                    //);
+                                    //console.log(
+                                    //    "At Upload, Created At: ",
+                                    //    new Date()
+                                    //);
+                                    //console.log(
+                                    //    "At Upload, Integrated Experiences: ",
+                                    //    []
+                                    //);
                                 }
 
                                 this.firestore
@@ -590,6 +489,7 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                             "documentId",
                                             documentRef.id
                                         );
+                                        this.loading = false;
                                         this.router.navigate(["/display"]);
                                         sessionStorage.setItem(
                                             "fileUploadSuccess",
@@ -628,7 +528,5 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         this.uploadProgress = 0;
         this.fileDownloadURL = "";
         this.topicName = "";
-        //this.selectedMainTopic = "";
-        // this.selectedSubTopic = "";
     }
 }

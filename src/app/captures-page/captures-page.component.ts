@@ -21,6 +21,7 @@ import { Observable } from "rxjs";
 })
 export class CapturesPageComponent implements OnInit {
     currCaptureName: string = "";
+    currCapturePrompt: string = "";
     currCaptureStartDate: Date = new Date();
     currCaptureEndDate: Date = new Date();
 
@@ -37,20 +38,61 @@ export class CapturesPageComponent implements OnInit {
 
     specificSelected: boolean | null = null;
     specificTopic!: string;
+    maxTopicCharacters: number = 40;
+    topicCharactersLeft: number = this.maxTopicCharacters;
+    maxPromptCharacters: number = 125;
+    promptCharactersLeft: number = this.maxPromptCharacters;
+    capturePrompt!: string;
     dateRangeStartDate!: string;
     dateRangeEndDate!: string;
 
     previousCaptures: any[] = [];
-
-    activeSortColumn: Number = 0;
-    displayedColumns: string[] = [
+    activeSortColumnPastCaptures: number = 0;
+    displayedColumnsPastCaptures: string[] = [
         "No.",
         "Capture Name",
+        "Prompt",
         "Start Date",
-        "End Date",
+        "Due Date",
         "Count",
     ];
-    columnSortState: string[] = ["asc", "asc", "asc", "asc", "asc"];
+    columnSortStatePastCaptures: string[] = [
+        "asc",
+        "asc",
+        "asc",
+        "asc",
+        "asc",
+        "asc",
+    ];
+
+    futureCaptures: any[] = [];
+    activeSortColumnFutureCaptures: number = 0;
+    displayedColumnsFutureCaptures: string[] = [
+        "No.",
+        "Capture Name",
+        "Prompt",
+        "Start Date",
+        "Due Date",
+    ];
+    columnSortStateFutureCaptures: string[] = [
+        "asc",
+        "asc",
+        "asc",
+        "asc",
+        "asc",
+    ];
+
+    futureCaptureKey!: string;
+    futureCaptureSpecificSelected: boolean | null = null;
+    futureCaptureSpecificTopic: string = "";
+    futureCaptureTopicCharactersLeft: number =
+        this.maxTopicCharacters -
+        (this.futureCaptureSpecificTopic?.length ?? 0);
+    futureCapturePrompt: string = "";
+    futureCapturePromptCharactersLeft: number =
+        this.maxPromptCharacters - (this.futureCapturePrompt?.length ?? 0);
+    futureCaptureStartDate!: string;
+    futureCaptureEndDate!: string;
 
     constructor(
         public dialog: MatDialog,
@@ -106,6 +148,7 @@ export class CapturesPageComponent implements OnInit {
 
         if (classroomDocSnap.exists()) {
             this.currCaptureName = classroomDocSnap.data()["selected_topic"];
+            this.currCapturePrompt = classroomDocSnap.data()["capture_prompt"];
             const start_date = classroomDocSnap.data()["start_date"];
             const end_date = classroomDocSnap.data()["due_date"];
             this.currCaptureStartDate = new Date(
@@ -177,6 +220,7 @@ export class CapturesPageComponent implements OnInit {
         const classroomDocSnap = await getDoc(classroomDocRef);
         let captureID: string = "";
         let selectedTopic: string = "";
+        let capturePrompt: string = "";
         let startDate: Date = new Date();
         let endDate: Date = new Date();
         let future_captures: any = {};
@@ -189,6 +233,7 @@ export class CapturesPageComponent implements OnInit {
         if (classroomDocSnap.exists()) {
             captureID = classroomDocSnap.data()["capture"] || "";
             selectedTopic = classroomDocSnap.data()["selected_topic"] || "";
+            capturePrompt = classroomDocSnap.data()["capture_prompt"] || "";
             startDate = classroomDocSnap.data()["start_date"] || new Date();
             endDate = classroomDocSnap.data()["due_date"] || new Date();
             future_captures = classroomDocSnap.data()["future_captures"] || {};
@@ -217,6 +262,7 @@ export class CapturesPageComponent implements OnInit {
                 id: classroom.slice(10),
                 capture: captureID,
                 selected_topic: selectedTopic,
+                capture_prompt: capturePrompt,
                 start_date: startDate,
                 due_date: endDate,
                 future_captures: future_captures,
@@ -230,6 +276,7 @@ export class CapturesPageComponent implements OnInit {
             await setDoc(doc(this.angularFireStore, classroomApp), {
                 capture: captureID,
                 selected_topic: selectedTopic,
+                capture_prompt: capturePrompt,
                 start_date: startDate,
                 due_date: endDate,
                 submission_open: true,
@@ -254,6 +301,7 @@ export class CapturesPageComponent implements OnInit {
             const length = Object.keys(previous_captures).length || 0;
             previous_captures[classroom.slice(10) + length.toString()] = {
                 name: this.currCaptureName,
+                prompt: this.currCapturePrompt,
                 start_date: this.currCaptureStartDate,
                 due_date: this.currCaptureEndDate,
             };
@@ -267,6 +315,7 @@ export class CapturesPageComponent implements OnInit {
         await setDoc(doc(this.angularFireStore, classroom), {
             id: classroom.slice(10),
             selected_topic: "",
+            capture_prompt: "",
             start_date: new Date("January 01, 2020 00:00:00"),
             due_date: new Date("January 02, 2020 00:00:00"),
             submission_open: false,
@@ -281,12 +330,15 @@ export class CapturesPageComponent implements OnInit {
         //Rewrite classroom data in ClassroomApp document to reflect end of capture
         await setDoc(doc(this.angularFireStore, classroomApp), {
             selected_topic: "",
+            capture_prompt: "",
             start_date: new Date("January 01, 2020 00:00:00"),
             due_date: new Date("January 02, 2020 00:00:00"),
-            submission_open: false,
+            //submission_open: false,
+            submission_open: true,
         });
 
         this.currCaptureName = "";
+        this.currCapturePrompt = "";
         this.currCaptureStartDate = new Date("January 01, 2020 00:00:00");
         this.currCaptureEndDate = new Date("January 02, 2020 00:00:00");
         this.isCaptureActive = false;
@@ -319,6 +371,7 @@ export class CapturesPageComponent implements OnInit {
         const classroomDocSnap = await getDoc(classroomDocRef);
         let captureID: string = "";
         let selectedTopic: string = "";
+        let capturePrompt: string = "";
         let startDate: Date = new Date();
         let endDate: Date = new Date();
         let future_captures: any = {};
@@ -329,6 +382,7 @@ export class CapturesPageComponent implements OnInit {
         const classroomApp = classroom + "App";
 
         if (classroomDocSnap.exists()) {
+            captureID = classroomDocSnap.data()["capture"] || "";
             future_captures = classroomDocSnap.data()["future_captures"] || {};
             previous_captures =
                 classroomDocSnap.data()["previous_captures"] || {};
@@ -339,6 +393,8 @@ export class CapturesPageComponent implements OnInit {
             console.log("No such document!");
         }
 
+        //Check if future captures is not empty and set current capture
+        //if future capture start date is less than current time
         if (Object.keys(future_captures).length !== 0) {
             for (const key in future_captures) {
                 const date = new Date(
@@ -346,7 +402,10 @@ export class CapturesPageComponent implements OnInit {
                         future_captures[key]["start_date"].nanoseconds / 1000000
                 );
                 if (date.getTime() <= new Date().getTime()) {
+                    //Set captureID only if some future capture's start date has elapsed
+                    captureID = classroom.slice(10) + length.toString();
                     selectedTopic = future_captures[key]["name"];
+                    capturePrompt = future_captures[key]["prompt"];
                     startDate = new Date(
                         future_captures[key]["start_date"].seconds * 1000 +
                             future_captures[key]["start_date"].nanoseconds /
@@ -357,66 +416,70 @@ export class CapturesPageComponent implements OnInit {
                             future_captures[key]["due_date"].nanoseconds /
                                 1000000
                     );
+                    delete future_captures[key];
+                    break;
                 }
-                delete future_captures[key];
-                break;
             }
 
-            captureID = classroom.slice(10) + length.toString();
+            //Set current capture from future captures only if captureID is not empty
+            if (captureID !== "") {
+                //Rewrite classroom data to reflect submission open
+                await setDoc(doc(this.angularFireStore, classroom), {
+                    id: classroom.slice(10),
+                    capture: captureID,
+                    selected_topic: selectedTopic,
+                    capture_prompt: capturePrompt,
+                    start_date: startDate,
+                    due_date: endDate,
+                    future_captures: future_captures,
+                    previous_captures: previous_captures,
+                    submission_open: true,
+                    students: students,
+                    teacher: teacher,
+                });
 
-            //Rewrite classroom data to reflect submission open
-            await setDoc(doc(this.angularFireStore, classroom), {
-                id: classroom.slice(10),
-                capture: captureID,
-                selected_topic: selectedTopic,
-                start_date: startDate,
-                due_date: endDate,
-                future_captures: future_captures,
-                previous_captures: previous_captures,
-                submission_open: true,
-                students: students,
-                teacher: teacher,
-            });
+                //Rewrite classroom data in ClassroomApp document to reflect submission open
+                await setDoc(doc(this.angularFireStore, classroomApp), {
+                    capture: captureID,
+                    selected_topic: selectedTopic,
+                    capture_prompt: capturePrompt,
+                    start_date: startDate,
+                    due_date: endDate,
+                    submission_open: true,
+                });
 
-            //Rewrite classroom data in ClassroomApp document to reflect submission open
-            await setDoc(doc(this.angularFireStore, classroomApp), {
-                capture: captureID,
-                selected_topic: selectedTopic,
-                start_date: startDate,
-                due_date: endDate,
-                submission_open: true,
-            });
+                this.currCaptureName = selectedTopic;
+                this.currCapturePrompt = capturePrompt;
+                this.currCaptureStartDate = startDate;
+                this.currCaptureEndDate = endDate;
+                this.noActiveCapture = false;
+                this.experiences = [];
 
-            this.currCaptureName = selectedTopic;
-            this.currCaptureStartDate = startDate;
-            this.currCaptureEndDate = endDate;
-            this.noActiveCapture = false;
-            this.experiences = [];
+                //Get all exp with Capture ID equal to captureID and
+                //Show Teacher field as true
+                this.experiences = await getDocs(
+                    query(
+                        collection(this.angularFireStore, "NewExperiences"),
+                        where("capture", "==", captureID),
+                        where("show_to_teacher", "==", true)
+                    )
+                ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
 
-            //Get all exp with Capture ID equal to captureID and
-            //Show Teacher field as true
-            this.experiences = await getDocs(
-                query(
-                    collection(this.angularFireStore, "NewExperiences"),
-                    where("capture", "==", captureID),
-                    where("show_to_teacher", "==", true)
-                )
-            ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
+                //Convert date into correct format for display and
+                //assign each experience the correct student name
+                //based on the Device ID associated with it
+                this.experiences.forEach((exp: any) => {
+                    let date = exp["creation_date"];
+                    exp["creation_date"] = new Date(
+                        date.seconds * 1000 + date.nanoseconds / 1000000
+                    ).toLocaleDateString();
+                    exp["name"] = this.students[exp["device_id"]]["name"];
+                    exp["grade"] = this.students[exp["device_id"]]["grade"];
+                    exp["gender"] = this.students[exp["device_id"]]["gender"];
+                });
 
-            //Convert date into correct format for display and
-            //assign each experience the correct student name
-            //based on the Device ID associated with it
-            this.experiences.forEach((exp: any) => {
-                let date = exp["creation_date"];
-                exp["creation_date"] = new Date(
-                    date.seconds * 1000 + date.nanoseconds / 1000000
-                ).toLocaleDateString();
-                exp["name"] = this.students[exp["device_id"]]["name"];
-                exp["grade"] = this.students[exp["device_id"]]["grade"];
-                exp["gender"] = this.students[exp["device_id"]]["gender"];
-            });
-
-            this.experiencesLength = Object.keys(this.experiences).length;
+                this.experiencesLength = Object.keys(this.experiences).length;
+            }
         }
     }
 
@@ -450,6 +513,7 @@ export class CapturesPageComponent implements OnInit {
         const key: string =
             classroom.slice(10) + (length.valueOf() - 1).toString();
         this.currCaptureName = previous_captures[key]["name"];
+        this.currCapturePrompt = previous_captures[key]["prompt"];
         this.currCaptureStartDate = new Date(
             previous_captures[key]["start_date"].seconds * 1000 +
                 previous_captures[key]["start_date"].nanoseconds / 1000000
@@ -491,6 +555,7 @@ export class CapturesPageComponent implements OnInit {
 
     async setCaptureDataInFirestore(
         captureName: string,
+        capturePrompt: string,
         startDate: Date,
         endDate: Date,
         activeCapture: boolean
@@ -501,6 +566,7 @@ export class CapturesPageComponent implements OnInit {
         const classroomDocSnap = await getDoc(currClassroomDocRef);
         let captureID: string = "";
         let selectedTopic: string = "";
+        let currCapturePrompt: string = "";
         let currCaptureStartDate: Date = new Date();
         let currCaptureEndDate: Date = new Date();
         let isSubmissionOpen: boolean = false;
@@ -529,6 +595,8 @@ export class CapturesPageComponent implements OnInit {
                 isSubmissionOpen =
                     classroomDocSnap.data()["submission_open"] || false;
                 selectedTopic = classroomDocSnap.data()["selected_topic"] || "";
+                currCapturePrompt =
+                    classroomDocSnap.data()["capture_prompt"] || "";
                 currCaptureStartDate =
                     classroomDocSnap.data()["start_date"] || new Date();
                 currCaptureEndDate =
@@ -544,10 +612,11 @@ export class CapturesPageComponent implements OnInit {
                 id: classroom.slice(10),
                 capture: classroom.slice(10) + length.toString(),
                 selected_topic: captureName,
+                capture_prompt: capturePrompt,
                 start_date: startDate,
                 due_date: endDate,
                 submission_open: isSubmissionOpen,
-                future_capture: future_captures,
+                future_captures: future_captures,
                 previous_captures: previous_captures,
                 teacher: teacher,
                 students: students,
@@ -559,21 +628,25 @@ export class CapturesPageComponent implements OnInit {
             await setDoc(doc(this.angularFireStore, classroomApp), {
                 capture: classroom.slice(10) + length.toString(),
                 selected_topic: captureName,
+                capture_prompt: capturePrompt,
                 start_date: startDate,
                 due_date: endDate,
-                submission_open: isSubmissionOpen,
+                //submission_open: isSubmissionOpen,
+                submission_open: true,
             });
 
             this.noActiveCapture = false;
         } else {
             const futureCapture: any = {
                 name: captureName,
+                prompt: capturePrompt,
                 start_date: startDate,
                 due_date: endDate,
             };
 
             let captureOverlap: boolean = false;
 
+            //Check overlap with other future captures
             for (const key in future_captures) {
                 const beginDate = new Date(
                     future_captures[key]["start_date"].seconds * 1000 +
@@ -597,6 +670,7 @@ export class CapturesPageComponent implements OnInit {
                 }
             }
 
+            //Check overlap with current active capture
             if (
                 (this.currCaptureStartDate.getTime() <= endDate.getTime() &&
                     this.currCaptureEndDate.getTime() >= endDate.getTime()) ||
@@ -617,12 +691,14 @@ export class CapturesPageComponent implements OnInit {
             } else {
                 const futureCapturesLength =
                     Object.keys(future_captures).length || 0;
+                futureCapture["key"] = futureCapturesLength.toString();
                 future_captures[futureCapturesLength] = futureCapture;
 
                 await setDoc(doc(this.angularFireStore, classroom), {
                     id: classroom.slice(10),
                     capture: captureID,
                     selected_topic: selectedTopic,
+                    capture_prompt: currCapturePrompt,
                     start_date: currCaptureStartDate,
                     due_date: currCaptureEndDate,
                     submission_open: isSubmissionOpen,
@@ -635,10 +711,15 @@ export class CapturesPageComponent implements OnInit {
         }
     }
 
-    removeTimeZoneOffset(inputDate: string) {
+    removeTimeZoneOffset(inputDate: string, addOffset: boolean) {
         const date = new Date(inputDate);
         const tzOffset = date.getTimezoneOffset() * 60000;
-        const offsetDate = new Date(date.getTime() + tzOffset);
+        let offsetDate = new Date();
+        if (addOffset) {
+            offsetDate = new Date(date.getTime() + tzOffset);
+        } else {
+            offsetDate = new Date(date.getTime() - tzOffset);
+        }
         return offsetDate.toLocaleDateString();
     }
 
@@ -675,16 +756,19 @@ export class CapturesPageComponent implements OnInit {
         }
 
         this.dateRangeStartDate = this.removeTimeZoneOffset(
-            this.dateRangeStartDate
+            this.dateRangeStartDate,
+            true
         );
         this.dateRangeEndDate = this.removeTimeZoneOffset(
-            this.dateRangeEndDate
+            this.dateRangeEndDate,
+            true
         );
 
         if (!this.isCaptureActive) {
             this.currCaptureName = this.specificSelected
                 ? this.specificTopic
                 : "General";
+            this.currCapturePrompt = this.capturePrompt;
             this.currCaptureStartDate =
                 new Date(this.dateRangeStartDate) || new Date();
             this.currCaptureEndDate =
@@ -692,6 +776,7 @@ export class CapturesPageComponent implements OnInit {
 
             await this.setCaptureDataInFirestore(
                 this.currCaptureName,
+                this.currCapturePrompt,
                 this.currCaptureStartDate,
                 this.currCaptureEndDate,
                 this.isCaptureActive
@@ -705,6 +790,7 @@ export class CapturesPageComponent implements OnInit {
             const futureCaptureName = this.specificSelected
                 ? this.specificTopic
                 : "General";
+            const futureCapturePrompt = this.capturePrompt;
             const futureCaptureStartDate =
                 new Date(this.dateRangeStartDate) || new Date();
             const futureCaptureEndDate =
@@ -712,6 +798,7 @@ export class CapturesPageComponent implements OnInit {
 
             await this.setCaptureDataInFirestore(
                 futureCaptureName,
+                futureCapturePrompt,
                 futureCaptureStartDate,
                 futureCaptureEndDate,
                 this.isCaptureActive
@@ -720,10 +807,21 @@ export class CapturesPageComponent implements OnInit {
 
         this.specificSelected = null;
         this.specificTopic = "";
+        this.capturePrompt = "";
         this.dateRangeStartDate = "";
         this.dateRangeEndDate = "";
         this.isCaptureActive = true;
         this.showRecentCapture = false;
+    }
+
+    updateTopicCharacterCounter() {
+        this.topicCharactersLeft =
+            this.maxTopicCharacters - (this.specificTopic?.length || 0);
+    }
+
+    updatePromptCharacterCounter() {
+        this.promptCharactersLeft =
+            this.maxPromptCharacters - (this.capturePrompt?.length || 0);
     }
 
     async getPastCaptures() {
@@ -768,77 +866,94 @@ export class CapturesPageComponent implements OnInit {
             this.previousCaptures[idx] = {
                 id: idx,
                 capture_name: previous_captures[key]["name"],
+                prompt: previous_captures[key]["prompt"],
                 start_date: startDate,
                 due_date: endDate,
                 count: expLength,
             };
         }
 
-        this.activeSortColumn = 0;
-        this.sortTable("No.");
+        this.activeSortColumnPastCaptures = 0;
+        this.columnSortStatePastCaptures[0] =
+            this.columnSortStatePastCaptures[0] === "desc" ? "asc" : "desc";
+        this.sortPastCapturesTable("No.");
     }
 
-    sortTable(column: string) {
+    sortPastCapturesTable(column: string) {
         if (column === "No.") {
-            this.columnSortState[0] =
-                this.columnSortState[0] === "desc" ? "asc" : "desc";
-            this.activeSortColumn = 0;
+            this.columnSortStatePastCaptures[0] =
+                this.columnSortStatePastCaptures[0] === "desc" ? "asc" : "desc";
+            this.activeSortColumnPastCaptures = 0;
         } else if (column === "Capture Name") {
-            this.columnSortState[1] =
-                this.columnSortState[1] === "desc" ? "asc" : "desc";
-            this.activeSortColumn = 1;
+            this.columnSortStatePastCaptures[1] =
+                this.columnSortStatePastCaptures[1] === "desc" ? "asc" : "desc";
+            this.activeSortColumnPastCaptures = 1;
+        } else if (column === "Prompt") {
+            this.columnSortStatePastCaptures[2] =
+                this.columnSortStatePastCaptures[2] === "desc" ? "asc" : "desc";
+            this.activeSortColumnPastCaptures = 2;
         } else if (column === "Start Date") {
-            this.columnSortState[2] =
-                this.columnSortState[2] === "desc" ? "asc" : "desc";
-            this.activeSortColumn = 2;
-        } else if (column === "End Date") {
-            this.columnSortState[3] =
-                this.columnSortState[3] === "desc" ? "asc" : "desc";
-            this.activeSortColumn = 3;
+            this.columnSortStatePastCaptures[3] =
+                this.columnSortStatePastCaptures[3] === "desc" ? "asc" : "desc";
+            this.activeSortColumnPastCaptures = 3;
+        } else if (column === "Due Date") {
+            this.columnSortStatePastCaptures[4] =
+                this.columnSortStatePastCaptures[4] === "desc" ? "asc" : "desc";
+            this.activeSortColumnPastCaptures = 4;
         } else if (column === "Count") {
-            this.columnSortState[4] =
-                this.columnSortState[4] === "desc" ? "asc" : "desc";
-            this.activeSortColumn = 4;
+            this.columnSortStatePastCaptures[5] =
+                this.columnSortStatePastCaptures[5] === "desc" ? "asc" : "desc";
+            this.activeSortColumnPastCaptures = 5;
         }
 
         if (column === "No.") {
-            if (this.columnSortState[0] === "asc") {
+            if (this.columnSortStatePastCaptures[0] === "asc") {
                 this.previousCaptures.sort((a: any, b: any) => a.id - b.id);
-            } else if (this.columnSortState[0] === "desc") {
+            } else if (this.columnSortStatePastCaptures[0] === "desc") {
                 this.previousCaptures.sort((a: any, b: any) => b.id - a.id);
             }
         } else if (column === "Capture Name") {
-            if (this.columnSortState[1] === "asc") {
+            if (this.columnSortStatePastCaptures[1] === "asc") {
                 this.previousCaptures.sort((a: any, b: any) =>
                     a.capture_name > b.capture_name ? 1 : -1
                 );
-            } else if (this.columnSortState[1] === "desc") {
+            } else if (this.columnSortStatePastCaptures[1] === "desc") {
                 this.previousCaptures.sort((a: any, b: any) =>
                     b.capture_name > a.capture_name ? 1 : -1
                 );
             }
+        } else if (column === "Prompt") {
+            if (this.columnSortStatePastCaptures[2] === "asc") {
+                this.previousCaptures.sort((a: any, b: any) =>
+                    a.prompt > b.prompt ? 1 : -1
+                );
+            } else if (this.columnSortStatePastCaptures[2] === "desc") {
+                this.previousCaptures.sort((a: any, b: any) =>
+                    b.prompt > a.prompt ? 1 : -1
+                );
+            }
         } else if (column === "Start Date") {
-            if (this.columnSortState[2] === "asc") {
+            if (this.columnSortStatePastCaptures[3] === "asc") {
                 this.previousCaptures.sort(
                     (a: any, b: any) =>
                         new Date(a.start_date).getTime() -
                         new Date(b.start_date).getTime()
                 );
-            } else if (this.columnSortState[2] === "desc") {
+            } else if (this.columnSortStatePastCaptures[3] === "desc") {
                 this.previousCaptures.sort(
                     (a: any, b: any) =>
                         new Date(b.start_date).getTime() -
                         new Date(a.start_date).getTime()
                 );
             }
-        } else if (column === "End Date") {
-            if (this.columnSortState[3] === "asc") {
+        } else if (column === "Due Date") {
+            if (this.columnSortStatePastCaptures[4] === "asc") {
                 this.previousCaptures.sort(
                     (a: any, b: any) =>
                         new Date(a.due_date).getTime() -
                         new Date(b.due_date).getTime()
                 );
-            } else if (this.columnSortState[3] === "desc") {
+            } else if (this.columnSortStatePastCaptures[4] === "desc") {
                 this.previousCaptures.sort(
                     (a: any, b: any) =>
                         new Date(b.due_date).getTime() -
@@ -846,16 +961,281 @@ export class CapturesPageComponent implements OnInit {
                 );
             }
         } else if (column === "Count") {
-            if (this.columnSortState[4] === "asc") {
+            if (this.columnSortStatePastCaptures[5] === "asc") {
                 this.previousCaptures.sort(
                     (a: any, b: any) => a.count - b.count
                 );
-            } else if (this.columnSortState[4] === "desc") {
+            } else if (this.columnSortStatePastCaptures[5] === "desc") {
                 this.previousCaptures.sort(
                     (a: any, b: any) => b.count - a.count
                 );
             }
         }
+    }
+
+    async getFutureCaptures() {
+        const classroom = sessionStorage.getItem("classroom") || "";
+        const currClassroomDocRef = doc(this.angularFireStore, classroom);
+        const classroomDocSnap = await getDoc(currClassroomDocRef);
+        let future_captures: any = {};
+
+        if (classroomDocSnap.exists()) {
+            future_captures = classroomDocSnap.data()["future_captures"] || {};
+        } else {
+            console.log("No such document!");
+        }
+
+        this.futureCaptures = [];
+
+        for (const key in future_captures) {
+            const numbersOnly = key.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+            const trailingNumbersMatch = key.match(/(\d+)$/); // Match digits at the end of the string
+            let num = trailingNumbersMatch ? trailingNumbersMatch[0] : "1"; // Return the matched digits or an empty string if no match
+            const idx = Number(num);
+            const startDate = new Date(
+                future_captures[key]["start_date"].seconds * 1000 +
+                    future_captures[key]["start_date"].nanoseconds / 1000000
+            );
+            const endDate = new Date(
+                future_captures[key]["due_date"].seconds * 1000 +
+                    future_captures[key]["due_date"].nanoseconds / 1000000
+            );
+
+            this.futureCaptures[idx] = {
+                id: idx,
+                key: key.toString(),
+                capture_name: future_captures[key]["name"],
+                prompt: future_captures[key]["prompt"],
+                start_date: startDate,
+                due_date: endDate,
+            };
+        }
+
+        this.activeSortColumnFutureCaptures = 0;
+        this.columnSortStateFutureCaptures[0] =
+            this.columnSortStateFutureCaptures[0] === "desc" ? "asc" : "desc";
+        this.sortFutureCapturesTable("No.");
+    }
+
+    sortFutureCapturesTable(column: string) {
+        if (column === "No.") {
+            this.columnSortStateFutureCaptures[0] =
+                this.columnSortStateFutureCaptures[0] === "desc"
+                    ? "asc"
+                    : "desc";
+            this.activeSortColumnFutureCaptures = 0;
+        } else if (column === "Capture Name") {
+            this.columnSortStateFutureCaptures[1] =
+                this.columnSortStateFutureCaptures[1] === "desc"
+                    ? "asc"
+                    : "desc";
+            this.activeSortColumnFutureCaptures = 1;
+        } else if (column === "Prompt") {
+            this.columnSortStateFutureCaptures[2] =
+                this.columnSortStateFutureCaptures[2] === "desc"
+                    ? "asc"
+                    : "desc";
+            this.activeSortColumnFutureCaptures = 2;
+        } else if (column === "Start Date") {
+            this.columnSortStateFutureCaptures[3] =
+                this.columnSortStateFutureCaptures[3] === "desc"
+                    ? "asc"
+                    : "desc";
+            this.activeSortColumnFutureCaptures = 3;
+        } else if (column === "Due Date") {
+            this.columnSortStateFutureCaptures[4] =
+                this.columnSortStateFutureCaptures[4] === "desc"
+                    ? "asc"
+                    : "desc";
+            this.activeSortColumnFutureCaptures = 4;
+        }
+
+        if (column === "No.") {
+            if (this.columnSortStateFutureCaptures[0] === "asc") {
+                this.futureCaptures.sort((a: any, b: any) => a.id - b.id);
+            } else if (this.columnSortStateFutureCaptures[0] === "desc") {
+                this.futureCaptures.sort((a: any, b: any) => b.id - a.id);
+            }
+        } else if (column === "Capture Name") {
+            if (this.columnSortStateFutureCaptures[1] === "asc") {
+                this.futureCaptures.sort((a: any, b: any) =>
+                    a.capture_name > b.capture_name ? 1 : -1
+                );
+            } else if (this.columnSortStateFutureCaptures[1] === "desc") {
+                this.futureCaptures.sort((a: any, b: any) =>
+                    b.capture_name > a.capture_name ? 1 : -1
+                );
+            }
+        } else if (column === "Prompt") {
+            if (this.columnSortStateFutureCaptures[2] === "asc") {
+                this.futureCaptures.sort((a: any, b: any) =>
+                    a.prompt > b.prompt ? 1 : -1
+                );
+            } else if (this.columnSortStateFutureCaptures[2] === "desc") {
+                this.futureCaptures.sort((a: any, b: any) =>
+                    b.prompt > a.prompt ? 1 : -1
+                );
+            }
+        } else if (column === "Start Date") {
+            if (this.columnSortStateFutureCaptures[3] === "asc") {
+                this.futureCaptures.sort(
+                    (a: any, b: any) =>
+                        new Date(a.start_date).getTime() -
+                        new Date(b.start_date).getTime()
+                );
+            } else if (this.columnSortStateFutureCaptures[3] === "desc") {
+                this.futureCaptures.sort(
+                    (a: any, b: any) =>
+                        new Date(b.start_date).getTime() -
+                        new Date(a.start_date).getTime()
+                );
+            }
+        } else if (column === "Due Date") {
+            if (this.columnSortStateFutureCaptures[4] === "asc") {
+                this.futureCaptures.sort(
+                    (a: any, b: any) =>
+                        new Date(a.due_date).getTime() -
+                        new Date(b.due_date).getTime()
+                );
+            } else if (this.columnSortStateFutureCaptures[4] === "desc") {
+                this.futureCaptures.sort(
+                    (a: any, b: any) =>
+                        new Date(b.due_date).getTime() -
+                        new Date(a.due_date).getTime()
+                );
+            }
+        }
+    }
+
+    convertDateFormat(dateString: string): string {
+        const [month, day, year] = dateString.split("/");
+        return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    }
+
+    editFutureCapture(capture: any) {
+        this.futureCaptureKey = capture["key"];
+        this.futureCaptureSpecificSelected =
+            capture["capture_name"] === "General" ? false : true;
+        this.futureCaptureSpecificTopic =
+            capture["capture_name"] !== "General"
+                ? capture["capture_name"]
+                : "";
+        this.futureCapturePrompt = capture["prompt"];
+        this.futureCaptureStartDate = this.convertDateFormat(
+            capture["start_date"].toLocaleDateString()
+        );
+        this.futureCaptureEndDate = this.convertDateFormat(
+            capture["due_date"].toLocaleDateString()
+        );
+
+        this.updateFutureCaptureTopicCharacterCounter();
+        this.updateFutureCapturePromptCharacterCounter();
+    }
+
+    updateFutureCaptureTopicCharacterCounter() {
+        this.futureCaptureTopicCharactersLeft =
+            this.maxTopicCharacters -
+            (this.futureCaptureSpecificTopic?.length ?? 0);
+    }
+
+    updateFutureCapturePromptCharacterCounter() {
+        this.futureCapturePromptCharactersLeft =
+            this.maxPromptCharacters - (this.futureCapturePrompt?.length ?? 0);
+    }
+
+    async saveFutureCaptureEdit() {
+        const classroom = sessionStorage.getItem("classroom") || "";
+        const currClassroomDocRef = doc(this.angularFireStore, classroom);
+        const classroomDocSnap = await getDoc(currClassroomDocRef);
+        let captureID: string = "";
+        let openCapture: boolean = false;
+        let selectedTopic: string = "";
+        let capturePrompt: string = "";
+        let startDate: Date = new Date();
+        let endDate: Date = new Date();
+        let future_captures: any = {};
+        let previous_captures: any = {};
+        let submissionOpen: boolean = false;
+        let students: any = {};
+        let teacher: any = {};
+
+        if (classroomDocSnap.exists()) {
+            if (
+                classroomDocSnap.data()["capture"] &&
+                classroomDocSnap.data()["capture"] !== undefined &&
+                classroomDocSnap.data()["capture"] !== null
+            ) {
+                openCapture = true;
+            }
+
+            if (openCapture) {
+                captureID = classroomDocSnap.data()["capture"];
+            }
+            selectedTopic = classroomDocSnap.data()["selected_topic"] || "";
+            capturePrompt = classroomDocSnap.data()["capture_prompt"] || "";
+            startDate = classroomDocSnap.data()["start_date"] || new Date();
+            endDate = classroomDocSnap.data()["due_date"] || new Date();
+            future_captures = classroomDocSnap.data()["future_captures"] || {};
+            previous_captures =
+                classroomDocSnap.data()["previous_captures"] || {};
+            submissionOpen =
+                classroomDocSnap.data()["submission_open"] || false;
+            teacher = classroomDocSnap.data()["teacher"];
+            students = classroomDocSnap.data()["students"];
+        } else {
+            console.log("No such document!");
+        }
+
+        for (const key in future_captures) {
+            if (this.futureCaptureKey === key.toString()) {
+                future_captures[key]["name"] = this.futureCaptureSpecificTopic;
+                future_captures[key]["prompt"] = this.futureCapturePrompt;
+                future_captures[key]["start_date"] = new Date(
+                    this.removeTimeZoneOffset(this.futureCaptureStartDate, true)
+                );
+                future_captures[key]["due_date"] = new Date(
+                    this.removeTimeZoneOffset(this.futureCaptureEndDate, true)
+                );
+            }
+        }
+
+        if (openCapture) {
+            await setDoc(doc(this.angularFireStore, classroom), {
+                id: classroom.slice(10),
+                capture: captureID,
+                selected_topic: selectedTopic,
+                capture_prompt: capturePrompt,
+                start_date: startDate,
+                due_date: endDate,
+                future_captures: future_captures,
+                previous_captures: previous_captures,
+                submission_open: submissionOpen,
+                students: students,
+                teacher: teacher,
+            });
+        } else {
+            await setDoc(doc(this.angularFireStore, classroom), {
+                id: classroom.slice(10),
+                selected_topic: selectedTopic,
+                capture_prompt: capturePrompt,
+                start_date: startDate,
+                due_date: endDate,
+                future_captures: future_captures,
+                previous_captures: previous_captures,
+                submission_open: submissionOpen,
+                students: students,
+                teacher: teacher,
+            });
+        }
+
+        this.futureCaptureKey = "";
+        this.futureCaptureSpecificSelected = null;
+        this.futureCaptureSpecificTopic = "";
+        this.futureCapturePrompt = "";
+        this.futureCaptureStartDate = "";
+        this.futureCaptureEndDate = "";
+
+        await this.getFutureCaptures();
     }
 
     openAlertDialog(title: string, message: string): void {

@@ -13,16 +13,12 @@ body {
 
 .title-container {
     display: flex;
-    flex-direction: row;
-    max-width: 80%;
-    gap: 40px;
+    flex-direction: column;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .title-container h1 {
-    /*border: 6px solid #ff8800;*/
-    border-radius: 20px;
-    margin: 20px;
-    padding: 15px;
     font-family: "Nova Square", sans-serif;
     color: #ff8800;
     font-size: 55px;
@@ -35,6 +31,7 @@ body {
     align-items: center;
     justify-content: center;
     margin: auto;
+    margin-bottom: 10px;
     gap: 40px;
 }
 
@@ -112,7 +109,6 @@ body {
 
 .card-text-body {
     background-color: #fff880;
-    /*background-color: #f7efeb;*/
     border: none;
     border-radius: 20px;
     padding: 0px;
@@ -223,7 +219,6 @@ body {
 .set-capture-type {
     display: flex;
     flex-direction: row;
-    margin-bottom: 20px;
 }
 
 .set-capture-type p {
@@ -240,13 +235,13 @@ body {
     display: flex;
     flex-direction: column;
     margin: auto;
-    gap: 20px;
     width: 60%;
 }
 
 .capture-radio {
     display: flex;
     flex-direction: row;
+    margin-bottom: 20px;
     padding-left: 10px;
 }
 
@@ -256,7 +251,7 @@ body {
     font-size: 25px;
     line-height: 30px;
     font-weight: 400;
-    margin: 10px 25px 0px 0px;
+    margin: 10px 15px 0px 0px;
 }
 
 .capture-radio input {
@@ -275,6 +270,70 @@ body {
     margin: 20px 15px 0px 0px;
 }
 
+.bi.bi-info-circle-fill {
+    position: relative; /* Ensure the tooltip is positioned relative to the icon */
+    width: auto;
+    height: auto;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-top: 15px;
+    margin-right: 30px;
+}
+
+.specific-capture-tooltip-text,
+.general-capture-tooltip-text {
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 400;
+    visibility: hidden; /* Initially hidden */
+    background-color: #ffffff;
+    color: #000000;
+    text-align: center;
+    padding: 8px 12px; /* Adjust padding for better readability */
+    border: 5px solid #ff8800;
+    border-radius: 20px;
+    position: absolute; /* Position relative to the icon */
+    z-index: 999; /* Ensure it appears above everything else */
+    top: 125%; /* Position below the icon */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust centering */
+    opacity: 0; /* Initial opacity set to 0 for smooth transition */
+    transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
+    white-space: nowrap; /* Prevent text from wrapping */
+    min-width: 500px;
+    max-width: 500px;
+    white-space: normal;
+}
+
+.bi.bi-info-circle-fill:hover .specific-capture-tooltip-text,
+.bi.bi-info-circle-fill:hover .general-capture-tooltip-text {
+    visibility: visible; /* Make tooltip visible on hover */
+    opacity: 1; /* Set opacity to fully visible */
+}
+
+.set-capture-topic {
+    display: flex;
+    flex-direction: row;
+}
+
+.set-capture-topic p {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 600;
+    margin: 10px 10px;
+    margin-left: 0px;
+    width: 25%;
+}
+
+.set-capture-topic-data {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 60%;
+}
+
 .specific-capture-input input {
     font-family: "Barlow", sans-serif;
     font-size: 25px;
@@ -285,6 +344,68 @@ body {
     border-radius: 20px;
     width: 80%;
     height: 60px;
+    padding-left: 10px;
+}
+
+.specific-capture-tooltip {
+    display: flex;
+    flex-direction: row;
+}
+
+.specific-capture-tooltip p {
+    font-family: "Barlow", sans-serif;
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 400;
+    width: 75%;
+    padding-left: 10px;
+}
+
+.set-prompt-data {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 60%;
+}
+
+.set-capture-prompt {
+    display: flex;
+    flex-direction: row;
+}
+
+.set-capture-prompt p {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 600;
+    margin: 10px 10px;
+    margin-left: 0px;
+    width: 25%;
+}
+
+.set-capture-prompt input {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    box-sizing: border-box;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    height: 60px;
+    padding-left: 10px;
+}
+
+.prompt-tooltip {
+    display: flex;
+    flex-direction: row;
+}
+
+.prompt-tooltip p {
+    font-family: "Barlow", sans-serif;
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 400;
+    width: 75%;
     padding-left: 10px;
 }
 
@@ -333,7 +454,7 @@ body {
     margin-left: 5px;
 }
 
-table {
+.past-captures-table {
     border: 4px solid #ff8800;
     border-radius: 20px;
     border-collapse: collapse;
@@ -341,11 +462,11 @@ table {
     width: 100%;
 }
 
-thead {
+.past-captures-table thead {
     background-color: #ffaa00;
 }
 
-th {
+.past-captures-table th {
     font-family: "Nova Square", sans-serif;
     font-size: 25px;
     line-height: 30px;
@@ -355,20 +476,90 @@ th {
     cursor: pointer;
 }
 
-td {
+.past-captures-table td {
     font-family: "Barlow", sans-serif;
     font-size: 25px;
     line-height: 30px;
     border: 2px solid #3f3734;
     padding: 8px 10px;
+    min-width: 15%;
+    max-width: 25%;
 }
 
-tbody > tr:nth-of-type(even) {
+.past-captures-table tbody > tr:nth-of-type(even) {
     background-color: #e2dedc;
 }
 
-tr:last-child td {
+.past-captures-table tr:last-child td {
     border-bottom: none;
+}
+
+.no-past-captures-text {
+    font-family: "Nova Square", sans-serif;
+    font-size: 35px;
+    line-height: 40px;
+    text-align: center;
+    margin: 100px 0px;
+}
+
+.future-captures-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.future-captures-table thead {
+    background-color: #ffaa00;
+}
+
+.future-captures-table th {
+    font-family: "Nova Square", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    border: 2px solid #3f3734;
+    border-top: none;
+    padding: 8px 10px;
+    cursor: pointer;
+}
+
+.future-captures-table td {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    border: 2px solid #3f3734;
+    padding: 8px 10px;
+    min-width: 15%;
+    max-width: 25%;
+}
+
+.future-captures-table tbody > tr:nth-of-type(even) {
+    background-color: #e2dedc;
+}
+
+.future-captures-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Add border around the first five columns */
+.future-captures-table tbody > tr > td:nth-child(-n + 5),
+.future-captures-table thead > tr > th:nth-child(-n + 5) {
+    border: 4px solid #ff8800; /* Apply the orange border */
+}
+
+/* Icon Styling */
+.bi.bi-pencil-fill {
+    width: auto; /* Reset width */
+    height: auto; /* Reset height */
+    font-size: 2rem; /* Scale icon to 2x size */
+    cursor: pointer;
+}
+
+.no-future-captures-text {
+    font-family: "Nova Square", sans-serif;
+    font-size: 35px;
+    line-height: 40px;
+    text-align: center;
+    margin: 100px 0px;
 }
 
 .modal-footer {

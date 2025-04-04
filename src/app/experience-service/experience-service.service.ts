@@ -59,14 +59,6 @@ export class ExperienceService {
         );
     }
 
-    // // Get all students
-    // getStudents(): Observable<Student[]> {
-    //     let studentReference = collection(this.angularFireStore, "Students");
-    //     return collectionData(studentReference, {
-    //         idField: "id",
-    //     }) as Observable<Student[]>;
-    // }
-
     // Parse student CSV file to get experiences
     parseStudentCSVContent(student: Student) {
         student.id = doc(collection(this.angularFireStore, "id")).id;
