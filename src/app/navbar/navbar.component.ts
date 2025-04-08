@@ -75,6 +75,9 @@ export class NavbarComponent {
             case "/landing":
                 pageName = "'Main Menu' ";
                 break;
+            case "/captures":
+                pageName = "'Current Capture' ";
+                break;
             case "/instructions":
                 pageName = "'Create Lesson Plan' ";
                 break;
@@ -137,6 +140,9 @@ export class NavbarComponent {
             case "/landing":
                 pageName = "'Main Menu' ";
                 break;
+            case "/captures":
+                pageName = "'Current Capture' ";
+                break;
             case "/instructions":
                 pageName = "'Create Lesson Plan' ";
                 break;
@@ -180,7 +186,6 @@ export class NavbarComponent {
     async onLogout() {
         //if (sessionStorage.getItem("passwordReset") === "true") {
         try {
-            await this.authService.logout();
             sessionStorage.removeItem("instructionsDot");
             sessionStorage.removeItem("uploadFileDot");
             sessionStorage.removeItem("experiencesDot");
@@ -202,6 +207,7 @@ export class NavbarComponent {
             sessionStorage.removeItem("userInteractionData");
             sessionStorage.removeItem("timeStart");
 
+            await this.authService.logout();
             this.router.navigate(["/login"]);
         } catch (error) {
             console.error("Logout error:", error);
