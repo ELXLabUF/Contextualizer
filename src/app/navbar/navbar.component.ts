@@ -38,31 +38,25 @@ export class NavbarComponent {
                 userIntData.push({
                     Action: "Clicked",
                     Target: "Logo on navbar",
-                    Result: "Navigate to Landing page",
+                    Result: "Navigate to 'Main Menu' page",
                     Time: time.toLocaleString(),
                 });
+                sessionStorage.setItem(
+                    "userInteractionData",
+                    JSON.stringify(userIntData)
+                );
 
                 //if (sessionStorage.getItem("passwordReset") === "true") {
                 //    this.router.navigate(["/landing"]);
                 //}
                 this.router.navigate(["/landing"]);
             } else {
-                userIntData.push({
-                    Action: "Clicked",
-                    Target: "Logo on navbar",
-                    Result: "Navigate to Login page",
-                    Time: time.toLocaleString(),
-                });
-                this.router.navigate(["/"]);
+                this.router.navigate(["/login"]);
             }
-            sessionStorage.setItem(
-                "userInteractionData",
-                JSON.stringify(userIntData)
-            );
         });
     }
 
-    getUserIntDocument() {
+    /*getUserIntDocument() {
         let content: any = [];
         let timeStart = new Date(sessionStorage.getItem("timeStart") || "");
         let timeEnd = new Date();
@@ -73,28 +67,28 @@ export class NavbarComponent {
 
         switch (this.router.url) {
             case "/about":
-                pageName = " About ";
+                pageName = "'About' ";
                 break;
             case "/account":
-                pageName = " Account ";
+                pageName = "'Account' ";
                 break;
             case "/landing":
-                pageName = " Landing ";
+                pageName = "'Main Menu' ";
                 break;
             case "/instructions":
-                pageName = " LP Instructions ";
+                pageName = "'Create Lesson Plan' ";
                 break;
             case "/lesson":
-                pageName = " Upload LP ";
+                pageName = "'Upload Lesson Plan' ";
                 break;
             case "/experience":
-                pageName = " Experiences ";
+                pageName = "'Browse Experiences' ";
                 break;
             case "/display":
-                pageName = " LP Display ";
+                pageName = "'Customize Lesson Plan' ";
                 break;
             case "/finalize":
-                pageName = " Finalize LP ";
+                pageName = "'Review Lesson Plan' ";
                 break;
         }
 
@@ -102,8 +96,8 @@ export class NavbarComponent {
 
         content.push({
             Action: "Clicked",
-            Target: "Log Out on navbar",
-            Result: "Log Out from website",
+            Target: "'Log Out' on navbar",
+            Result: "Logout from the website",
             Time: timeEnd.toLocaleString(),
         });
         content.push({
@@ -122,7 +116,7 @@ export class NavbarComponent {
         return {
             content: content,
         };
-    }
+    }*/
 
     getUserInteractionData() {
         let content: any = [];
@@ -135,28 +129,28 @@ export class NavbarComponent {
 
         switch (this.router.url) {
             case "/about":
-                pageName = " About ";
+                pageName = "'About' ";
                 break;
             case "/account":
-                pageName = " Account ";
+                pageName = "'Account' ";
                 break;
             case "/landing":
-                pageName = " Landing ";
+                pageName = "'Main Menu' ";
                 break;
             case "/instructions":
-                pageName = " LP Instructions ";
+                pageName = "'Create Lesson Plan' ";
                 break;
             case "/lesson":
-                pageName = " Upload LP ";
+                pageName = "'Upload Lesson Plan' ";
                 break;
             case "/experience":
-                pageName = " Experiences ";
+                pageName = "'Browse Experiences' ";
                 break;
             case "/display":
-                pageName = " LP Display ";
+                pageName = "'Customize Lesson Plan' ";
                 break;
             case "/finalize":
-                pageName = " Finalize LP ";
+                pageName = "'Review Lesson Plan' ";
                 break;
         }
 
@@ -164,8 +158,8 @@ export class NavbarComponent {
 
         content.push({
             Action: "Clicked",
-            Target: "Log Out on navbar",
-            Result: "Log Out from website",
+            Target: "'Log Out' on navbar",
+            Result: "Logout from the website",
             Time: timeEnd.toLocaleString(),
         });
         content.push({
@@ -224,7 +218,7 @@ export class NavbarComponent {
         userIntData.push({
             Action: "Clicked",
             Target: "'Account' on navbar",
-            Result: "Navigate to Account page",
+            Result: "Navigate to 'Account' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -242,6 +236,24 @@ export class NavbarComponent {
     toggleDropdown(event: any) {
         event.stopPropagation(); // Prevent click from propagating to document listener
         this.isDropdownOpen = !this.isDropdownOpen;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Profile icon on navbar",
+            Result: this.isDropdownOpen
+                ? "Open"
+                : "Close" + " profile dropdown",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     //To close dropdown on clicking anywhere else
@@ -259,7 +271,7 @@ export class NavbarComponent {
         userIntData.push({
             Action: "Clicked",
             Target: "'About' on navbar",
-            Result: "Navigate to About page",
+            Result: "Navigate to 'About' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(

@@ -2,8 +2,12 @@
     <div class="title-container">
         <h1>Current Capture</h1>
         <div class="buttons-container">
-            <button data-bs-toggle="modal" data-bs-target="#newCaptureModal">
-                Start New
+            <button
+                data-bs-toggle="modal"
+                data-bs-target="#newCaptureModal"
+                (click)="onStartNewCaptureClick()"
+            >
+                Start New Capture
             </button>
             <button
                 data-bs-toggle="modal"
@@ -111,6 +115,7 @@
                         class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"
+                        (click)="onStartNewCaptureXClick()"
                     ></button>
                 </div>
                 <div class="modal-body">
@@ -122,6 +127,7 @@
                                     type="radio"
                                     name="captureType"
                                     id="specificCapture"
+                                    (click)="onCaptureTypeClick()"
                                     [(ngModel)]="specificSelected"
                                     [value]="true"
                                     required
@@ -130,6 +136,7 @@
                                 <i
                                     class="bi bi-info-circle-fill"
                                     style="color: #ff8800"
+                                    (mouseenter)="onSpecificCaptureInfoHover()"
                                 >
                                     <span class="specific-capture-tooltip-text">
                                         A capture period that gives a specific
@@ -141,6 +148,7 @@
                                     type="radio"
                                     name="captureType"
                                     id="generalCapture"
+                                    (click)="onCaptureTypeClick()"
                                     [(ngModel)]="specificSelected"
                                     [value]="false"
                                     required
@@ -149,6 +157,7 @@
                                 <i
                                     class="bi bi-info-circle-fill"
                                     style="color: #ff8800"
+                                    (mouseenter)="onGeneralCaptureInfoHover()"
                                 >
                                     <span class="general-capture-tooltip-text">
                                         A capture period that has no defined
@@ -171,6 +180,7 @@
                                     maxlength="40"
                                     [disabled]="!specificSelected"
                                     [(ngModel)]="specificTopic"
+                                    (click)="onSpecificCaptureTopicClick()"
                                     (input)="updateTopicCharacterCounter()"
                                     required
                                 />
@@ -192,6 +202,7 @@
                                     placeholder="Prompt"
                                     maxlength="125"
                                     [(ngModel)]="capturePrompt"
+                                    (click)="onPromptClick()"
                                     (input)="updatePromptCharacterCounter()"
                                 />
                             </div>
@@ -211,19 +222,29 @@
                             <input
                                 type="date"
                                 [(ngModel)]="dateRangeStartDate"
+                                (click)="onCaptureDateClick()"
+                                (input)="onCaptureStartDateInput()"
                                 required
                             />
                             <p>to</p>
                             <input
                                 type="date"
                                 [(ngModel)]="dateRangeEndDate"
+                                (click)="onCaptureDateClick()"
+                                (input)="onCaptureEndDateInput()"
                                 required
                             />
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" data-bs-dismiss="modal">Close</button>
+                    <button
+                        type="button"
+                        data-bs-dismiss="modal"
+                        (click)="onStartNewCaptureCloseClick()"
+                    >
+                        Close
+                    </button>
                     <button
                         type="button"
                         data-bs-dismiss="modal"
@@ -257,6 +278,7 @@
                         class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"
+                        (click)="onPastCapturesXClick()"
                     ></button>
                 </div>
                 <div class="modal-body" style="overflow-y: auto; height: 75%">
@@ -337,7 +359,13 @@
                     </ng-template>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" data-bs-dismiss="modal">Close</button>
+                    <button
+                        type="button"
+                        data-bs-dismiss="modal"
+                        (click)="onPastCapturesCloseClick()"
+                    >
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -364,6 +392,7 @@
                         class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"
+                        (click)="onFutureCapturesXClick()"
                     ></button>
                 </div>
                 <div class="modal-body" style="overflow-y: auto; height: 75%">
@@ -464,7 +493,13 @@
                     </ng-template>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" data-bs-dismiss="modal">Close</button>
+                    <button
+                        type="button"
+                        data-bs-dismiss="modal"
+                        (click)="onFutureCapturesCloseClick()"
+                    >
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -491,6 +526,7 @@
                         class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"
+                        (click)="onEditUpcomingCaptureXClick()"
                     ></button>
                 </div>
                 <div class="modal-body">
@@ -502,6 +538,7 @@
                                     type="radio"
                                     name="futureCaptureType"
                                     id="specificCapture"
+                                    (click)="onFutureCaptureTypeClick()"
                                     [(ngModel)]="futureCaptureSpecificSelected"
                                     [value]="true"
                                     required
@@ -510,6 +547,7 @@
                                 <i
                                     class="bi bi-info-circle-fill"
                                     style="color: #ff8800"
+                                    (mouseenter)="onSpecificCaptureInfoHover()"
                                 >
                                     <span class="specific-capture-tooltip-text">
                                         A capture period that gives a specific
@@ -521,6 +559,7 @@
                                     type="radio"
                                     name="futureCaptureType"
                                     id="generalCapture"
+                                    (click)="onFutureCaptureTypeClick()"
                                     [(ngModel)]="futureCaptureSpecificSelected"
                                     [value]="false"
                                     required
@@ -529,6 +568,7 @@
                                 <i
                                     class="bi bi-info-circle-fill"
                                     style="color: #ff8800"
+                                    (mouseenter)="onGeneralCaptureInfoHover()"
                                 >
                                     <span class="general-capture-tooltip-text">
                                         A capture period that has no defined
@@ -551,6 +591,9 @@
                                     maxlength="40"
                                     [disabled]="!futureCaptureSpecificSelected"
                                     [(ngModel)]="futureCaptureSpecificTopic"
+                                    (click)="
+                                        onFutureSpecificCaptureTopicClick()
+                                    "
                                     (input)="
                                         updateFutureCaptureTopicCharacterCounter()
                                     "
@@ -560,9 +603,7 @@
 
                             <div class="specific-capture-tooltip">
                                 <p>
-                                    {{
-                                        futureCaptureTopicCharactersLeft
-                                    }}
+                                    {{ futureCaptureTopicCharactersLeft }}
                                     characters left
                                 </p>
                                 <p style="color: #ff6666">required</p>
@@ -579,6 +620,7 @@
                                     placeholder="Prompt"
                                     maxlength="125"
                                     [(ngModel)]="futureCapturePrompt"
+                                    (click)="onFutureCapturePromptClick()"
                                     (input)="
                                         updateFutureCapturePromptCharacterCounter()
                                     "
@@ -587,9 +629,7 @@
 
                             <div class="prompt-tooltip">
                                 <p>
-                                    {{
-                                        futureCapturePromptCharactersLeft
-                                    }}
+                                    {{ futureCapturePromptCharactersLeft }}
                                     characters left
                                 </p>
                                 <p style="color: #ff6666">optional</p>
@@ -603,19 +643,29 @@
                             <input
                                 type="date"
                                 [(ngModel)]="futureCaptureStartDate"
+                                (click)="onFutureCaptureDateClick()"
+                                (input)="onFutureCaptureStartDateInput()"
                                 required
                             />
                             <p>to</p>
                             <input
                                 type="date"
                                 [(ngModel)]="futureCaptureEndDate"
+                                (click)="onFutureCaptureDateClick()"
+                                (input)="onFutureCaptureEndDateInput()"
                                 required
                             />
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" data-bs-dismiss="modal">Close</button>
+                    <button
+                        type="button"
+                        data-bs-dismiss="modal"
+                        (click)="onFutureCaptureCloseClick()"
+                    >
+                        Close
+                    </button>
                     <button
                         type="button"
                         data-bs-dismiss="modal"

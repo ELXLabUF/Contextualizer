@@ -17,7 +17,7 @@ export class AboutComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Visited",
-            Target: "About page",
+            Target: "'About' page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
@@ -38,13 +38,13 @@ export class AboutComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Left",
-            Target: "About page",
+            Target: "'About' page",
             Result: "",
             Time: this.timeEnd.toLocaleString(),
         });
         userIntData.push({
             Action: "Time spent",
-            Target: "About page",
+            Target: "'About' page",
             Result: "",
             Time: duration + " seconds",
         });

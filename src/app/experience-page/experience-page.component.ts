@@ -205,22 +205,6 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         //});
     }
 
-    openAlertDialog(title: string, message: string): void {
-        this.dialog.open(AlertDialogComponent, {
-            width: "600px",
-            data: { title: title, message: message },
-        });
-    }
-
-    openConfirmDialog(title: string, message: string): Observable<boolean> {
-        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-            width: "600px",
-            data: { title, message },
-        });
-
-        return dialogRef.afterClosed();
-    }
-
     ngOnInit() {
         this.timeStart = new Date();
         let userIntData: any = [];
@@ -229,7 +213,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Visited",
-            Target: "Experiences page",
+            Target: "'Browse Experiences' page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
@@ -263,13 +247,13 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Left",
-            Target: "Experiences page",
+            Target: "'Browse Experiences' page",
             Result: "",
             Time: this.timeEnd.toLocaleString(),
         });
         userIntData.push({
             Action: "Time spent",
-            Target: "Experiences page",
+            Target: "'Browse Experiences' page",
             Result: "",
             Time: duration + " seconds",
         });
@@ -277,6 +261,53 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+    }
+
+    onPreviousPageButtonClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Previous Page' button",
+            Result: "Navigate to 'Upload Lesson Plan' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.router.navigate(["/lesson"]);
+    }
+
+    onNextPageButtonClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Next Page' button",
+            Result:
+                "Navigate to '" + this.startNavigationFromExperiences
+                    ? "Create Lesson Plan"
+                    : "Customize Lesson Plan" + "' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        if (!this.startNavigationFromExperiences) {
+            this.router.navigate(["/display"]);
+        } else {
+            this.router.navigate(["/instructions"]);
+        }
     }
 
     async getCurrentCaptureExperiences() {
@@ -387,6 +418,28 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     }
 
     getAllExperiences() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "'" + this.toggleAllExp
+                    ? "View Current Capture Experiences"
+                    : "View All Experiences" + "' button",
+            Result:
+                "Show " + this.toggleAllExp
+                    ? "experiences only from the current capture"
+                    : "all the experiences from all the captures",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         this.keywordSearchTerm = "";
         this.startDateSearchTerm = "";
         this.endDateSearchTerm = "";
@@ -446,6 +499,24 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         }
     }
 
+    onViewPreviousCaptureExpDropdownClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'View Past Capture Experiences' dropdown",
+            Result: "Open a dropdown with all the past captures for the current selected classroom",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
     async getPreviousCaptureExperiences() {
         this.togglePrevCap = true;
         this.toggleAllExp = false;
@@ -495,6 +566,30 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.prevCapExperiences = [...this.experiences];
         this.selectedExperiences = Object.keys(this.experiences).length;
         this.totalExperiencesLength = Object.keys(this.experiences).length;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Selected",
+            Target:
+                "'" +
+                previous_captures[capture_id]["name"] +
+                "(" +
+                previous_captures[capture_id]["start_date"] +
+                " to " +
+                previous_captures[capture_id]["due_date"] +
+                ")" +
+                "' option",
+            Result: "Set the past capture to view experiences from",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     /*addExperience() {
@@ -879,8 +974,11 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 Action: "Clicked",
                 Target:
                     "Checkbox for experience with title " +
-                    //exp.experience_title,
-                    exp.title,
+                    exp.title +
+                    ", student name " +
+                    exp.name +
+                    " and date " +
+                    exp.creation_date,
                 Result: "De-select the experience",
                 Time: time.toLocaleString(),
             });
@@ -901,8 +999,11 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 Action: "Clicked",
                 Target:
                     "Checkbox for experience with title " +
-                    //exp.experience_title,
-                    exp.title,
+                    exp.title +
+                    ", student name " +
+                    exp.name +
+                    " and date " +
+                    exp.creation_date,
                 Result: "Select the experience",
                 Time: time.toLocaleString(),
             });
@@ -940,7 +1041,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             userIntData.push({
                 Action: "Clicked",
                 Target: "'Ok' button",
-                Result: "Close alert dialog box",
+                Result: "Close the 'Integration Error' alert dialog box",
                 Time: time.toLocaleString(),
             });
             sessionStorage.setItem(
@@ -964,7 +1065,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 userIntData.push({
                     Action: "Clicked",
                     Target: "'Yes, Confirm' button",
-                    Result: "Integrate selected experiences with LP",
+                    Result: "Transfer selected experiences for integration to the 'Customize Lesson Plan' page",
                     Time: time.toLocaleString(),
                 });
                 sessionStorage.setItem(
@@ -1060,7 +1161,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 userIntData.push({
                     Action: "Clicked",
                     Target: "'No, Go Back' button",
-                    Result: "Deny integration of selected experiences",
+                    Result: "Deny transfer of selected experiences to the 'Customize Lesson Plan' page",
                     Time: time.toLocaleString(),
                 });
                 sessionStorage.setItem(
@@ -1078,9 +1179,9 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             sessionStorage.getItem("userInteractionData") || "[]"
         );
         userIntData.push({
-            Action: "Clicked on",
-            Target: "Student: " + experience.student_name,
-            Result: "Display student details",
+            Action: "Clicked",
+            Target: "Student with name " + experience.name,
+            Result: "Display the student's details",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1091,6 +1192,42 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         //this.clickedExperience = experience;
         this.studentData = this.students[experience["device_id"]];
         event.target.click();
+    }
+
+    onStudentDetailsXClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'X' button on student details dialog box",
+            Result: "Close the student details dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onStudentDetailsCloseClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Close button on student details dialog box",
+            Result: "Close the student details dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     onFilterByKeywordClick() {
@@ -1165,7 +1302,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
-    changeDateFormat(filterDateTerm: Date) {
+    /*changeDateFormat(filterDateTerm: Date) {
         const dateArray = filterDateTerm.toLocaleDateString().split("/");
         dateArray[0] =
             dateArray[0].length === 1 ? "0" + dateArray[0] : dateArray[0];
@@ -1174,7 +1311,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         const formattedDateTerm =
             dateArray[2] + "-" + dateArray[0] + "-" + dateArray[1];
         return formattedDateTerm;
-    }
+    }*/
 
     /*onFilterByDateClick() {
 		let userIntData: any = [];
@@ -1239,7 +1376,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Clicked",
-            Target: "'Search Date Range' filter",
+            Target: "'Search Date' filter",
             Result: "Filter experiences",
             Time: time.toLocaleString(),
         });
@@ -1276,18 +1413,31 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
-        userIntData.push({
-            Action: "Typed",
-            Target: "'Search Date Range' filter",
-            Result: this.startDateSearchTerm,
-            Time: time.toLocaleString(),
-        });
-        userIntData.push({
-            Action: "Typed",
-            Target: "'Search Date Range' filter",
-            Result: this.endDateSearchTerm,
-            Time: time.toLocaleString(),
-        });
+
+        if (
+            this.startDateSearchTerm !== null &&
+            this.startDateSearchTerm !== undefined
+        ) {
+            userIntData.push({
+                Action: "Typed",
+                Target: "'Search Date' filter's start date",
+                Result: this.startDateSearchTerm,
+                Time: time.toLocaleString(),
+            });
+        }
+
+        if (
+            this.endDateSearchTerm !== null &&
+            this.endDateSearchTerm !== undefined
+        ) {
+            userIntData.push({
+                Action: "Typed",
+                Target: "'Search Date' filter's end date",
+                Result: this.endDateSearchTerm,
+                Time: time.toLocaleString(),
+            });
+        }
+
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
@@ -1367,8 +1517,26 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Clicked",
-            Target: "'Advanced Search and Filter' button",
-            Result: "Open advanced search and filter dialog box",
+            Target: "'Advanced Search' button",
+            Result: "Open 'Advanced Search and Filter' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onAdvancedFilterXClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'X' button on 'Advanced Search and Filter' dialog box",
+            Result: "Close the 'Advanced Search and Filter' dialog box",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1385,8 +1553,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Clicked",
-            Target: "'Search Student' filter",
-            Result: "Filter experiences",
+            Target: "'Name' filter",
+            Result: "Filter experiences by students' names",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1408,7 +1576,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Typed",
-            Target: "'Search Student' filter",
+            Target: "'Name' filter",
             Result: this.studentSearchTerm,
             Time: time.toLocaleString(),
         });
@@ -2763,9 +2931,9 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                     ? "Radio button for filter 'Oldest to Newest'"
                     : "Radio button for filter 'Newest to Oldest'",
             Result:
-                event.target.value === "newToOld"
-                    ? "Filter experiences using date from oldest to newest"
-                    : "Filter experiences using date from newest to oldest",
+                event.target.value === "oldToNew"
+                    ? "Filter experiences by date from oldest to newest"
+                    : "Filter experiences by date from newest to oldest",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -3074,4 +3242,20 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 				break;
 		}
 	}*/
+
+    openAlertDialog(title: string, message: string): void {
+        this.dialog.open(AlertDialogComponent, {
+            width: "600px",
+            data: { title: title, message: message },
+        });
+    }
+
+    openConfirmDialog(title: string, message: string): Observable<boolean> {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            width: "600px",
+            data: { title, message },
+        });
+
+        return dialogRef.afterClosed();
+    }
 }

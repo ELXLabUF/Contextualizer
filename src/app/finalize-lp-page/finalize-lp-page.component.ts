@@ -74,7 +74,7 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Visited",
-            Target: "Finalize LP page",
+            Target: "'Review Lesson Plan' page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
@@ -120,13 +120,13 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Left",
-            Target: "Finalize LP page",
+            Target: "'Review Lesson Plan' page",
             Result: "",
             Time: this.timeEnd.toLocaleString(),
         });
         userIntData.push({
             Action: "Time spent",
-            Target: "Finalize LP page",
+            Target: "'Review Lesson Plan' page",
             Result: "",
             Time: duration + " seconds",
         });
@@ -134,6 +134,26 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+    }
+
+    onPreviousPageButtonClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Previous Page' button",
+            Result: "Navigate to 'Customize Lesson Plan' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.router.navigate(["/display"]);
     }
 
     private updateFieldOrder(fieldOrder: string[]) {
@@ -596,7 +616,7 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Download Lesson Plan (as DOCX)' button",
-            Result: "Download DOCX finalized LP",
+            Result: "Download contextualized lesson plan",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -701,8 +721,8 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Clicked",
-            Target: "'Download Lesson Plan (as PDF)' button",
-            Result: "Download PDF finalized LP",
+            Target: "'Download Lesson Plan' button",
+            Result: "Download contextualized lesson plan",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -722,7 +742,7 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         };
 
         const documentDefinition = this.getDocumentDefinition();
-        pdfMake.createPdf(documentDefinition).download("Lesson_Plan_PDF.pdf");
+        pdfMake.createPdf(documentDefinition).download("Lesson_Plan.pdf");
     }
 
     /*onBackClick() {
@@ -734,7 +754,7 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Back' button",
-            Result: "Navigate to Display LP page",
+            Result: "Navigate to 'Customize Lesson Plan' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -753,7 +773,7 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Home' button",
-            Result: "Navigate to Landing page to start new LP contextualization",
+            Result: "Navigate to 'Main Menu page to start new LP contextualization",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(

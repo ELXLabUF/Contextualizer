@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import {
     Firestore,
@@ -19,7 +19,7 @@ import { Observable } from "rxjs";
     templateUrl: "./captures-page.component.html",
     styleUrls: ["./captures-page.component.css"],
 })
-export class CapturesPageComponent implements OnInit {
+export class CapturesPageComponent implements OnInit, OnDestroy {
     currCaptureName: string = "";
     currCapturePrompt: string = "";
     currCaptureStartDate: Date = new Date();
@@ -94,12 +94,32 @@ export class CapturesPageComponent implements OnInit {
     futureCaptureStartDate!: string;
     futureCaptureEndDate!: string;
 
+    timeStart!: Date;
+    timeEnd!: Date;
+
     constructor(
         public dialog: MatDialog,
         private angularFireStore: Firestore
     ) {}
 
     async ngOnInit() {
+        this.timeStart = new Date();
+        let userIntData: any = [];
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Visited",
+            Target: "'Current Capture' page",
+            Result: "",
+            Time: this.timeStart.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+        sessionStorage.setItem("timeStart", this.timeStart.toString());
+
         await this.getCurrentCapture();
         await this.setSubmissionOpen();
         await this.getCaptureStories();
@@ -139,6 +159,32 @@ export class CapturesPageComponent implements OnInit {
         } else {
             this.isCaptureActive = true;
         }
+    }
+
+    ngOnDestroy() {
+        this.timeEnd = new Date();
+        let userIntData: any = [];
+        let duration =
+            (this.timeEnd.valueOf() - this.timeStart.valueOf()) / 1000;
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Left",
+            Target: "'Current Capture' page",
+            Result: "",
+            Time: this.timeEnd.toLocaleString(),
+        });
+        userIntData.push({
+            Action: "Time spent",
+            Target: "'Current Capture' page",
+            Result: "",
+            Time: duration + " seconds",
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     async getCurrentCapture() {
@@ -299,6 +345,14 @@ export class CapturesPageComponent implements OnInit {
             previous_captures =
                 classroomDocSnap.data()["previous_captures"] || {};
             const length = Object.keys(previous_captures).length || 0;
+
+            if (
+                this.currCapturePrompt === undefined ||
+                this.currCapturePrompt === null
+            ) {
+                this.currCapturePrompt = "";
+            }
+
             previous_captures[classroom.slice(10) + length.toString()] = {
                 name: this.currCaptureName,
                 prompt: this.currCapturePrompt,
@@ -354,12 +408,60 @@ export class CapturesPageComponent implements OnInit {
             return;
         }
 
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'End Capture' button",
+            Result: "Open a dialog box to the current active capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         this.openConfirmDialog(
             "End Current Capture",
             "Are you sure you want to end the current capture?"
         ).subscribe(async (decision: boolean) => {
             if (decision) {
+                let userIntData: any = [];
+                let time = new Date();
+                userIntData = JSON.parse(
+                    sessionStorage.getItem("userInteractionData") || "[]"
+                );
+                userIntData.push({
+                    Action: "Clicked",
+                    Target: "'Confirm' button",
+                    Result: "End the current active capture",
+                    Time: time.toLocaleString(),
+                });
+                sessionStorage.setItem(
+                    "userInteractionData",
+                    JSON.stringify(userIntData)
+                );
+
                 await this.setEndCaptureDataInFirestore();
+            } else {
+                let userIntData: any = [];
+                let time = new Date();
+                userIntData = JSON.parse(
+                    sessionStorage.getItem("userInteractionData") || "[]"
+                );
+                userIntData.push({
+                    Action: "Clicked",
+                    Target: "'Cancel' button",
+                    Result: "Deny the end of the current active capture",
+                    Time: time.toLocaleString(),
+                });
+                sessionStorage.setItem(
+                    "userInteractionData",
+                    JSON.stringify(userIntData)
+                );
             }
         });
     }
@@ -489,11 +591,48 @@ export class CapturesPageComponent implements OnInit {
             return;
         }
 
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "'" +
+                this.buttonText +
+                " Stories (" +
+                this.experiencesLength.toString() +
+                ")' button",
+            Result: this.buttonText + " all the experiences for the capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         this.toggleCaptureStories = !this.toggleCaptureStories;
         this.buttonText = this.toggleCaptureStories ? "Hide" : "Show";
     }
 
     async getMostRecentCapture() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'View Most Recent Capture' button",
+            Result: "View the most recently concluded capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         const classroom = sessionStorage.getItem("classroom") || "";
         const currClassroomDocRef = doc(this.angularFireStore, classroom);
         const classroomDocSnap = await getDoc(currClassroomDocRef);
@@ -606,6 +745,10 @@ export class CapturesPageComponent implements OnInit {
             console.log("No such document!");
         }
 
+        if (capturePrompt === undefined || capturePrompt === null) {
+            capturePrompt = "";
+        }
+
         if (!activeCapture) {
             //Rewrite classroom data to reflect start of new capture
             await setDoc(doc(this.angularFireStore, classroom), {
@@ -711,6 +854,254 @@ export class CapturesPageComponent implements OnInit {
         }
     }
 
+    onStartNewCaptureClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Start New Capture' button",
+            Result: "Open a dialog box to start a new capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onStartNewCaptureXClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'X' button on the 'Start New Capture' dialog box",
+            Result: "Close the 'Start New Capture' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onCaptureTypeClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "'" + this.specificSelected
+                    ? "Specific"
+                    : "General" + "'radio button",
+            Result:
+                "Select '" + this.specificSelected
+                    ? "Specific"
+                    : "General" + "' as the capture type",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onSpecificCaptureInfoHover() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Hovered",
+            Target: "Specific capture info button",
+            Result: "Pop-up specific capture information",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onGeneralCaptureInfoHover() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Hovered",
+            Target: "General capture info button",
+            Result: "Pop-up general capture information",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onSpecificCaptureTopicClick() {
+        if (this.specificSelected) {
+            let userIntData: any = [];
+            let time = new Date();
+            userIntData = JSON.parse(
+                sessionStorage.getItem("userInteractionData") || "[]"
+            );
+            userIntData.push({
+                Action: "Clicked",
+                Target: "'Topic Name' input",
+                Result: "Enter topic name for the capture",
+                Time: time.toLocaleString(),
+            });
+            sessionStorage.setItem(
+                "userInteractionData",
+                JSON.stringify(userIntData)
+            );
+        }
+    }
+
+    updateTopicCharacterCounter() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Topic Name' input",
+            Result: this.specificTopic,
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.topicCharactersLeft =
+            this.maxTopicCharacters - (this.specificTopic?.length || 0);
+    }
+
+    onPromptClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Prompt' input",
+            Result: "Enter prompt for the capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    updatePromptCharacterCounter() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Prompt' input",
+            Result: this.capturePrompt,
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.promptCharactersLeft =
+            this.maxPromptCharacters - (this.capturePrompt?.length || 0);
+    }
+
+    onCaptureDateClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Date' input",
+            Result: "Enter dates for the capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onCaptureStartDateInput() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Date' input's start date",
+            Result: this.dateRangeStartDate,
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onCaptureEndDateInput() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Date' input's end date",
+            Result: this.dateRangeEndDate,
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onStartNewCaptureCloseClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Close' button on the 'Start New Capture' dialog box",
+            Result: "Close the 'Start New Capture' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
     removeTimeZoneOffset(inputDate: string, addOffset: boolean) {
         const date = new Date(inputDate);
         const tzOffset = date.getTimezoneOffset() * 60000;
@@ -724,6 +1115,22 @@ export class CapturesPageComponent implements OnInit {
     }
 
     async startNewCapture() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Confirm' button",
+            Result: "Start a new capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         if (
             this.specificSelected === null ||
             this.specificSelected === undefined ||
@@ -814,17 +1221,23 @@ export class CapturesPageComponent implements OnInit {
         this.showRecentCapture = false;
     }
 
-    updateTopicCharacterCounter() {
-        this.topicCharactersLeft =
-            this.maxTopicCharacters - (this.specificTopic?.length || 0);
-    }
-
-    updatePromptCharacterCounter() {
-        this.promptCharactersLeft =
-            this.maxPromptCharacters - (this.capturePrompt?.length || 0);
-    }
-
     async getPastCaptures() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Past Captures Library' button",
+            Result: "View the list of all the concluded captures",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         const classroom = sessionStorage.getItem("classroom") || "";
         const currClassroomDocRef = doc(this.angularFireStore, classroom);
         const classroomDocSnap = await getDoc(currClassroomDocRef);
@@ -971,9 +1384,84 @@ export class CapturesPageComponent implements OnInit {
                 );
             }
         }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'" + column + "'column in the Past Captures table",
+            Result:
+                "Sort the past captures by '" +
+                column +
+                "' in " +
+                this.columnSortStatePastCaptures[
+                    this.activeSortColumnPastCaptures
+                ] +
+                "ending order",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onPastCapturesXClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'X' button on the 'Past Captures' dialog box",
+            Result: "Close the 'Past Captures' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onPastCapturesCloseClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Close' button on the 'Past Captures' dialog box",
+            Result: "Close the 'Past Captures' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     async getFutureCaptures() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Upcoming Captures Library' button",
+            Result: "View the list of all the upcoming captures",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         const classroom = sessionStorage.getItem("classroom") || "";
         const currClassroomDocRef = doc(this.angularFireStore, classroom);
         const classroomDocSnap = await getDoc(currClassroomDocRef);
@@ -1105,6 +1593,65 @@ export class CapturesPageComponent implements OnInit {
                 );
             }
         }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'" + column + "'column in the Upcoming Captures table",
+            Result:
+                "Sort the upcoming captures by '" +
+                column +
+                "' in " +
+                this.columnSortStateFutureCaptures[
+                    this.activeSortColumnFutureCaptures
+                ] +
+                "ending order",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onFutureCapturesXClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'X' button on the 'Upcoming Captures' dialog box",
+            Result: "Close the 'Upcoming Captures' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onFutureCapturesCloseClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Close' button on the 'Upcoming Captures' dialog box",
+            Result: "Close the 'Upcoming Captures' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     convertDateFormat(dateString: string): string {
@@ -1113,6 +1660,25 @@ export class CapturesPageComponent implements OnInit {
     }
 
     editFutureCapture(capture: any) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "Pencil icon button for the upcoming capture with topic name '" +
+                capture["capture_name"] +
+                "'",
+            Result: "Open a dialog box to edit the upcoming capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         this.futureCaptureKey = capture["key"];
         this.futureCaptureSpecificSelected =
             capture["capture_name"] === "General" ? false : true;
@@ -1132,18 +1698,219 @@ export class CapturesPageComponent implements OnInit {
         this.updateFutureCapturePromptCharacterCounter();
     }
 
+    onEditUpcomingCaptureXClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'X' button on the 'Edit Upcoming Capture' dialog box",
+            Result: "Close the 'Edit Upcoming Capture' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onFutureCaptureTypeClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "'" + this.futureCaptureSpecificSelected
+                    ? "Specific"
+                    : "General" + "'radio button",
+            Result:
+                "Select '" + this.futureCaptureSpecificSelected
+                    ? "Specific"
+                    : "General" +
+                      "' as the capture type for the upcoming capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onFutureSpecificCaptureTopicClick() {
+        if (this.futureCaptureSpecificSelected) {
+            let userIntData: any = [];
+            let time = new Date();
+            userIntData = JSON.parse(
+                sessionStorage.getItem("userInteractionData") || "[]"
+            );
+            userIntData.push({
+                Action: "Clicked",
+                Target: "'Topic Name' input",
+                Result: "Enter topic name for the upcoming capture",
+                Time: time.toLocaleString(),
+            });
+            sessionStorage.setItem(
+                "userInteractionData",
+                JSON.stringify(userIntData)
+            );
+        }
+    }
+
     updateFutureCaptureTopicCharacterCounter() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Topic Name' input",
+            Result: this.futureCaptureSpecificTopic,
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         this.futureCaptureTopicCharactersLeft =
             this.maxTopicCharacters -
             (this.futureCaptureSpecificTopic?.length ?? 0);
     }
 
+    onFutureCapturePromptClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Prompt' input",
+            Result: "Enter prompt for the upcoming capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
     updateFutureCapturePromptCharacterCounter() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Prompt' input",
+            Result: this.futureCapturePrompt,
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         this.futureCapturePromptCharactersLeft =
             this.maxPromptCharacters - (this.futureCapturePrompt?.length ?? 0);
     }
 
+    onFutureCaptureDateClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Date' input",
+            Result: "Enter dates for the upcoming capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onFutureCaptureStartDateInput() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Date' input's start date",
+            Result: this.futureCaptureStartDate,
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onFutureCaptureEndDateInput() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Date' input's end date",
+            Result: this.futureCaptureEndDate,
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onFutureCaptureCloseClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Close' button on the 'Edit Upcoming Capture' dialog box",
+            Result: "Close the 'Edit Upcoming Capture' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
     async saveFutureCaptureEdit() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Confirm' button",
+            Result: "Complete the edit of the upcoming capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         const classroom = sessionStorage.getItem("classroom") || "";
         const currClassroomDocRef = doc(this.angularFireStore, classroom);
         const classroomDocSnap = await getDoc(currClassroomDocRef);

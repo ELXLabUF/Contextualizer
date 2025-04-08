@@ -56,10 +56,16 @@ export class UserInteractionCsvService {
 
         const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
         const time = new Date().toString();
+        //const fileName = this.userEmail + "_" + time + ".csv";
+        //const storageRef = ref(
+        //    this.storage,
+        //    `user_interaction_data_files/${fileName}`
+        //);
         const fileName = this.userEmail + "_" + time + ".csv";
+        const filePath = `${this.userEmail}/${fileName}`;
         const storageRef = ref(
             this.storage,
-            `user_interaction_data_files/${fileName}`
+            `user_interaction_data_files/${filePath}`
         );
         const uploadTask = uploadBytesResumable(storageRef, blob);
 

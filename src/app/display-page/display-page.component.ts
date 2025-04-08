@@ -207,7 +207,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Visited",
-            Target: "Display LP page",
+            Target: "'Customize Lesson Plan' page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
@@ -354,13 +354,13 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Left",
-            Target: "Display LP page",
+            Target: "'Customize Lesson Plan' page",
             Result: "",
             Time: this.timeEnd.toLocaleString(),
         });
         userIntData.push({
             Action: "Time spent",
-            Target: "Display LP page",
+            Target: "'Customize Lesson Plan' page",
             Result: "",
             Time: duration + " seconds",
         });
@@ -368,6 +368,53 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+    }
+
+    onPreviousPageButtonClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Previous Page' button",
+            Result:
+                "Navigate to '" + this.startNavigationFromExperiences
+                    ? "Upload Lesson Plan"
+                    : "Browse Experiences" + "' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        if (!this.startNavigationFromExperiences) {
+            this.router.navigate(["/experience"]);
+        } else {
+            this.router.navigate(["/lesson"]);
+        }
+    }
+
+    onNextPageButtonClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Next Page' button",
+            Result: "Navigate to 'Review Lesson Plan' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.router.navigate(["/finalize"]);
     }
 
     private setDefaultFieldOrder() {
@@ -420,6 +467,12 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         }
     }
 
+    initializeEditValues() {
+        this.editableFields.forEach((field) => {
+            field.editValue = this.pdfData[field.key]?.content || ""; // assign the content or an empty string if it's falsy
+        });
+    }
+
     onBrowseExpClick() {
         let userIntData: any = [];
         let time = new Date();
@@ -429,13 +482,14 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Browse Experiences' button",
-            Result: "Navigate to Experiences page",
+            Result: "Navigate to 'Browse Experiences' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+
         this.router.navigate(["/experience"]);
     }
 
@@ -448,56 +502,61 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Finalize Lesson Plan' button",
-            Result: "Navigate to Finalize LP page",
+            Result: "Navigate to 'Review Lesson Plan' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+
         this.router.navigate(["/finalize"]);
     }
 
-    initializeEditValues() {
-        this.editableFields.forEach((field) => {
-            field.editValue = this.pdfData[field.key]?.content || ""; // assign the content or an empty string if it's falsy
-        });
-    }
-
-    enableEditing(field: any) {
-        field.editing = true;
-        field.editValue = this.pdfData[field.key]?.content.content;
-    }
-
     enableLabelEditing(field: any) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "Title of box with title '" +
+                this.pdfData[field.key]?.title +
+                "'",
+            Result: "Edit title of the box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         field.labelEditing = true;
         field.labelEditValue = this.pdfData[field.key]?.title;
     }
 
-    enableExperienceEditing(field: any, index: any) {
-        field.experiencesEditingIndex = index;
-        field.experiencesEditValue =
-            this.pdfData[field.key]?.integrated_experiences[index];
-    }
-
-    submitEdit(field: any) {
-        field.editing = false;
-        // Update Firestore document
-        const updatedFieldData = {
-            ...this.pdfData[field.key],
-            content: { content: field.editValue },
-        };
-
-        this.firestore
-            .doc(`Documents/${this.id}`)
-            .update({ [field.key]: updatedFieldData })
-            .then(() => {
-                this.pdfData[field.key] = updatedFieldData;
-            })
-            .catch((err) => console.error("Error updating document: ", err));
-    }
-
     submitLabelEdit(field: any) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "Outside of the title of box with title '" +
+                this.pdfData[field.key]?.title +
+                "'",
+            Result: "Finish edit of the title of the box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         field.labelEditing = false;
         // Update Firestore document
         const updatedFieldData = {
@@ -514,7 +573,119 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             .catch((err) => console.error("Error updating document: ", err));
     }
 
-    submitExperienceEdit(field: any) {
+    enableEditing(field: any) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "Content of box with title '" +
+                this.pdfData[field.key]?.title +
+                "'",
+            Result: "Edit content of the box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        field.editing = true;
+        field.editValue = this.pdfData[field.key]?.content.content;
+    }
+
+    submitEdit(field: any) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "Outside of the content of box with title '" +
+                this.pdfData[field.key]?.title +
+                "'",
+            Result: "Finish edit of the content of the box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        field.editing = false;
+        // Update Firestore document
+        const updatedFieldData = {
+            ...this.pdfData[field.key],
+            content: { content: field.editValue },
+        };
+
+        this.firestore
+            .doc(`Documents/${this.id}`)
+            .update({ [field.key]: updatedFieldData })
+            .then(() => {
+                this.pdfData[field.key] = updatedFieldData;
+            })
+            .catch((err) => console.error("Error updating document: ", err));
+    }
+
+    enableExperienceEditing(field: any, index: any) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "Experience with content " +
+                this.pdfData[field.key]?.integrated_experiences[index][
+                    "transcript"
+                ] +
+                " integrated with the box with title '" +
+                this.pdfData[field.key]?.title +
+                "'",
+            Result: "Edit content of the experience",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        field.experiencesEditingIndex = index;
+        field.experiencesEditValue =
+            this.pdfData[field.key]?.integrated_experiences[index];
+    }
+
+    submitExperienceEdit(field: any, index: any) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "'Save' button for experience with content " +
+                this.pdfData[field.key]?.integrated_experiences[index][
+                    "transcript"
+                ] +
+                " integrated with the box with title '" +
+                this.pdfData[field.key]?.title +
+                "'",
+            Result: "Finish edit of the content of the experience",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         field.experiencesEditingIndex = -1;
         // Update Firestore document
         const updatedExperiences = [
@@ -555,11 +726,11 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             .catch((err) => console.error("Error updating document: ", err));
     }
 
-    openFile() {
+    /*openFile() {
         if (this.fileDownloadURL) {
             window.open(this.fileDownloadURL, "_blank");
         }
-    }
+    }*/
 
     getFilenameFromUrl(url: string): string {
         return url.split("/").pop() || "downloaded_file";
@@ -606,17 +777,6 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         this.expIntegratedPDF.integrated_experiences =
             this.integratedExperiences;
         this.integrateExpService.addIntegratedExperience(this.expIntegratedPDF);
-    }
-
-    openAlertDialog(title: string, message: string): void {
-        this.dialog.open(AlertDialogComponent, {
-            width: "600px",
-            data: { title: title, message: message },
-        });
-    }
-
-    trackByFn(index: number, item: any): any {
-        return index; // or item.id
     }
 
     updateFirestore(field: any, description: string) {
@@ -720,6 +880,28 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         date: string,
         student_name: string
     ) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Dragging",
+            Target:
+                "Experience with title " +
+                experience_title +
+                ", date " +
+                date +
+                " and student name " +
+                student_name,
+            Result: "",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         this.currentExperienceTitle = experience_title;
         this.currentExperienceDate = date;
         this.currentExperienceDescription = experience_description;
@@ -742,7 +924,7 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                 this.currentExperienceDate +
                 " and student name " +
                 this.currentStudentName,
-            Result: "Box with title " + field.name,
+            Result: "Box with title '" + field.name + "'",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -762,6 +944,28 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     }
 
     async addContainer(field: any) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "'+' button below box with title '" +
+                this.pdfData[field.key]?.title +
+                "'",
+            Result:
+                "Add a new box below box with title '" +
+                this.pdfData[field.key]?.title +
+                "'",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         const dialogRef = this.dialog.open(InputDialogComponent, {
             width: "500px",
         });
@@ -770,11 +974,49 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             if (result) {
                 const containerName = result.trim();
 
+                let userIntData: any = [];
+                let time = new Date();
+                userIntData = JSON.parse(
+                    sessionStorage.getItem("userInteractionData") || "[]"
+                );
+                userIntData.push({
+                    Action: "Clicked",
+                    Target: "'Confirm' button",
+                    Result:
+                        "Add a new box with title '" +
+                        containerName +
+                        "'below box with title '" +
+                        this.pdfData[field.key]?.title +
+                        "'",
+                    Time: time.toLocaleString(),
+                });
+                sessionStorage.setItem(
+                    "userInteractionData",
+                    JSON.stringify(userIntData)
+                );
+
                 if (this.editableFields.some((f) => f.name === containerName)) {
                     this.openAlertDialog(
-                        "Error",
-                        "A container with this name already exists. Please choose a unique name."
+                        "Box Title Error",
+                        "A box with this name already exists. Please choose a unique name."
                     );
+
+                    let userIntData: any = [];
+                    let time = new Date();
+                    userIntData = JSON.parse(
+                        sessionStorage.getItem("userInteractionData") || "[]"
+                    );
+                    userIntData.push({
+                        Action: "Clicked",
+                        Target: "'Ok' button",
+                        Result: "Close the 'Box Title Error' alert dialog box",
+                        Time: time.toLocaleString(),
+                    });
+                    sessionStorage.setItem(
+                        "userInteractionData",
+                        JSON.stringify(userIntData)
+                    );
+
                     return;
                 }
 
@@ -865,8 +1107,9 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                         Action: "Clicked",
                         Target: "'Yes, Confirm' button on dialog box",
                         Result:
-                            "Delete box with title " +
-                            this.pdfData[field.key]?.title,
+                            "Delete box with title '" +
+                            this.pdfData[field.key]?.title +
+                            "'",
                         Time: time.toLocaleString(),
                     });
                     sessionStorage.setItem(
@@ -896,8 +1139,9 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
                         Action: "Clicked",
                         Target: "'No, Go Back' button on dialog box",
                         Result:
-                            "Deny deletion of box with title " +
-                            this.pdfData[field.key]?.title,
+                            "Deny deletion of box with title '" +
+                            this.pdfData[field.key]?.title +
+                            "'",
                         Time: time.toLocaleString(),
                     });
                     sessionStorage.setItem(
@@ -975,10 +1219,12 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             );
             userIntData.push({
                 Action: "Moved",
-                Target: "Box with title " + this.pdfData[field.key]?.title,
+                Target:
+                    "Box with title '" + this.pdfData[field.key]?.title + "'",
                 Result:
-                    "Above box with title " +
-                    this.pdfData[this.editableFields[index - 1].key]?.title,
+                    "Above box with title '" +
+                    this.pdfData[this.editableFields[index - 1].key]?.title +
+                    "'",
                 Time: time.toLocaleString(),
             });
             sessionStorage.setItem(
@@ -1000,10 +1246,12 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             );
             userIntData.push({
                 Action: "Moved",
-                Target: "Box with title " + this.pdfData[field.key]?.title,
+                Target:
+                    "Box with title '" + this.pdfData[field.key]?.title + "'",
                 Result:
-                    "Below box with title " +
-                    this.pdfData[this.editableFields[index + 1].key]?.title,
+                    "Below box with title '" +
+                    this.pdfData[this.editableFields[index + 1].key]?.title +
+                    "'",
                 Time: time.toLocaleString(),
             });
             sessionStorage.setItem(
@@ -1054,7 +1302,18 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
         });
     }
 
-    trackByField(index: number, field: any): string {
+    openAlertDialog(title: string, message: string): void {
+        this.dialog.open(AlertDialogComponent, {
+            width: "600px",
+            data: { title: title, message: message },
+        });
+    }
+
+    trackByFn(index: number): any {
+        return index;
+    }
+
+    trackByField(field: any): string {
         return field.key;
     }
 }

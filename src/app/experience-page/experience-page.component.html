@@ -43,18 +43,24 @@
             *ngIf="!startNavigationFromExperiences; else alt_nav"
             class="lesson-nav-start"
         >
-            <button routerLink="/lesson" title="Go to previous page">
+            <button
+                (click)="onPreviousPageButtonClick()"
+                title="Go to previous page"
+            >
                 <i class="fas fa-arrow-left"></i>
             </button>
             <app-dot-navigation></app-dot-navigation>
-            <button routerLink="/display" title="Go to next page">
+            <button (click)="onNextPageButtonClick()" title="Go to next page">
                 <i class="fas fa-arrow-right"></i>
             </button>
         </div>
         <div class="exp-nav-start">
             <ng-template #alt_nav>
                 <app-dot-navigation></app-dot-navigation>
-                <button routerLink="/instructions" title="Go to next page">
+                <button
+                    (click)="onNextPageButtonClick()"
+                    title="Go to next page"
+                >
                     <i class="fas fa-arrow-right"></i>
                 </button>
             </ng-template>
@@ -183,15 +189,14 @@
                 </mat-form-field>-->
 
                 <div class="view-previous-capture">
-                    <label>View Previous Capture Experiences</label>
+                    <label>View Past Capture Experiences</label>
                     <select
                         class="dropdown-select"
+                        (click)="onViewPreviousCaptureExpDropdownClick()"
                         (change)="getPreviousCaptureExperiences()"
                         [(ngModel)]="prevCaptureName"
                     >
-                        <option value="" disabled>
-                            Select A Previous Capture
-                        </option>
+                        <option value="" disabled>Select A Past Capture</option>
                         <option
                             *ngFor="let capture of previousCaptures"
                             [value]="capture.capture"
@@ -543,6 +548,7 @@
                         class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"
+                        (click)="onStudentDetailsXClick()"
                     ></button>
                 </div>
                 <div class="modal-body">
@@ -792,7 +798,12 @@
                     </div>-->
                 </div>
                 <div class="modal-footer">
-                    <button data-bs-dismiss="modal">Close</button>
+                    <button
+                        data-bs-dismiss="modal"
+                        (click)="onStudentDetailsCloseClick()"
+                    >
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -820,6 +831,7 @@
                         class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"
+                        (click)="onAdvancedFilterXClick()"
                     ></button>
                 </div>
                 <div class="modal-body">

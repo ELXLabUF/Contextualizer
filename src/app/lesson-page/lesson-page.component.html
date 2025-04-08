@@ -4,21 +4,30 @@
             *ngIf="!startNavigationFromExperiences; else alt_nav"
             class="lesson-nav-start"
         >
-            <button routerLink="/instructions" title="Go to previous page">
+            <button
+                (click)="onPreviousPageButtonClick()"
+                title="Go to previous page"
+            >
                 <i class="fas fa-arrow-left"></i>
             </button>
             <app-dot-navigation></app-dot-navigation>
-            <button routerLink="/experience" title="Go to next page">
+            <button (click)="onNextPageButtonClick()" title="Go to next page">
                 <i class="fas fa-arrow-right"></i>
             </button>
         </div>
         <div class="exp-nav-start">
             <ng-template #alt_nav>
-                <button routerLink="/instructions" title="Go to previous page">
+                <button
+                    (click)="onPreviousPageButtonClick()"
+                    title="Go to previous page"
+                >
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <app-dot-navigation></app-dot-navigation>
-                <button routerLink="/display" title="Go to next page">
+                <button
+                    (click)="onNextPageButtonClick()"
+                    title="Go to next page"
+                >
                     <i class="fas fa-arrow-right"></i>
                 </button>
             </ng-template>
@@ -37,6 +46,7 @@
             [(ngModel)]="topicName"
             class="topic-input"
             (click)="onTopicInputClick()"
+            (input)="onTopicInput()"
             placeholder="Enter a science topic"
             type="text"
             required

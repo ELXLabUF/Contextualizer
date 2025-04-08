@@ -22,7 +22,7 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Visited",
-            Target: "LP Instructions page",
+            Target: "'Create Lesson Plan' page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
@@ -53,13 +53,13 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Left",
-            Target: "LP Instructions page",
+            Target: "'Create Lesson Plan' page",
             Result: "",
             Time: this.timeEnd.toLocaleString(),
         });
         userIntData.push({
             Action: "Time spent",
-            Target: "LP Instructions page",
+            Target: "'Create Lesson Plan' page",
             Result: "",
             Time: duration + " seconds",
         });
@@ -67,6 +67,46 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+    }
+
+    onPreviousPageButtonClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Previous Page' button",
+            Result: "Navigate to 'Browse Experiences' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.router.navigate(["/experience"]);
+    }
+
+    onNextPageButtonClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Next Page' button",
+            Result: "Navigate to 'Upload Lesson Plan' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.router.navigate(["/lesson"]);
     }
 
     downloadFile() {
@@ -78,7 +118,7 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Download Lesson Plan Template' button",
-            Result: "Download LP template",
+            Result: "Download lesson plan template",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -100,5 +140,25 @@ export class LessonPlanInstructionsComponent implements OnInit, OnDestroy {
             link.click();
             link.remove();
         });
+    }
+
+    onContinueClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Continue' button",
+            Result: "Navigate to 'Upload Lesson Plan' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.router.navigate(["/lesson"]);
     }
 }

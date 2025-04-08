@@ -16,10 +16,10 @@ describe("AppComponent", () => {
         expect(app).toBeTruthy();
     });
 
-    it(`should have as title 'pdf-upload'`, () => {
+    it(`should have as title 'Contextualizer'`, () => {
         const fixture = TestBed.createComponent(AppComponent);
         const app = fixture.componentInstance;
-        expect(app.title).toEqual("pdf-upload");
+        expect(app.title).toEqual("Contextualizer");
     });
 
     it("should render title", () => {
@@ -27,7 +27,7 @@ describe("AppComponent", () => {
         fixture.detectChanges();
         const compiled = fixture.nativeElement as HTMLElement;
         expect(compiled.querySelector(".content span")?.textContent).toContain(
-            "pdf-upload app is running!"
+            "Contextualizer app is running!"
         );
     });
 });

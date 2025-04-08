@@ -3,6 +3,7 @@
     <div class="select-classroom">
         <select
             class="dropdown-select"
+            (click)="onClassroomDropdownClick()"
             (change)="setClassroom()"
             [(ngModel)]="classroom"
         >

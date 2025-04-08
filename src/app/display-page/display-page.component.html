@@ -4,21 +4,30 @@
             *ngIf="!startNavigationFromExperiences; else alt_nav"
             class="lesson-nav-start"
         >
-            <button routerLink="/experience" title="Go to previous page">
+            <button
+                (click)="onPreviousPageButtonClick()"
+                title="Go to previous page"
+            >
                 <i class="fas fa-arrow-left"></i>
             </button>
             <app-dot-navigation></app-dot-navigation>
-            <button routerLink="/finalize" title="Go to next page">
+            <button (click)="onNextPageButtonClick()" title="Go to next page">
                 <i class="fas fa-arrow-right"></i>
             </button>
         </div>
         <div class="exp-nav-start">
             <ng-template #alt_nav>
-                <button routerLink="/lesson" title="Go to previous page">
+                <button
+                    (click)="onPreviousPageButtonClick()"
+                    title="Go to previous page"
+                >
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <app-dot-navigation></app-dot-navigation>
-                <button routerLink="/finalize" title="Go to next page">
+                <button
+                    (click)="onNextPageButtonClick()"
+                    title="Go to next page"
+                >
                     <i class="fas fa-arrow-right"></i>
                 </button>
             </ng-template>
@@ -189,16 +198,24 @@
                                         ></textarea>
                                         <button
                                             (click)="
-                                                submitExperienceEdit(field)
+                                                submitExperienceEdit(field, idx)
                                             "
                                         >
                                             Save
                                         </button>
                                     </div>
-                                    <!-- <textarea *ngIf="field.experiencesEditingIndex === idx" [(ngModel)]="pdfData[field.key]?.integrated_experiences[idx]"
+                                    <!--<textarea
+                                        *ngIf="
+                                            field.experiencesEditingIndex ===
+                                            idx
+                                        "
+                                        [(ngModel)]="
+                                            pdfData[field.key]
+                                                ?.integrated_experiences[idx]
+                                        "
                                         (blur)="submitExperienceEdit(field)"
                                         class="editField"
-                                    ></textarea> -->
+                                    ></textarea>-->
                                 </li>
                             </ng-container>
                         </ul>
@@ -249,18 +266,15 @@
                 >
                     <mat-expansion-panel-header>
                         <mat-panel-title class="exp-title">
-                            <!--{{ experience.experience_title }}-->
                             {{ experience.title }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <!--<p>{{ experience.experience_description }}</p>-->
                     <p>{{ experience.transcript }}</p>
                     <div class="meta-data d-flex align-items-center">
                         <div class="flex align-self-stretch">
                             <i class="bi bi-person"></i>
                         </div>
                         <div class="flex-grow-1 ms-2 me-2">
-                            <!--<p>{{ experience.student_name }}</p>-->
                             <p>{{ experience.name }}</p>
                         </div>
                         <div class="flex align-self-stretch">

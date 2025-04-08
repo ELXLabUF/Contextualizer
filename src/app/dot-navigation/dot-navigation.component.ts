@@ -116,15 +116,15 @@ export class DotNavigationComponent implements OnInit {
         let userIntData: any = [];
         let time = new Date();
         let dotNumber = this.startNavigationFromExperiences
-            ? "second"
-            : "first";
+            ? "Second"
+            : "First";
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
         userIntData.push({
             Action: "Clicked",
             Target: dotNumber + " navigation dot",
-            Result: "Navigate to LP Instructions page",
+            Result: "Navigate to 'Create Lesson Plan' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -146,15 +146,15 @@ export class DotNavigationComponent implements OnInit {
         let userIntData: any = [];
         let time = new Date();
         let dotNumber = this.startNavigationFromExperiences
-            ? "third"
-            : "second";
+            ? "Third"
+            : "Second";
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
         userIntData.push({
             Action: "Clicked",
             Target: dotNumber + " navigation dot",
-            Result: "Navigate to Upload LP page",
+            Result: "Navigate to 'Upload Lesson Plan' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -175,14 +175,14 @@ export class DotNavigationComponent implements OnInit {
     navigateToExperiences() {
         let userIntData: any = [];
         let time = new Date();
-        let dotNumber = this.startNavigationFromExperiences ? "first" : "third";
+        let dotNumber = this.startNavigationFromExperiences ? "First" : "Third";
         userIntData = JSON.parse(
             sessionStorage.getItem("userInteractionData") || "[]"
         );
         userIntData.push({
             Action: "Clicked",
             Target: dotNumber + " navigation dot",
-            Result: "Navigate to Experiences page",
+            Result: "Navigate to 'Browse Experiences' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -209,7 +209,7 @@ export class DotNavigationComponent implements OnInit {
         userIntData.push({
             Action: "Clicked",
             Target: "Fourth navigation dot",
-            Result: "Navigate to Display LP page",
+            Result: "Navigate to 'Customize Lesson Plan' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -234,7 +234,7 @@ export class DotNavigationComponent implements OnInit {
         userIntData.push({
             Action: "Clicked",
             Target: "Fifth navigation dot",
-            Result: "Navigate to Finalize LP page",
+            Result: "Navigate to 'Review Lesson Plan' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(

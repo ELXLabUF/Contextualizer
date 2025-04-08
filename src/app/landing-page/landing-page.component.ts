@@ -32,7 +32,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Visited",
-            Target: "Landing page",
+            Target: "'Main Menu' page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
@@ -66,15 +66,33 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Left",
-            Target: "Landing page",
+            Target: "'Main Menu' page",
             Result: "",
             Time: this.timeEnd.toLocaleString(),
         });
         userIntData.push({
             Action: "Time spent",
-            Target: "Landing page",
+            Target: "'Main Menu' page",
             Result: "",
             Time: duration + " seconds",
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onClassroomDropdownClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Select A Classroom' dropdown",
+            Result: "Open a dropdown with all the classrooms for the current user",
+            Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
             "userInteractionData",
@@ -85,6 +103,22 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     setClassroom() {
         for (const clroom of this.allClassrooms) {
             if (clroom.slice(10) === this.classroom) {
+                let userIntData: any = [];
+                let time = new Date();
+                userIntData = JSON.parse(
+                    sessionStorage.getItem("userInteractionData") || "[]"
+                );
+                userIntData.push({
+                    Action: "Selected",
+                    Target: "'" + this.classroom + "' option",
+                    Result: "Set the current classroom for the user",
+                    Time: time.toLocaleString(),
+                });
+                sessionStorage.setItem(
+                    "userInteractionData",
+                    JSON.stringify(userIntData)
+                );
+
                 sessionStorage.setItem("classroom", clroom);
             }
         }
@@ -99,7 +133,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Student Experience Capture' button",
-            Result: "Navigate to Captures page",
+            Result: "Navigate to 'Current Capture' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -131,7 +165,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Personalize Lesson' button",
-            Result: "Navigate to LP Instructions page",
+            Result: "Navigate to 'Create Lesson Plan' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -171,7 +205,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                     userIntData.push({
                         Action: "Clicked",
                         Target: "'Yes, Confirm' button on dialog box",
-                        Result: "Navigate to LP Instructions page",
+                        Result: "Navigate to 'Create Lesson Plan' page",
                         Time: time.toLocaleString(),
                     });
                     sessionStorage.setItem(
@@ -188,7 +222,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                     userIntData.push({
                         Action: "Clicked",
                         Target: "'No, Go Back' button on dialog box",
-                        Result: "Deny new LP contextualization",
+                        Result: "Deny start of new lesson plan contextualization",
                         Time: time.toLocaleString(),
                     });
                     sessionStorage.setItem(
@@ -223,7 +257,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Browse Experiences' button",
-            Result: "Navigate to Experiences page",
+            Result: "Navigate to 'Browse Experiences' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -263,7 +297,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                     userIntData.push({
                         Action: "Clicked",
                         Target: "'Yes, Confirm' button on dialog box",
-                        Result: "Navigate to Experiences page",
+                        Result: "Navigate to 'Browse Experiences' page",
                         Time: time.toLocaleString(),
                     });
                     sessionStorage.setItem(
@@ -280,7 +314,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                     userIntData.push({
                         Action: "Clicked",
                         Target: "'No, Go Back' button on dialog box",
-                        Result: "Deny new LP contextualization",
+                        Result: "Deny start of new lesson plan contextualization",
                         Time: time.toLocaleString(),
                     });
                     sessionStorage.setItem(

@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
-import { PdfReaderService } from "../pdf-reader-service/pdf-reader.service";
 import {
     Storage,
     ref,
@@ -10,6 +9,7 @@ import {
 } from "@angular/fire/storage";
 
 import { ExperienceLessonPlanService } from "../experience-lesson-plan-service/experience-lesson-plan.service";
+import { PdfReaderService } from "../pdf-reader-service/pdf-reader.service";
 import { Experience } from "../experience";
 import { AlertDialogComponent } from "../alert-dialog/alert-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -51,7 +51,7 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Visited",
-            Target: "Upload LP page",
+            Target: "'Upload Lesson Plan' page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
@@ -82,13 +82,13 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Left",
-            Target: "Upload LP page",
+            Target: "'Upload Lesson Plan' page",
             Result: "",
             Time: this.timeEnd.toLocaleString(),
         });
         userIntData.push({
             Action: "Time spent",
-            Target: "Upload LP page",
+            Target: "'Upload Lesson Plan' page",
             Result: "",
             Time: duration + " seconds",
         });
@@ -96,6 +96,53 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+    }
+
+    onPreviousPageButtonClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Previous Page' button",
+            Result: "Navigate to 'Create Lesson Plan' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.router.navigate(["/instructions"]);
+    }
+
+    onNextPageButtonClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Next Page' button",
+            Result:
+                "Navigate to '" + this.startNavigationFromExperiences
+                    ? "Customize Lesson Plan"
+                    : "Browse Experiences" + "' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        if (!this.startNavigationFromExperiences) {
+            this.router.navigate(["/experience"]);
+        } else {
+            this.router.navigate(["/display"]);
+        }
     }
 
     onTopicInputClick() {
@@ -116,11 +163,22 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         );
     }
 
-    openAlertDialog(title: string, message: string): void {
-        this.dialog.open(AlertDialogComponent, {
-            width: "600px",
-            data: { title: title, message: message },
+    onTopicInput() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Typed",
+            Target: "'Enter a science topic' input",
+            Result: this.topicName,
+            Time: time.toLocaleString(),
         });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     onFileSelected(event: any) {
@@ -186,7 +244,7 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Upload' button",
-            Result: "Upload selected LP file",
+            Result: "Upload selected lesson plan file",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -528,5 +586,12 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         this.uploadProgress = 0;
         this.fileDownloadURL = "";
         this.topicName = "";
+    }
+
+    openAlertDialog(title: string, message: string): void {
+        this.dialog.open(AlertDialogComponent, {
+            width: "600px",
+            data: { title: title, message: message },
+        });
     }
 }

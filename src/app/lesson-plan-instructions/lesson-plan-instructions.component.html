@@ -5,17 +5,23 @@
             class="lesson-nav-start"
         >
             <app-dot-navigation></app-dot-navigation>
-            <button routerLink="/lesson" title="Go to next page">
+            <button (click)="onNextPageButtonClick()" title="Go to next page">
                 <i class="fas fa-arrow-right"></i>
             </button>
         </div>
         <div class="exp-nav-start">
             <ng-template #alt_nav>
-                <button routerLink="/experience" title="Go to previous page">
+                <button
+                    (click)="onPreviousPageButtonClick()"
+                    title="Go to previous page"
+                >
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <app-dot-navigation></app-dot-navigation>
-                <button routerLink="/lesson" title="Go to next page">
+                <button
+                    (click)="onNextPageButtonClick()"
+                    title="Go to next page"
+                >
                     <i class="fas fa-arrow-right"></i>
                 </button>
             </ng-template>
@@ -68,6 +74,6 @@
     </div>
 
     <div class="continue-button">
-        <button routerLink="/lesson">Continue</button>
+        <button (click)="onContinueClick()">Continue</button>
     </div>
 </div>

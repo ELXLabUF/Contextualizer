@@ -38,7 +38,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Visited",
-            Target: "Account page",
+            Target: "'Account' page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
@@ -71,13 +71,13 @@ export class AccountComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Left",
-            Target: "Account page",
+            Target: "'Account' page",
             Result: "",
             Time: this.timeEnd.toLocaleString(),
         });
         userIntData.push({
             Action: "Time spent",
-            Target: "Account page",
+            Target: "'Account' page",
             Result: "",
             Time: duration + " seconds",
         });
@@ -88,6 +88,22 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     changePassword() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Submit' button",
+            Result: "Submit the form to change the account's password",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         if (this.newPassword !== this.confirmPassword) {
             this.errorMessage = "Passwords do not match.";
             return;
@@ -100,9 +116,9 @@ export class AccountComponent implements OnInit, OnDestroy {
         }
 
         this.authService
-            .changeUserPassword(this.currentPassword, this.newPassword)
+            .changeUserPassword(this.newPassword)
             .then(() => {
-                this.errorMessage = "Password updated successfully.";
+                this.errorMessage = "Password updated successfully!";
                 this.resetForm();
                 //if (!this.passwordReset) {
                 //    this.setPasswordResetFlagInFirestore();
