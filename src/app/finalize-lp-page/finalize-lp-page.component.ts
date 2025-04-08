@@ -1,12 +1,19 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { Router } from "@angular/router";
+import { AuthService } from "../auth-service/auth.service";
 
-import { Document, Packer, Paragraph, HeadingLevel } from "docx";
-import { saveAs } from "file-saver";
+//import { Document, Packer, Paragraph, HeadingLevel } from "docx";
+//import { saveAs } from "file-saver";
 
 import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
+import {
+    ref,
+    uploadBytesResumable,
+    Storage,
+    getDownloadURL,
+} from "@angular/fire/storage";
+//import pdfFonts from "pdfmake/build/vfs_fonts";
 
 //pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -61,10 +68,20 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
         },
     ];
 
+    username: string = "";
+    currentUser$ = this.authService.currentUser.subscribe((user) => {
+        this.username = user?.email as string;
+    });
+
     timeStart!: Date;
     timeEnd!: Date;
 
-    constructor(private firestore: AngularFirestore, private router: Router) {}
+    constructor(
+        private firestore: AngularFirestore,
+        private storage: Storage,
+        public authService: AuthService,
+        private router: Router
+    ) {}
 
     ngOnInit(): void {
         this.timeStart = new Date();
@@ -743,6 +760,43 @@ export class FinalizeLpPageComponent implements OnInit, OnDestroy {
 
         const documentDefinition = this.getDocumentDefinition();
         pdfMake.createPdf(documentDefinition).download("Lesson_Plan.pdf");
+
+        const fileDownloadTime = new Date()
+            .toString()
+            .replace(/[\s:-]/g, "_") // Replace spaces, colons, and hyphens with underscores
+            .replace(/[()]/g, ""); // Remove parentheses
+        const fileName =
+            this.username + "_Lesson _Plan_" + fileDownloadTime + ".pdf";
+        const filePath = `${this.username}/${fileName}`;
+        const storageRef = ref(
+            this.storage,
+            `contextualized_lesson_plans/${filePath}`
+        );
+
+        // Generate the PDF as a Blob
+        pdfMake.createPdf(documentDefinition).getBlob((blob: any) => {
+            // Upload the Blob to Firebase Storage
+            const uploadTask = uploadBytesResumable(storageRef, blob);
+
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log("Upload is " + progress + "% done");
+                },
+                (error) => {
+                    console.log(error.message);
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then(
+                        (downloadURL) => {
+                            console.log("File available at", downloadURL);
+                        }
+                    );
+                }
+            );
+        });
     }
 
     /*onBackClick() {

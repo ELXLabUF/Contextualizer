@@ -11,9 +11,9 @@ import {
     providedIn: "root",
 })
 export class UserInteractionCsvService {
-    userEmail: string = "";
+    username: string = "";
     currentUser$ = this.authService.currentUser.subscribe((user) => {
-        this.userEmail = user?.email as string;
+        this.username = user?.email as string;
     });
 
     constructor(private storage: Storage, public authService: AuthService) {}
@@ -49,9 +49,12 @@ export class UserInteractionCsvService {
                 .join("\n");
 
         const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
-        const time = new Date().toString();
-        const fileName = this.userEmail + "_" + time + ".csv";
-        const filePath = `${this.userEmail}/${fileName}`;
+        const time = new Date()
+            .toString()
+            .replace(/[\s:-]/g, "_") // Replace spaces, colons, and hyphens with underscores
+            .replace(/[()]/g, ""); // Remove parentheses
+        const fileName = this.username + "_" + time + ".csv";
+        const filePath = `${this.username}/${fileName}`;
         const storageRef = ref(
             this.storage,
             `user_interaction_data_files/${filePath}`
