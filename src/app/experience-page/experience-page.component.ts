@@ -98,6 +98,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     selectedFemale: boolean = false;
     selectedMale: boolean = false;
+    selectedGrade4: boolean = false;
+    selectedGrade5: boolean = false;
     selectedGrade6: boolean = false;
     selectedGrade7: boolean = false;
     selectedGrade8: boolean = false;
@@ -2119,6 +2121,50 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
     }
 
+    filterByGrade4(event: any) {
+        this.selectedGrade4 = event.target.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for grade 4",
+            Result: event.target.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    filterByGrade5(event: any) {
+        this.selectedGrade5 = event.target.checked;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "Checkbox for grade 5",
+            Result: event.target.checked
+                ? "Select the filter"
+                : "De-select the filter",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
     filterByGrade6(event: any) {
         this.selectedGrade6 = event.target.checked;
 
@@ -2971,9 +3017,17 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
         this.filteredExp = [...this.experiences];
 
-        if (this.selectedGrade6 || this.selectedGrade7 || this.selectedGrade8) {
+        if (
+            this.selectedGrade4 ||
+            this.selectedGrade5 ||
+            this.selectedGrade6 ||
+            this.selectedGrade7 ||
+            this.selectedGrade8
+        ) {
             this.experiences = this.filteredExp.filter(
                 (exp: any) =>
+                    exp.grade === (this.selectedGrade4 ? 4 : null) ||
+                    exp.grade === (this.selectedGrade5 ? 5 : null) ||
                     exp.grade === (this.selectedGrade6 ? 6 : null) ||
                     exp.grade === (this.selectedGrade7 ? 7 : null) ||
                     exp.grade === (this.selectedGrade8 ? 8 : null)

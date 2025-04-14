@@ -243,8 +243,8 @@ body {
     background-color: #ff8800;
     color: #ffffff;
     border: none;
-    border-radius: 30px;
-    padding: 10px;
+    border-radius: 40px;
+    padding: 10px 18px;
     font-size: 15px;
     cursor: pointer;
 }
@@ -448,7 +448,7 @@ option {
 .search-student-gender {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
     padding-left: 20px;
 }
 
@@ -472,19 +472,7 @@ option {
     font-size: 25px;
     line-height: 30px;
     font-weight: 400;
-    margin: 10px 25px 0px 0px;
-}
-
-.gender-checkbox input {
-    font-family: "Barlow", sans-serif;
-    font-size: 25px;
-    line-height: 30px;
-    box-sizing: border-box;
-    background-color: #e2dedc;
-    border: 2px solid #3f3734;
-    border-radius: 20px;
-    width: 100%;
-    height: fit-content;
+    margin: 15px 25px 0px 0px;
 }
 
 .gender-checkbox input[type="checkbox"] {
@@ -497,13 +485,13 @@ option {
     flex-direction: row;
     margin: 5px;
     padding: 10px;
-    gap: 125px;
+    gap: 5px;
 }
 
 .search-student-grade {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
 
 .search-student-grade label {
@@ -525,19 +513,7 @@ option {
     font-size: 25px;
     line-height: 30px;
     font-weight: 400;
-    margin: 10px 25px 0px 0px;
-}
-
-.grade-checkbox input {
-    font-family: "Barlow", sans-serif;
-    font-size: 25px;
-    line-height: 30px;
-    box-sizing: border-box;
-    background-color: #e2dedc;
-    border: 2px solid #3f3734;
-    border-radius: 20px;
-    width: 100%;
-    height: fit-content;
+    margin: 15px 25px 0px 0px;
 }
 
 .grade-checkbox input[type="checkbox"] {
@@ -549,7 +525,7 @@ option {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    padding-left: 20px;
+    /*padding-left: 20px;*/
 }
 
 .sort-experiences label {
@@ -563,7 +539,7 @@ option {
 .sort-radio {
     display: flex;
     flex-direction: row;
-    padding-left: 5px;
+    padding-left: 10px;
 }
 
 .sort-radio label {
