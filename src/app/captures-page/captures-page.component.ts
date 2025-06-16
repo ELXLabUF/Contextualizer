@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
 import {
     Firestore,
     collection,
@@ -10,8 +9,11 @@ import {
     setDoc,
     where,
 } from "@angular/fire/firestore";
-import { AlertDialogComponent } from "../alert-dialog/alert-dialog.component";
+
 import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
+import { AlertDialogComponent } from "../alert-dialog/alert-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+
 import { Observable } from "rxjs";
 
 @Component({
@@ -26,7 +28,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
     currCaptureEndDate: Date = new Date();
 
     experiences: any = [];
-    experiencesLength: Number = 0;
+    experiencesLength: number = 0;
     students: any = {};
 
     noActiveCapture: boolean = false;
@@ -45,6 +47,57 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
     capturePrompt!: string;
     dateRangeStartDate!: string;
     dateRangeEndDate!: string;
+
+    allCaptures: any = [];
+    selectedCapture: string = "";
+    selectedCaptureLessonPlans: any = {};
+    activeSortColumnLessonPlans: number = 0;
+    displayedColumnsLessonPlans: string[] = [
+        "No.",
+        "Science Topic",
+        "Creation Date",
+    ];
+    columnSortStateLessonPlans: string[] = ["asc", "asc", "asc"];
+
+    lessonPlanData: any = null;
+    fields = [
+        {
+            name: "Grade",
+            key: "Grade",
+        },
+        {
+            name: "Subject",
+            key: "Subject",
+        },
+        {
+            name: "Duration",
+            key: "Duration",
+        },
+        {
+            name: "Lesson Standards & Objectives",
+            key: "Lesson Standards & Objectives",
+        },
+        {
+            name: "Materials",
+            key: "Materials",
+        },
+        {
+            name: "Warm-Up",
+            key: "Warm-Up",
+        },
+        {
+            name: "Teacher-Led Instruction",
+            key: "Teacher-Led Instruction",
+        },
+        {
+            name: "Student-Led Learning",
+            key: "Student-Led Learning",
+        },
+        {
+            name: "Wrap-Up Closure",
+            key: "Wrap-Up Closure",
+        },
+    ];
 
     previousCaptures: any[] = [];
     activeSortColumnPastCaptures: number = 0;
@@ -335,16 +388,18 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         const classroom = sessionStorage.getItem("classroom") || "";
         const classroomDocRef = doc(this.angularFireStore, classroom);
         const classroomDocSnap = await getDoc(classroomDocRef);
+        let captureID: string = "";
         let future_captures: any = {};
         let previous_captures: any = {};
         let students: any = {};
         let teacher: any = {};
 
         if (classroomDocSnap.exists()) {
+            captureID = classroomDocSnap.data()["capture"] || "";
             future_captures = classroomDocSnap.data()["future_captures"] || {};
             previous_captures =
                 classroomDocSnap.data()["previous_captures"] || {};
-            const length = Object.keys(previous_captures).length || 0;
+            //const length = Object.keys(previous_captures).length || 0;
 
             if (
                 this.currCapturePrompt === undefined ||
@@ -353,7 +408,8 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                 this.currCapturePrompt = "";
             }
 
-            previous_captures[classroom.slice(10) + length.toString()] = {
+            //previous_captures[classroom.slice(10) + length.toString()] = {
+            previous_captures[captureID] = {
                 name: this.currCaptureName,
                 prompt: this.currCapturePrompt,
                 start_date: this.currCaptureStartDate,
@@ -416,7 +472,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'End Capture' button",
-            Result: "Open a dialog box to the current active capture",
+            Result: "Open a dialog box to end the current active capture",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -478,7 +534,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         let endDate: Date = new Date();
         let future_captures: any = {};
         let previous_captures: any = {};
-        let length: Number = 0;
+        let length: number = 0;
         let students: any = {};
         let teacher: any = {};
         const classroomApp = classroom + "App";
@@ -505,7 +561,8 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                 );
                 if (date.getTime() <= new Date().getTime()) {
                     //Set captureID only if some future capture's start date has elapsed
-                    captureID = classroom.slice(10) + length.toString();
+                    //captureID = classroom.slice(10) + length.toString();
+                    captureID = future_captures[key]["capture"];
                     selectedTopic = future_captures[key]["name"];
                     capturePrompt = future_captures[key]["prompt"];
                     startDate = new Date(
@@ -638,7 +695,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         const classroomDocSnap = await getDoc(currClassroomDocRef);
         this.students = {};
         let previous_captures: any = {};
-        let length: Number = 0;
+        let length: number = 0;
 
         if (classroomDocSnap.exists()) {
             this.students = classroomDocSnap.data()["students"] || {};
@@ -710,8 +767,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         let currCaptureEndDate: Date = new Date();
         let isSubmissionOpen: boolean = false;
         let future_captures: any = {};
+        let futureCapLength: number = 0;
         let previous_captures: any = {};
-        let length: Number = 0;
+        let prevCapLength: number = 0;
         let teacher: any = {};
         let students: any = {};
 
@@ -724,9 +782,10 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         if (classroomDocSnap.exists()) {
             future_captures =
                 classroomDocSnap.data()["future_captures"] || null;
+            futureCapLength = Object.keys(future_captures).length || 0;
             previous_captures =
                 classroomDocSnap.data()["previous_captures"] || null;
-            length = Object.keys(previous_captures).length || 0;
+            prevCapLength = Object.keys(previous_captures).length || 0;
             teacher = classroomDocSnap.data()["teacher"] || {};
             students = classroomDocSnap.data()["students"] || {};
             if (activeCapture) {
@@ -749,11 +808,18 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             capturePrompt = "";
         }
 
+        if (captureID === "") {
+            captureID =
+                classroom.slice(10) +
+                (prevCapLength + futureCapLength).toString();
+        }
+
         if (!activeCapture) {
             //Rewrite classroom data to reflect start of new capture
             await setDoc(doc(this.angularFireStore, classroom), {
                 id: classroom.slice(10),
-                capture: classroom.slice(10) + length.toString(),
+                //capture: classroom.slice(10) + length.toString(),
+                capture: captureID,
                 selected_topic: captureName,
                 capture_prompt: capturePrompt,
                 start_date: startDate,
@@ -769,7 +835,8 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
 
             //Rewrite classroom data in ClassroomApp document
             await setDoc(doc(this.angularFireStore, classroomApp), {
-                capture: classroom.slice(10) + length.toString(),
+                //capture: classroom.slice(10) + length.toString(),
+                capture: captureID,
                 selected_topic: captureName,
                 capture_prompt: capturePrompt,
                 start_date: startDate,
@@ -780,11 +847,15 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
 
             this.noActiveCapture = false;
         } else {
+            const futureCaptureID =
+                classroom.slice(10) +
+                (prevCapLength + futureCapLength + 1).toString();
             const futureCapture: any = {
                 name: captureName,
                 prompt: capturePrompt,
                 start_date: startDate,
                 due_date: endDate,
+                capture: futureCaptureID,
             };
 
             let captureOverlap: boolean = false;
@@ -832,10 +903,16 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                 );
                 return;
             } else {
-                const futureCapturesLength =
-                    Object.keys(future_captures).length || 0;
-                futureCapture["key"] = futureCapturesLength.toString();
-                future_captures[futureCapturesLength] = futureCapture;
+                //const futureCapturesLength =
+                //    Object.keys(future_captures).length || 0;
+                //future_captures[futureCapturesLength] = futureCapture;
+                let maxKey: number = 0;
+
+                for (const key in future_captures) {
+                    maxKey = maxKey < Number(key) ? Number(key) : maxKey;
+                }
+
+                future_captures[maxKey + 1] = futureCapture;
 
                 await setDoc(doc(this.angularFireStore, classroom), {
                     id: classroom.slice(10),
@@ -1221,6 +1298,423 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         this.showRecentCapture = false;
     }
 
+    async getAllCaptures() {
+        this.allCaptures = [];
+        const classroom = sessionStorage.getItem("classroom") || "";
+        const currClassroomDocRef = doc(this.angularFireStore, classroom);
+        const classroomDocSnap = await getDoc(currClassroomDocRef);
+        let capture_id: any = "";
+        let selected_topic: any = "";
+        let start_date: any = {};
+        let due_date: any = {};
+        let previous_captures: any = {};
+        let future_captures: any = {};
+
+        //Get previous captures
+        if (classroomDocSnap.exists()) {
+            capture_id = classroomDocSnap.data()["capture"] || "";
+            selected_topic = classroomDocSnap.data()["selected_topic"] || "";
+            start_date = classroomDocSnap.data()["start_date"] || {};
+            due_date = classroomDocSnap.data()["due_date"] || {};
+            previous_captures =
+                classroomDocSnap.data()["previous_captures"] || {};
+            future_captures = classroomDocSnap.data()["future_captures"] || {};
+        } else {
+            console.log("No such document!");
+        }
+
+        //Get all previous captures and store them
+        for (const key of Object.keys(previous_captures)) {
+            //const numbersOnly = key.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+            //const trailingNumbersMatch = key.match(/(\d+)$/); // Match digits at the end of the string
+            //let num = trailingNumbersMatch ? trailingNumbersMatch[0] : "1"; // Return the matched digits or an empty string if no match
+            //const idx = Number(num);
+
+            const startDate = new Date(
+                previous_captures[key]["start_date"].seconds * 1000 +
+                    previous_captures[key]["start_date"].nanoseconds / 1000000
+            ).toLocaleDateString();
+            const endDate = new Date(
+                previous_captures[key]["due_date"].seconds * 1000 +
+                    previous_captures[key]["due_date"].nanoseconds / 1000000
+            ).toLocaleDateString();
+
+            const captureObject = {
+                //capture: classroom + idx.toString(),
+                capture: key,
+                name: previous_captures[key]["name"],
+                start_date: startDate,
+                due_date: endDate,
+            };
+
+            this.allCaptures.push(captureObject);
+        }
+
+        //Check if a current capture is active and store it
+        if (capture_id !== "") {
+            let startDate = new Date(
+                start_date.seconds * 1000 + start_date.nanoseconds / 1000000
+            ).toLocaleDateString();
+            let endDate = new Date(
+                due_date.seconds * 1000 + due_date.nanoseconds / 1000000
+            ).toLocaleDateString();
+
+            const currCapture = {
+                capture: capture_id,
+                name: selected_topic,
+                start_date: startDate,
+                due_date: endDate,
+            };
+            this.allCaptures.push(currCapture);
+        }
+
+        //Get all the future captures and store them
+        for (const key of Object.keys(future_captures)) {
+            const idx = this.allCaptures.length;
+            const startDate = new Date(
+                future_captures[key]["start_date"].seconds * 1000 +
+                    future_captures[key]["start_date"].nanoseconds / 1000000
+            ).toLocaleDateString();
+            const endDate = new Date(
+                future_captures[key]["due_date"].seconds * 1000 +
+                    future_captures[key]["due_date"].nanoseconds / 1000000
+            ).toLocaleDateString();
+
+            const captureObject = {
+                //capture: classroom + idx.toString(),
+                capture: future_captures[key]["capture"],
+                name: future_captures[key]["name"],
+                start_date: startDate,
+                due_date: endDate,
+            };
+
+            this.allCaptures.push(captureObject);
+        }
+    }
+
+    onSelectCaptureDropdownClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Select A Capture' dropdown",
+            Result: "Open a dropdown with all the captures for the current selected classroom",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    async selectCapture() {
+        let selectedCaptureName: string = "";
+        let captureStartDate: string = "";
+        let captureDueDate: string = "";
+
+        for (const capture of this.allCaptures) {
+            if (capture["capture"] === this.selectedCapture) {
+                selectedCaptureName = capture["name"];
+                captureStartDate = capture["start_date"];
+                captureDueDate = capture["due_date"];
+                break;
+            }
+        }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Selected",
+            Target:
+                "'" +
+                selectedCaptureName +
+                "(" +
+                captureStartDate +
+                " to " +
+                captureDueDate +
+                ")" +
+                "' option",
+            Result: "Set the capture for which to view the lesson plans",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        await this.getLessonPlans();
+    }
+
+    async getLessonPlans() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Lesson Plans Library' button",
+            Result: "View the list of all the lesson plans associated with the current capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.selectedCaptureLessonPlans = await getDocs(
+            query(
+                collection(this.angularFireStore, "Documents"),
+                where("capture", "==", this.selectedCapture)
+            )
+        ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
+
+        let index: number = 0;
+
+        this.selectedCaptureLessonPlans.forEach((lessonPlan: any) => {
+            let date = lessonPlan["createdAt"];
+            lessonPlan["createdAt"] = new Date(
+                date.seconds * 1000 + date.nanoseconds / 1000000
+            ).toLocaleDateString();
+            lessonPlan["index"] = index++;
+        });
+
+        this.activeSortColumnLessonPlans = 0;
+        this.columnSortStateLessonPlans[0] =
+            this.columnSortStateLessonPlans[0] === "desc" ? "asc" : "desc";
+        this.sortLessonPlansTable("No.");
+    }
+
+    sortLessonPlansTable(column: string) {
+        if (column === "No.") {
+            this.columnSortStateLessonPlans[0] =
+                this.columnSortStateLessonPlans[0] === "desc" ? "asc" : "desc";
+            this.activeSortColumnLessonPlans = 0;
+        } else if (column === "Science Topic") {
+            this.columnSortStateLessonPlans[1] =
+                this.columnSortStateLessonPlans[1] === "desc" ? "asc" : "desc";
+            this.activeSortColumnLessonPlans = 1;
+        } else if (column === "Creation Date") {
+            this.columnSortStateLessonPlans[2] =
+                this.columnSortStateLessonPlans[2] === "desc" ? "asc" : "desc";
+            this.activeSortColumnLessonPlans = 2;
+        }
+
+        if (column === "No.") {
+            if (this.columnSortStateLessonPlans[0] === "asc") {
+                this.selectedCaptureLessonPlans.sort(
+                    (a: any, b: any) => a.index - b.index
+                );
+            } else if (this.columnSortStateLessonPlans[0] === "desc") {
+                this.selectedCaptureLessonPlans.sort(
+                    (a: any, b: any) => b.index - a.index
+                );
+            }
+        } else if (column === "Science Topic") {
+            if (this.columnSortStateLessonPlans[1] === "asc") {
+                this.selectedCaptureLessonPlans.sort((a: any, b: any) =>
+                    a.mainTopic > b.mainTopic ? 1 : -1
+                );
+            } else if (this.columnSortStateLessonPlans[1] === "desc") {
+                this.selectedCaptureLessonPlans.sort((a: any, b: any) =>
+                    b.mainTopic > a.mainTopic ? 1 : -1
+                );
+            }
+        } else if (column === "Creation Date") {
+            if (this.columnSortStateLessonPlans[2] === "asc") {
+                this.selectedCaptureLessonPlans.sort(
+                    (a: any, b: any) =>
+                        new Date(a.createdAt).getTime() -
+                        new Date(b.createdAt).getTime()
+                );
+            } else if (this.columnSortStateLessonPlans[2] === "desc") {
+                this.selectedCaptureLessonPlans.sort(
+                    (a: any, b: any) =>
+                        new Date(b.createdAt).getTime() -
+                        new Date(a.createdAt).getTime()
+                );
+            }
+        }
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'" + column + "'column in the 'Lesson Plans' table",
+            Result:
+                "Sort the lesson plans by '" +
+                column +
+                "' in " +
+                this.columnSortStateLessonPlans[
+                    this.activeSortColumnLessonPlans
+                ] +
+                "ending order",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onLessonPlansXClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'X' button on the 'Lesson Plans' dialog box",
+            Result: "Close the 'Lesson Plans' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onLessonPlansCloseClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Close' button on the 'Lesson Plans' dialog box",
+            Result: "Close the 'Lesson Plans' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    viewLessonPlan(lessonPlan: any) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "File icon button for the lesson plan with topic name '" +
+                lessonPlan["mainTopic"] +
+                "'",
+            Result: "Open a dialog box to view the lesson plan",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.lessonPlanData = lessonPlan;
+        const fieldOrder = (this.lessonPlanData.fieldOrder as string[]) || [];
+        this.updateFieldOrder(fieldOrder);
+    }
+
+    private updateFieldOrder(fieldOrder: string[]) {
+        if (fieldOrder.length > 0) {
+            // Map the order to existing fields
+            this.fields = fieldOrder.map((key) => ({
+                name: this.getFieldName(key),
+                key: key,
+            }));
+        }
+    }
+
+    private getFieldName(fieldKey: string): string {
+        switch (fieldKey) {
+            case "Grade":
+                return "Grade";
+            case "Subject":
+                return "Subject";
+            case "Duration":
+                return "Duration";
+            case "Lesson Standards & Objectives":
+                return "Lesson Standards & Objectives";
+            case "Materials":
+                return "Materials";
+            case "Warm-Up":
+                return "Warm-Up";
+            case "Teacher-Led Instruction":
+                return "Teacher-Led Instruction";
+            case "Student-Led Learning":
+                return "Student-Led Learning";
+            case "Wrap-Up Closure":
+                return "Wrap-Up Closure";
+            default:
+                return "Unknown";
+        }
+    }
+
+    // Function to get additional container keys
+    getAdditionalContainerKeysForField(field: any): string[] {
+        const defaultKeys = ["content", "integrated_experiences", "title"];
+        const fieldData = this.lessonPlanData[field.key] || {};
+
+        return Object.keys(fieldData)
+            .filter((key) => !defaultKeys.includes(key))
+            .sort((a, b) => {
+                // Fetch the createdAt timestamps for each container
+                const dateA = fieldData[a]?.createdAt || 0;
+                const dateB = fieldData[b]?.createdAt || 0;
+
+                // Sort in ascending order based on the timestamps
+                return dateA - dateB;
+            });
+    }
+
+    onViewLessonPlanXClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'X' button on the 'View Lesson Plan' dialog box",
+            Result: "Close the 'View Lesson Plan' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    onViewLessonPlanCloseClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Close' button on the 'View Lesson Plan' dialog box",
+            Result: "Close the 'View Lesson Plan' dialog box",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
     async getPastCaptures() {
         let userIntData: any = [];
         let time = new Date();
@@ -1251,12 +1745,14 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         }
 
         this.previousCaptures = [];
+        let index: number = 0;
 
         for (const key in previous_captures) {
-            const numbersOnly = key.replace(/[^0-9]/g, ""); // Remove non-numeric characters
-            const trailingNumbersMatch = key.match(/(\d+)$/); // Match digits at the end of the string
-            let num = trailingNumbersMatch ? trailingNumbersMatch[0] : "1"; // Return the matched digits or an empty string if no match
-            const idx = Number(num);
+            //const numbersOnly = key.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+            //const trailingNumbersMatch = key.match(/(\d+)$/); // Match digits at the end of the string
+            //let num = trailingNumbersMatch ? trailingNumbersMatch[0] : "1"; // Return the matched digits or an empty string if no match
+            //const idx = Number(num);
+
             const startDate = new Date(
                 previous_captures[key]["start_date"].seconds * 1000 +
                     previous_captures[key]["start_date"].nanoseconds / 1000000
@@ -1274,10 +1770,10 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                 )
             ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
 
-            const expLength: Number = captureExperiences.length || 0;
+            const expLength: number = captureExperiences.length || 0;
 
-            this.previousCaptures[idx] = {
-                id: idx,
+            this.previousCaptures[index] = {
+                id: index++,
                 capture_name: previous_captures[key]["name"],
                 prompt: previous_captures[key]["prompt"],
                 start_date: startDate,
@@ -1392,7 +1888,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Clicked",
-            Target: "'" + column + "'column in the Past Captures table",
+            Target: "'" + column + "'column in the 'Past Captures' table",
             Result:
                 "Sort the past captures by '" +
                 column +
@@ -1474,12 +1970,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         }
 
         this.futureCaptures = [];
+        let index: number = 0;
 
         for (const key in future_captures) {
-            const numbersOnly = key.replace(/[^0-9]/g, ""); // Remove non-numeric characters
-            const trailingNumbersMatch = key.match(/(\d+)$/); // Match digits at the end of the string
-            let num = trailingNumbersMatch ? trailingNumbersMatch[0] : "1"; // Return the matched digits or an empty string if no match
-            const idx = Number(num);
             const startDate = new Date(
                 future_captures[key]["start_date"].seconds * 1000 +
                     future_captures[key]["start_date"].nanoseconds / 1000000
@@ -1489,9 +1982,8 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                     future_captures[key]["due_date"].nanoseconds / 1000000
             );
 
-            this.futureCaptures[idx] = {
-                id: idx,
-                key: key.toString(),
+            this.futureCaptures[index] = {
+                id: index++,
                 capture_name: future_captures[key]["name"],
                 prompt: future_captures[key]["prompt"],
                 start_date: startDate,
@@ -1601,7 +2093,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Clicked",
-            Target: "'" + column + "'column in the Upcoming Captures table",
+            Target: "'" + column + "'column in the 'Upcoming Captures' table",
             Result:
                 "Sort the upcoming captures by '" +
                 column +

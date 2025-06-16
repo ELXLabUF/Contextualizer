@@ -102,13 +102,59 @@
                             </div>
                             <div class="card-text-body">
                                 <div class="experience-data">
-                                    <h3>
-                                        <!--{{ experience.experience_title }}-->
-                                        {{ experience.title }}
-                                    </h3>
+                                    <div class="experience-title">
+                                        <h3>
+                                            <!--{{ experience.experience_title }}-->
+                                            {{ experience.title }}
+                                        </h3>
+                                        <div class="translation-toggle">
+                                            <input
+                                                type="checkbox"
+                                                class="translation-toggle-checkbox"
+                                                [id]="
+                                                    'checkbox-' + experience.id
+                                                "
+                                                [checked]="
+                                                    experience.show_translation
+                                                "
+                                                (change)="
+                                                    experience.show_translation =
+                                                        !experience.show_translation
+                                                "
+                                                (click)="
+                                                    onToggleTranslationClick(
+                                                        experience
+                                                    )
+                                                "
+                                            />
+                                            <label
+                                                [for]="
+                                                    'checkbox-' + experience.id
+                                                "
+                                                class="translation-toggle-checkbox-label"
+                                            >
+                                                <span
+                                                    style="
+                                                        font-family: 'Barlow',
+                                                            sans-serif;
+                                                        font-size: 14px;
+                                                        font-weight: 600;
+                                                    "
+                                                >
+                                                    EN
+                                                </span>
+                                                <i class="fas fa-globe"></i>
+                                                <span class="ball"></span>
+                                            </label>
+                                        </div>
+                                    </div>
                                     <p>
                                         <!--{{ experience.experience_description }}-->
-                                        {{ experience.transcript }}
+                                        {{
+                                            experience.show_translation
+                                                ? experience.translation
+                                                : experience.transcript
+                                        }}
                                     </p>
                                 </div>
                                 <div class="experience-details">
@@ -129,6 +175,20 @@
                                                 {{ experience.name }}
                                             </a>
                                         </p>
+                                    </div>
+                                    <div class="audio-player">
+                                        <button
+                                            (click)="playPauseAudio(experience)"
+                                        >
+                                            {{
+                                                experience.is_playing
+                                                    ? "Pause"
+                                                    : "Play"
+                                            }}
+                                        </button>
+                                        <button (click)="stopAudio()">
+                                            Stop
+                                        </button>
                                     </div>
                                     <div class="date-uploaded">
                                         <p style="font-weight: 600">
@@ -157,6 +217,18 @@
                     Showing {{ selectedExperiences }} of
                     {{ totalExperiencesLength }} entries
                 </p>
+
+                <button
+                    class="view-all-translations-button"
+                    (click)="toggleAllTranslations()"
+                >
+                    <span *ngIf="!toggleTranslations; else viewTranslations">
+                        View Translated Experiences
+                    </span>
+                    <ng-template #viewTranslations>
+                        View Original Experiences
+                    </ng-template>
+                </button>
 
                 <button
                     class="view-all-exp-button"

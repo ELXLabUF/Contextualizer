@@ -50,6 +50,25 @@ body {
     border-top-width: 6px;
 }
 
+.dropdown-select {
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    width: 600px;
+    height: 50px;
+    margin-top: 25px;
+    padding-left: 15px;
+}
+
+option {
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+}
+
 .topic-input {
     background-color: #d9d9d9;
     border: 2px solid #787878;

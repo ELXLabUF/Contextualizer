@@ -454,6 +454,132 @@ body {
     margin-left: 5px;
 }
 
+.select-capture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dropdown-select {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    background-color: #e2dedc;
+    border: 2px solid #3f3734;
+    border-radius: 20px;
+    width: 500px;
+    height: 50px;
+    padding-left: 15px;
+}
+
+option {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+}
+
+.lesson-plans-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.lesson-plans-table thead {
+    background-color: #ffaa00;
+}
+
+.lesson-plans-table th {
+    font-family: "Nova Square", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    border: 2px solid #3f3734;
+    border-top: none;
+    padding: 8px 10px;
+    cursor: pointer;
+}
+
+.lesson-plans-table td {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    border: 2px solid #3f3734;
+    padding: 8px 10px;
+    min-width: 15%;
+    max-width: 25%;
+}
+
+.lesson-plans-table tbody > tr:nth-of-type(even) {
+    background-color: #e2dedc;
+}
+
+.lesson-plans-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Add border around the first three columns */
+.lesson-plans-table tbody > tr > td:nth-child(-n + 3),
+.lesson-plans-table thead > tr > th:nth-child(-n + 3) {
+    border: 4px solid #ff8800; /* Apply the orange border */
+}
+
+/* Icon Styling */
+.bi.bi-file-text-fill {
+    width: auto; /* Reset width */
+    height: auto; /* Reset height */
+    font-size: 2rem; /* Scale icon to 2x size */
+    cursor: pointer;
+}
+
+.no-lesson-plans-text {
+    font-family: "Nova Square", sans-serif;
+    font-size: 35px;
+    line-height: 40px;
+    text-align: center;
+    margin: 100px 0px;
+}
+
+.no-capture-selected-text {
+    font-family: "Nova Square", sans-serif;
+    font-size: 35px;
+    line-height: 40px;
+    text-align: center;
+    margin: 100px 0px;
+}
+
+.no-capture-available-text {
+    font-family: "Nova Square", sans-serif;
+    font-size: 35px;
+    line-height: 40px;
+    text-align: center;
+    margin: 100px 0px;
+}
+
+.lesson-plan-data-container {
+    padding: 30px;
+    border: 6px solid #ff8800;
+    border-radius: 20px;
+}
+
+.info h3 {
+    font-family: "Barlow", sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 30px;
+}
+
+.info p {
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+}
+
+.int-exp li {
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+}
+
 .past-captures-table {
     border: 4px solid #ff8800;
     border-radius: 20px;

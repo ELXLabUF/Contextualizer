@@ -259,6 +259,8 @@
                             $event,
                             experience.title,
                             experience.transcript,
+                            experience.translation,
+                            experience.show_translation,
                             experience.creation_date,
                             experience.name
                         )
@@ -266,10 +268,44 @@
                 >
                     <mat-expansion-panel-header>
                         <mat-panel-title class="exp-title">
-                            {{ experience.title }}
+                            <h3>{{ experience.title }}</h3>
+                            <div class="translation-toggle">
+                                <input
+                                    type="checkbox"
+                                    class="translation-toggle-checkbox"
+                                    [id]="'checkbox-' + experience.id"
+                                    [checked]="experience.show_translation"
+                                    (change)="
+                                        experience.show_translation =
+                                            !experience.show_translation
+                                    "
+                                />
+                                <label
+                                    [for]="'checkbox-' + experience.id"
+                                    class="translation-toggle-checkbox-label"
+                                >
+                                    <span
+                                        style="
+                                            font-family: 'Barlow', sans-serif;
+                                            font-size: 14px;
+                                            font-weight: 600;
+                                        "
+                                    >
+                                        EN
+                                    </span>
+                                    <i class="fas fa-globe"></i>
+                                    <span class="ball"></span>
+                                </label>
+                            </div>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <p>{{ experience.transcript }}</p>
+                    <p>
+                        {{
+                            experience.show_translation
+                                ? experience.translation
+                                : experience.transcript
+                        }}
+                    </p>
                     <div class="meta-data d-flex align-items-center">
                         <div class="flex align-self-stretch">
                             <i class="bi bi-person"></i>

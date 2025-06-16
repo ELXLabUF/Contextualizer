@@ -192,6 +192,56 @@ body {
     padding: 20px 20px 0px 20px;
 }
 
+.experience-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.translation-toggle-checkbox {
+    opacity: 0;
+    position: absolute;
+    display: none !important;
+}
+
+.translation-toggle-checkbox-label {
+    background-color: #e2dedc;
+    width: 50px;
+    height: 26px;
+    border-radius: 50px;
+    position: relative;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fa-globe {
+    color: #19c5ff;
+}
+
+.translation-toggle-checkbox-label .ball {
+    background-color: #ff6666;
+    /*background-color: #ff8800;*/
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    transition: transform 0.2s linear;
+}
+
+.translation-toggle-checkbox:checked
+    + .translation-toggle-checkbox-label
+    .ball {
+    transform: translateX(24px);
+}
+
+#checkbox {
+    display: none;
+}
+
 .experience-details {
     display: flex;
     flex-direction: row;
@@ -202,7 +252,7 @@ body {
 }
 
 .student-name {
-    width: 66%;
+    width: 33%;
     text-align: left;
 }
 
@@ -210,12 +260,32 @@ body {
     color: #ffffff;
     font-size: 25px;
     line-height: 30px;
-    padding-top: 10px;
+    padding-top: 15px;
     padding-left: 20px;
 }
 
 .student-name p:hover {
     cursor: pointer;
+}
+
+.audio-player {
+    display: flex;
+    flex-direction: row;
+    width: 33%;
+    gap: 30px;
+}
+
+.audio-player button {
+    background-color: #ff8800;
+    color: #ffffff;
+    border: none;
+    border-radius: 40px;
+    padding: 10px 15px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: "Nova Square", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
 }
 
 .date-uploaded {
@@ -227,7 +297,7 @@ body {
     color: #ffffff;
     font-size: 25px;
     line-height: 30px;
-    padding-top: 10px;
+    padding-top: 15px;
     padding-right: 20px;
 }
 
@@ -324,6 +394,22 @@ option {
     font-family: "Barlow", sans-serif;
     font-size: 20px;
     line-height: 25px;
+}
+
+.view-all-translations-button {
+    height: max-content;
+    width: 100%;
+    background-color: #ff8800;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 15px;
+    font-family: "Nova Square", sans-serif;
+    font-size: 25px;
+    line-height: 30px;
+    cursor: pointer;
+    word-wrap: break-word;
+    margin: 0px auto 20px;
 }
 
 .search-keyword label {

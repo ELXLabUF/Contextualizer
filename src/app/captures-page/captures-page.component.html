@@ -11,6 +11,13 @@
             </button>
             <button
                 data-bs-toggle="modal"
+                data-bs-target="#lessonPlanModal"
+                (click)="getAllCaptures()"
+            >
+                Lesson Plans Library
+            </button>
+            <button
+                data-bs-toggle="modal"
                 data-bs-target="#pastCapturesModal"
                 (click)="getPastCaptures()"
             >
@@ -251,6 +258,326 @@
                         (click)="startNewCapture()"
                     >
                         Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="lessonPlanModal"
+        tabindex="-1"
+        aria-labelledby="viewLessonPlans"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1
+                        class="modal-title text-center flex-grow-1"
+                        id="viewLessonPlans"
+                    >
+                        Lesson Plans
+                    </h1>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        (click)="onLessonPlansXClick()"
+                    ></button>
+                </div>
+                <div class="modal-body" style="overflow-y: auto; height: 75%">
+                    <ng-container
+                        *ngIf="allCaptures.length > 0; else noCapturesAvailable"
+                    >
+                        <div class="select-capture">
+                            <select
+                                class="dropdown-select"
+                                (click)="onSelectCaptureDropdownClick()"
+                                (change)="selectCapture()"
+                                [(ngModel)]="selectedCapture"
+                                required
+                            >
+                                <option value="" disabled>
+                                    Select a capture
+                                </option>
+                                <option
+                                    *ngFor="let capture of allCaptures"
+                                    [value]="capture.capture"
+                                >
+                                    {{ capture.name }}
+                                    ({{
+                                        capture.start_date | date : "MMM dd, YY"
+                                    }}
+                                    to
+                                    {{
+                                        capture.due_date | date : "MMM dd, YY"
+                                    }})
+                                </option>
+                            </select>
+                        </div>
+                        <ng-container
+                            *ngIf="
+                                selectedCapture.length > 0;
+                                else noCapturesSelected
+                            "
+                        >
+                            <ng-container
+                                *ngIf="
+                                    selectedCaptureLessonPlans.length > 0;
+                                    else noLessonPlans
+                                "
+                            >
+                                <table class="lesson-plans-table">
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                *ngFor="
+                                                    let col of displayedColumnsLessonPlans;
+                                                    index as idx
+                                                "
+                                                (click)="
+                                                    sortLessonPlansTable(col)
+                                                "
+                                            >
+                                                <span
+                                                    style="
+                                                        display: flex;
+                                                        flex-direction: row;
+                                                    "
+                                                >
+                                                    {{ col }}
+                                                    <i
+                                                        class="bi bi-caret-down-fill"
+                                                        *ngIf="
+                                                            activeSortColumnLessonPlans ===
+                                                                idx &&
+                                                            columnSortStateLessonPlans[
+                                                                idx
+                                                            ] === 'desc'
+                                                        "
+                                                        style="
+                                                            transform: scale(
+                                                                0.5
+                                                            );
+                                                        "
+                                                    ></i>
+                                                    <i
+                                                        class="bi bi-caret-up-fill"
+                                                        *ngIf="
+                                                            activeSortColumnLessonPlans ===
+                                                                idx &&
+                                                            columnSortStateLessonPlans[
+                                                                idx
+                                                            ] === 'asc'
+                                                        "
+                                                        style="
+                                                            transform: scale(
+                                                                0.5
+                                                            );
+                                                        "
+                                                    ></i>
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="
+                                                let lessonPlan of selectedCaptureLessonPlans
+                                            "
+                                        >
+                                            <td
+                                                style="
+                                                    min-width: 5%;
+                                                    max-width: 10%;
+                                                "
+                                            >
+                                                {{ lessonPlan?.index + 1 }}
+                                            </td>
+                                            <td>{{ lessonPlan?.mainTopic }}</td>
+                                            <td>
+                                                {{
+                                                    lessonPlan?.createdAt
+                                                        | date : "MMM dd, yyyy"
+                                                }}
+                                            </td>
+                                            <td
+                                                style="
+                                                    border: none;
+                                                    text-align: center;
+                                                    background-color: #ffffff !important;
+                                                    min-width: 5%;
+                                                    max-width: 10%;
+                                                "
+                                            >
+                                                <i
+                                                    class="bi bi-file-text-fill"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#viewLessonPlanModal"
+                                                    (click)="
+                                                        viewLessonPlan(
+                                                            lessonPlan
+                                                        )
+                                                    "
+                                                ></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </ng-container>
+                            <ng-template #noLessonPlans>
+                                <p class="no-lesson-plans-text">
+                                    There are no lesson plans associated with
+                                    this capture.
+                                </p>
+                            </ng-template>
+                        </ng-container>
+                        <ng-template #noCapturesSelected>
+                            <p class="no-capture-selected-text">
+                                Select a capture to view all the lesson plans
+                                associated with it.
+                            </p>
+                        </ng-template>
+                    </ng-container>
+                    <ng-template #noCapturesAvailable>
+                        <p class="no-capture-available-text">
+                            There are no captures to show. Create a capture to
+                            populate the list.
+                        </p>
+                    </ng-template>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        data-bs-dismiss="modal"
+                        (click)="onLessonPlansCloseClick()"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="viewLessonPlanModal"
+        tabindex="-1"
+        aria-labelledby="viewLessonPlan"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1
+                        class="modal-title text-center flex-grow-1"
+                        id="viewLessonPlan"
+                    >
+                        View Lesson Plan
+                    </h1>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        (click)="onViewLessonPlanXClick()"
+                    ></button>
+                </div>
+                <div class="modal-body" style="margin: 10px 30px 20px 30px">
+                    <span *ngIf="lessonPlanData">
+                        <h1
+                            style="
+                                font-family: 'Nova Square', sans-serif;
+                                font-size: 30px;
+                                line-height: 35px;
+                                text-align: center;
+                                margin-bottom: 20px;
+                            "
+                        >
+                            Science Topic: {{ lessonPlanData["mainTopic"] }}
+                        </h1>
+                        <div class="lesson-plan-data-container" id="lessonPlan">
+                            <div *ngFor="let field of fields">
+                                <div class="info">
+                                    <h3
+                                        *ngIf="lessonPlanData[field.key]?.title"
+                                    >
+                                        {{ lessonPlanData[field.key]?.title }}:
+                                    </h3>
+                                    <span
+                                        *ngFor="
+                                            let contentData of lessonPlanData[
+                                                field.key
+                                            ]?.content.content
+                                        "
+                                    >
+                                        <p>
+                                            {{ contentData }}
+                                        </p>
+                                    </span>
+                                    <div
+                                        class="int-exp"
+                                        *ngIf="
+                                            lessonPlanData[field.key]
+                                                ?.integrated_experiences?.length
+                                        "
+                                    >
+                                        <ul>
+                                            <ng-container
+                                                *ngFor="
+                                                    let exp of lessonPlanData[
+                                                        field.key
+                                                    ]?.integrated_experiences
+                                                "
+                                            >
+                                                <li
+                                                    *ngIf="
+                                                        exp &&
+                                                        exp.trim().length > 0
+                                                    "
+                                                >
+                                                    {{ exp }}
+                                                </li>
+                                            </ng-container>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div
+                                    class="info"
+                                    *ngFor="
+                                        let key of getAdditionalContainerKeysForField(
+                                            field
+                                        )
+                                    "
+                                >
+                                    <h3>{{ key }}:</h3>
+                                    <ul>
+                                        <li
+                                            *ngFor="
+                                                let item of lessonPlanData[
+                                                    field.key
+                                                ][key]?.list
+                                            "
+                                            style="font-size: 20px"
+                                        >
+                                            {{ item }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        data-bs-dismiss="modal"
+                        (click)="onViewLessonPlanCloseClick()"
+                    >
+                        Close
                     </button>
                 </div>
             </div>

@@ -321,11 +321,59 @@ html {
 }
 
 .exp-title {
+    justify-content: space-between;
+}
+
+.exp-title h3 {
     font-family: "Barlow", sans-serif;
     font-size: 25px;
     font-weight: bold;
     line-height: 30px;
     padding: 20px auto;
+    margin-top: 15px;
+}
+
+.translation-toggle-checkbox {
+    opacity: 0;
+    position: absolute;
+    display: none !important;
+}
+
+.translation-toggle-checkbox-label {
+    background-color: #e2dedc;
+    width: 50px;
+    height: 26px;
+    border-radius: 50px;
+    position: relative;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fa-globe {
+    color: #19c5ff;
+}
+
+.translation-toggle-checkbox-label .ball {
+    background-color: #ff6666;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    transition: transform 0.2s linear;
+}
+
+.translation-toggle-checkbox:checked
+    + .translation-toggle-checkbox-label
+    .ball {
+    transform: translateX(24px);
+}
+
+#checkbox {
+    display: none;
 }
 
 .mat-accordion .mat-expansion-panel p {

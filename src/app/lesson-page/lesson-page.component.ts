@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
+import { doc, Firestore, getDoc } from "@angular/fire/firestore";
 import {
     Storage,
     ref,
@@ -21,6 +22,8 @@ import { MatDialog } from "@angular/material/dialog";
 })
 export class LessonPageComponent implements OnInit, OnDestroy {
     startNavigationFromExperiences: boolean = false;
+    selectedCapture: string = "";
+    captures: any = [];
     selectedFile: File | null = null;
     uploadStatus: string = "";
     uploadProgress: number = 0;
@@ -38,12 +41,13 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         private cdr: ChangeDetectorRef,
         private router: Router,
         private expLessonPlanService: ExperienceLessonPlanService,
-        private firestore: AngularFirestore, // inject Firestore
+        private firestore: Firestore,
+        private angularFirestore: AngularFirestore, // inject Firestore
         private pdfReaderService: PdfReaderService, // Inject your service to convert PDF to JSON
         public dialog: MatDialog
     ) {}
 
-    ngOnInit() {
+    async ngOnInit() {
         this.timeStart = new Date();
         let userIntData: any = [];
         userIntData = JSON.parse(
@@ -70,6 +74,8 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         } else if (sessionStorage.getItem("altNavigation") === "true") {
             this.startNavigationFromExperiences = true;
         }
+
+        await this.getCaptures();
     }
 
     ngOnDestroy() {
@@ -143,6 +149,158 @@ export class LessonPageComponent implements OnInit, OnDestroy {
         } else {
             this.router.navigate(["/display"]);
         }
+    }
+
+    async getCaptures() {
+        const classroom = sessionStorage.getItem("classroom") || "";
+        const currClassroomDocRef = doc(this.firestore, classroom);
+        const classroomDocSnap = await getDoc(currClassroomDocRef);
+        let capture_id: any = "";
+        let selected_topic: any = "";
+        let start_date: any = {};
+        let due_date: any = {};
+        let previous_captures: any = {};
+        let future_captures: any = {};
+
+        //Get previous captures
+        if (classroomDocSnap.exists()) {
+            capture_id = classroomDocSnap.data()["capture"] || "";
+            selected_topic = classroomDocSnap.data()["selected_topic"] || "";
+            start_date = classroomDocSnap.data()["start_date"] || {};
+            due_date = classroomDocSnap.data()["due_date"] || {};
+            previous_captures =
+                classroomDocSnap.data()["previous_captures"] || {};
+            future_captures = classroomDocSnap.data()["future_captures"] || {};
+        } else {
+            console.log("No such document!");
+        }
+
+        //Get all previous captures and store them
+        for (const key of Object.keys(previous_captures)) {
+            //const numbersOnly = key.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+            //const trailingNumbersMatch = key.match(/(\d+)$/); // Match digits at the end of the string
+            //let num = trailingNumbersMatch ? trailingNumbersMatch[0] : "1"; // Return the matched digits or an empty string if no match
+            //const idx = Number(num);
+
+            const startDate = new Date(
+                previous_captures[key]["start_date"].seconds * 1000 +
+                    previous_captures[key]["start_date"].nanoseconds / 1000000
+            ).toLocaleDateString();
+            const endDate = new Date(
+                previous_captures[key]["due_date"].seconds * 1000 +
+                    previous_captures[key]["due_date"].nanoseconds / 1000000
+            ).toLocaleDateString();
+
+            const captureObject = {
+                //capture: classroom + idx.toString(),
+                capture: key,
+                name: previous_captures[key]["name"],
+                start_date: startDate,
+                due_date: endDate,
+            };
+
+            this.captures.push(captureObject);
+        }
+
+        //Check if a current capture is active and store it
+        if (capture_id !== "") {
+            let startDate = new Date(
+                start_date.seconds * 1000 + start_date.nanoseconds / 1000000
+            ).toLocaleDateString();
+            let endDate = new Date(
+                due_date.seconds * 1000 + due_date.nanoseconds / 1000000
+            ).toLocaleDateString();
+
+            const currCapture = {
+                capture: capture_id,
+                name: selected_topic,
+                start_date: startDate,
+                due_date: endDate,
+            };
+            this.captures.push(currCapture);
+        }
+
+        //Get all the future captures and store them
+        for (const key of Object.keys(future_captures)) {
+            //const idx = this.captures.length;
+            const startDate = new Date(
+                future_captures[key]["start_date"].seconds * 1000 +
+                    future_captures[key]["start_date"].nanoseconds / 1000000
+            ).toLocaleDateString();
+            const endDate = new Date(
+                future_captures[key]["due_date"].seconds * 1000 +
+                    future_captures[key]["due_date"].nanoseconds / 1000000
+            ).toLocaleDateString();
+
+            const captureObject = {
+                //capture: classroom + idx.toString(),
+                capture: future_captures[key]["capture"],
+                name: future_captures[key]["name"],
+                start_date: startDate,
+                due_date: endDate,
+            };
+
+            this.captures.push(captureObject);
+        }
+    }
+
+    onSelectCaptureDropdownClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Select A Capture' dropdown",
+            Result: "Open a dropdown with all the captures for the current selected classroom",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
+    selectCapture() {
+        let selectedCaptureName: string = "";
+        let captureStartDate: string = "";
+        let captureDueDate: string = "";
+
+        for (const capture of this.captures) {
+            if (capture["capture"] === this.selectedCapture) {
+                selectedCaptureName = capture["name"];
+                captureStartDate = capture["start_date"];
+                captureDueDate = capture["due_date"];
+                break;
+            }
+        }
+
+        sessionStorage.setItem("selectedCapture", this.selectedCapture);
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Selected",
+            Target:
+                "'" +
+                selectedCaptureName +
+                "(" +
+                captureStartDate +
+                " to " +
+                captureDueDate +
+                ")" +
+                "' option",
+            Result: "Set the capture for the lesson plan to be uploaded",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
     }
 
     onTopicInputClick() {
@@ -265,11 +423,17 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             }
         }*/
 
-        if (!this.topicName && !this.selectedFile) {
-            this.openAlertDialog(
-                "Incomplete Data",
-                "Please enter a science topic and select the PDF of your lesson plan to upload."
-            );
+        //if (!this.topicName && !this.selectedFile) {
+        //    this.openAlertDialog(
+        //        "Incomplete Data",
+        //        "Please enter a science topic and select the PDF of your lesson plan to upload."
+        //    );
+        //    this.resetUploadState();
+        //    return;
+        //}
+
+        if (!this.selectedCapture) {
+            this.openAlertDialog("Incomplete Data", "Please select a capture.");
             this.resetUploadState();
             return;
         }
@@ -290,7 +454,7 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             //return;
             this.openAlertDialog(
                 "Incomplete Data",
-                "Please select the PDF of your lesson plan to upload."
+                "Please select a lesson plan PDF to upload."
             );
             this.resetUploadState();
             return;
@@ -440,6 +604,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                                 jsonData["Wrap-Up Closure"],
                                             integrated_experiences: [],
                                         },
+                                        capture:
+                                            sessionStorage.getItem(
+                                                "selectedCapture"
+                                            ),
                                         mainTopic: mainTopic,
                                         createdAt: new Date(),
                                         integrated_experiences: [
@@ -516,6 +684,10 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                                 jsonData["Wrap-Up Closure"],
                                             integrated_experiences: [],
                                         },
+                                        capture:
+                                            sessionStorage.getItem(
+                                                "selectedCapture"
+                                            ),
                                         mainTopic: mainTopic,
                                         createdAt: new Date(),
                                         integrated_experiences: [],
@@ -535,7 +707,7 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                     //);
                                 }
 
-                                this.firestore
+                                this.angularFirestore
                                     .collection("Documents")
                                     .add(jsonData)
                                     .then((documentRef) => {
@@ -547,12 +719,15 @@ export class LessonPageComponent implements OnInit, OnDestroy {
                                             "documentId",
                                             documentRef.id
                                         );
-                                        this.loading = false;
-                                        this.router.navigate(["/display"]);
                                         sessionStorage.setItem(
                                             "fileUploadSuccess",
                                             "true"
                                         );
+                                        sessionStorage.removeItem(
+                                            "selectedCapture"
+                                        );
+                                        this.loading = false;
+                                        this.router.navigate(["/display"]);
                                         this.cdr.detectChanges();
                                     })
                                     .catch((err) =>
@@ -580,12 +755,13 @@ export class LessonPageComponent implements OnInit, OnDestroy {
     }
 
     resetUploadState() {
+        this.selectedCapture = "";
+        this.topicName = "";
         this.selectedFile = null;
         this.labelText = "No file selected";
         this.uploadStatus = "";
         this.uploadProgress = 0;
         this.fileDownloadURL = "";
-        this.topicName = "";
     }
 
     openAlertDialog(title: string, message: string): void {

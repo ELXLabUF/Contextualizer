@@ -41,6 +41,27 @@
 
         <div class="horizontal-line"><mat-divider></mat-divider></div>
 
+        <!-- Select Capture Field -->
+        <div class="select-capture">
+            <select
+                class="dropdown-select"
+                (click)="onSelectCaptureDropdownClick()"
+                (change)="selectCapture()"
+                [(ngModel)]="selectedCapture"
+                required
+            >
+                <option value="" disabled>Select a capture</option>
+                <option
+                    *ngFor="let capture of captures"
+                    [value]="capture.capture"
+                >
+                    {{ capture.name }}
+                    ({{ capture.start_date | date : "MMM dd, YY" }} to
+                    {{ capture.due_date | date : "MMM dd, YY" }})
+                </option>
+            </select>
+        </div>
+
         <!-- Topic Title Field -->
         <input
             [(ngModel)]="topicName"

@@ -876,7 +876,9 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
     onDragStart(
         event: any,
         experience_title: string,
-        experience_description: string,
+        experience_transcript: string,
+        experience_translation: string,
+        experience_show_translation: boolean,
         date: string,
         student_name: string
     ) {
@@ -901,6 +903,10 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
+
+        const experience_description = experience_show_translation
+            ? experience_translation
+            : experience_transcript;
 
         this.currentExperienceTitle = experience_title;
         this.currentExperienceDate = date;

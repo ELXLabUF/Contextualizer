@@ -3,7 +3,12 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 //import { DatePipe } from "@angular/common";
 import { Router } from "@angular/router";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
-//import { Storage, getDownloadURL, ref, uploadBytesResumable } from "@angular/fire/storage";
+import {
+    Storage,
+    getDownloadURL,
+    ref,
+    uploadBytesResumable,
+} from "@angular/fire/storage";
 import {
     Firestore,
     collection,
@@ -74,6 +79,10 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
     prevCaptureName: string = "";
     previousCaptures: any = [];
+
+    currentAudio: HTMLAudioElement | null = null;
+    currentPlayingExpId: string | null = null;
+    toggleTranslations: boolean = false;
 
     //selectedExperienceFile: File | null = null;
     //selectStudentFile: File | null = null;
@@ -189,7 +198,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         //private formBuilder: FormBuilder,
         //private datePipe: DatePipe,
         private router: Router,
-        //private storage: Storage,
+        private storage: Storage,
         //private papa: Papa,
         public dialog: MatDialog
     ) {
@@ -359,6 +368,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 )
             ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
 
+            let index: number = 0;
+
             //Convert date into correct format for display and
             //assign each experience the correct student name
             //based on the Device ID associated with it
@@ -371,6 +382,9 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 exp["grade"] = this.students[exp["device_id"]]["grade"];
                 exp["gender"] = this.students[exp["device_id"]]["gender"];
                 exp["title"] = currSelectedTopic;
+                exp["id"] = index++;
+                exp["show_translation"] = false;
+                exp["is_playing"] = false;
             });
 
             this.totalExperiencesLength = Object.keys(this.experiences).length;
@@ -401,6 +415,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             )
         ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
 
+        let index: number = 0;
+
         this.allExperiences.forEach((exp: any) => {
             let date = exp["creation_date"];
             exp["creation_date"] = new Date(
@@ -414,6 +430,9 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             } else {
                 exp["title"] = currSelectedTopic;
             }
+            exp["id"] = index++;
+            exp["show_translation"] = false;
+            exp["is_playing"] = false;
         });
 
         this.prevCaptureName = "";
@@ -551,6 +570,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             )
         ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
 
+        let index: number = 0;
+
         //Convert date into correct format for display and
         //assign each experience the correct student name
         //based on the Device ID associated with it
@@ -563,6 +584,9 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             exp["grade"] = this.students[exp["device_id"]]["grade"];
             exp["gender"] = this.students[exp["device_id"]]["gender"];
             exp["title"] = previous_captures[capture_id]["name"];
+            exp["id"] = index++;
+            exp["show_translation"] = false;
+            exp["is_playing"] = false;
         });
 
         this.prevCapExperiences = [...this.experiences];
@@ -1174,6 +1198,33 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         });
     }
 
+    onToggleTranslationClick(exp: any) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "'Toggle translation' button for experience with title " +
+                exp.title +
+                ", student name " +
+                exp.name +
+                " and date " +
+                exp.creation_date,
+            Result:
+                "View the " + exp.show_translation
+                    ? "original"
+                    : "translated" + " version of that experience",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+    }
+
     displayStudentData(event: any, experience: any) {
         let userIntData: any = [];
         let time = new Date();
@@ -1232,6 +1283,83 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
     }
 
+    playPauseAudio(exp: any) {
+        const audioRef = ref(this.storage, exp.recording_path);
+
+        if (this.currentPlayingExpId === exp.id) {
+            // Toggle existing audio
+            this.currentAudio?.[this.currentAudio.paused ? "play" : "pause"]();
+            exp.is_playing = !this.currentAudio?.paused;
+        } else {
+            // New audio track
+            getDownloadURL(audioRef).then((url) => {
+                if (this.currentAudio) {
+                    this.currentAudio.pause();
+                    const prevExp = this.experiences.find(
+                        (e: any) => e.id === this.currentPlayingExpId
+                    );
+
+                    if (prevExp) {
+                        prevExp.is_playing = false;
+                    }
+                }
+
+                this.currentAudio = new Audio(url);
+                this.currentAudio.play();
+                exp.is_playing = true;
+                this.currentPlayingExpId = exp.id;
+
+                this.currentAudio.onended = () => {
+                    exp.is_playing = false;
+                    this.currentPlayingExpId = null;
+                };
+            });
+        }
+    }
+
+    stopAudio() {
+        if (this.currentAudio) {
+            this.currentAudio.pause();
+            this.currentAudio.currentTime = 0;
+        }
+    }
+
+    toggleAllTranslations() {
+        if (this.experiences.length === 0) {
+            return;
+        }
+
+        this.toggleTranslations = !this.toggleTranslations;
+
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "'View " + this.toggleTranslations
+                    ? "Translated"
+                    : "Original" + " Experiences' button",
+            Result:
+                "Show the " + this.toggleTranslations
+                    ? "translated"
+                    : "original" + " versions of all the experiences",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        this.experiences.forEach((exp: any) => {
+            exp.show_translation = this.toggleTranslations ? true : false;
+        });
+
+        this.cdr.detectChanges();
+    }
+
     onFilterByKeywordClick() {
         let userIntData: any = [];
         let time = new Date();
@@ -1288,7 +1416,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             //     .toLowerCase()
             //     .includes(this.keywordSearchTerm.toLowerCase()) ||
             //exp.experience_description
-            exp.transcript
+            (exp.show_translation ? exp.translation : exp.transcript)
                 .toLowerCase()
                 .includes(this.keywordSearchTerm.toLowerCase())
         );
