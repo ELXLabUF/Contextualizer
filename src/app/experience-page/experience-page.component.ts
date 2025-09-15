@@ -31,6 +31,21 @@ import { Observable } from "rxjs";
 import { take } from "rxjs/operators";
 //import { Papa } from "ngx-papaparse";
 
+import {
+    Document,
+    Packer,
+    Paragraph,
+    TextRun,
+    HeadingLevel,
+    Table,
+    TableRow,
+    TableCell,
+    WidthType,
+    BorderStyle,
+    AlignmentType,
+} from "docx";
+import { saveAs } from "file-saver";
+
 @Component({
     selector: "app-experience-page",
     templateUrl: "./experience-page.component.html",
@@ -1322,6 +1337,228 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             this.currentAudio.pause();
             this.currentAudio.currentTime = 0;
         }
+    }
+
+    async exportAllExperiences() {
+        const rows = [];
+
+        // Store the text data for rows (excluding header)
+        const dataRowsText: {
+            title: string;
+            transcript: string;
+            name: string;
+        }[] = [];
+
+        // Header row
+        rows.push(
+            new TableRow({
+                children: [
+                    new TableCell({
+                        children: [
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "Title",
+                                        bold: true,
+                                        font: "Arial",
+                                    }),
+                                ],
+                            }),
+                        ],
+                        width: { size: 20, type: WidthType.PERCENTAGE },
+                    }),
+                    new TableCell({
+                        children: [
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "Experience",
+                                        bold: true,
+                                        font: "Arial",
+                                    }),
+                                ],
+                            }),
+                        ],
+                        width: { size: 60, type: WidthType.PERCENTAGE },
+                    }),
+                    new TableCell({
+                        children: [
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "Student Name",
+                                        bold: true,
+                                        font: "Arial",
+                                    }),
+                                ],
+                            }),
+                        ],
+                        width: { size: 20, type: WidthType.PERCENTAGE },
+                    }),
+                ],
+            })
+        );
+
+        // Add data rows and store texts
+        for (const exp of this.allExperiences) {
+            const title = exp.title || "";
+            const transcript = exp.translation || exp.transcript || "";
+            const name = exp.name || "";
+
+            dataRowsText.push({ title, transcript, name });
+
+            rows.push(
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: title,
+                                            font: "Arial",
+                                        }),
+                                    ],
+                                }),
+                            ],
+                            width: { size: 20, type: WidthType.PERCENTAGE },
+                        }),
+                        new TableCell({
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: transcript,
+                                            font: "Arial",
+                                        }),
+                                    ],
+                                }),
+                            ],
+                            width: { size: 60, type: WidthType.PERCENTAGE },
+                        }),
+                        new TableCell({
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: name,
+                                            font: "Arial",
+                                        }),
+                                    ],
+                                }),
+                            ],
+                            width: { size: 20, type: WidthType.PERCENTAGE },
+                        }),
+                    ],
+                })
+            );
+        }
+
+        // Replace last row with borders explicitly applied
+        if (rows.length > 1) {
+            // at least one data row exists
+            const lastTexts = dataRowsText[dataRowsText.length - 1];
+            const widths = [
+                { size: 20, type: WidthType.PERCENTAGE },
+                { size: 60, type: WidthType.PERCENTAGE },
+                { size: 20, type: WidthType.PERCENTAGE },
+            ];
+
+            const borderedCells = [
+                new TableCell({
+                    children: [
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: lastTexts.title,
+                                    font: "Arial",
+                                }),
+                            ],
+                        }),
+                    ],
+                    width: widths[0],
+                    borders: {
+                        bottom: {
+                            style: BorderStyle.SINGLE,
+                            size: 2,
+                            color: "000000",
+                        },
+                    },
+                }),
+                new TableCell({
+                    children: [
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: lastTexts.transcript,
+                                    font: "Arial",
+                                }),
+                            ],
+                        }),
+                    ],
+                    width: widths[1],
+                    borders: {
+                        bottom: {
+                            style: BorderStyle.SINGLE,
+                            size: 2,
+                            color: "000000",
+                        },
+                    },
+                }),
+                new TableCell({
+                    children: [
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: lastTexts.name,
+                                    font: "Arial",
+                                }),
+                            ],
+                        }),
+                    ],
+                    width: widths[2],
+                    borders: {
+                        bottom: {
+                            style: BorderStyle.SINGLE,
+                            size: 2,
+                            color: "000000",
+                        },
+                    },
+                }),
+            ];
+
+            rows[rows.length - 1] = new TableRow({ children: borderedCells });
+        }
+
+        const table = new Table({
+            rows: rows,
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            alignment: "center",
+        });
+
+        const docTitle = new Paragraph({
+            spacing: { after: 300 },
+            alignment: AlignmentType.CENTER,
+            children: [
+                new TextRun({
+                    text: "Student Experiences",
+                    font: "Arial",
+                    bold: true,
+                    size: 48,
+                }),
+            ],
+        });
+
+        const doc = new Document({
+            sections: [
+                {
+                    children: [docTitle, table],
+                },
+            ],
+        });
+
+        const blob = await Packer.toBlob(doc);
+        saveAs(blob, "Student_Experiences.docx");
     }
 
     toggleAllTranslations() {
