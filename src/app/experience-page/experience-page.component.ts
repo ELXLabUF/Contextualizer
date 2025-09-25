@@ -30,7 +30,6 @@ import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation
 import { Observable } from "rxjs";
 import { take } from "rxjs/operators";
 //import { Papa } from "ngx-papaparse";
-
 import {
     Document,
     Packer,
@@ -351,15 +350,15 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         const classroomDocSnap = await getDoc(currClassroomDocRef);
         this.students = {};
         let capture_id: string = "";
-        let previous_captures: any = {};
-        let currSelectedTopic: string = "";
+        //let previous_captures: any = {};
+        //let currSelectedTopic: string = "";
 
         //Get all Students
         if (classroomDocSnap.exists()) {
             this.students = classroomDocSnap.data()["students"] || {};
-            previous_captures =
-                classroomDocSnap.data()["previous_captures"] || {};
-            currSelectedTopic = classroomDocSnap.data()["selected_topic"] || "";
+            //previous_captures =
+            //    classroomDocSnap.data()["previous_captures"] || {};
+            //currSelectedTopic = classroomDocSnap.data()["selected_topic"] || "";
             if (classroomDocSnap.data()["capture"] !== undefined) {
                 capture_id = classroomDocSnap.data()["capture"];
             } else {
@@ -396,7 +395,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 exp["name"] = this.students[exp["device_id"]]["name"];
                 exp["grade"] = this.students[exp["device_id"]]["grade"];
                 exp["gender"] = this.students[exp["device_id"]]["gender"];
-                exp["title"] = currSelectedTopic;
+                exp["title"] = exp["topic"] || "No Topic";
                 exp["id"] = index++;
                 exp["show_translation"] = false;
                 exp["is_playing"] = false;
@@ -408,47 +407,77 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             this.filteredExp = [...this.experiences];
         }
 
-        //Retrieve all experiences irrespective of noActiveCapture value
+        ////Retrieve all experiences irrespective of noActiveCapture value
 
-        //Get all previous capture IDs and store in an array
-        let allCaptureIDs: any = [];
-        let allSelectedTopics: string[] = [];
-        Object.keys(previous_captures).forEach((key: string) => {
-            allCaptureIDs.push(key);
-            allSelectedTopics.push(previous_captures[key]["name"]);
-        });
+        ////Get all previous capture IDs and store in an array
+        //let allCaptureIDs: any = [];
+        //let allSelectedTopics: string[] = [];
+        //Object.keys(previous_captures).forEach((key: string) => {
+        //    allCaptureIDs.push(key);
+        //    allSelectedTopics.push(previous_captures[key]["name"]);
+        //});
 
-        //Add current active capture ID to list of all capture IDs
-        allCaptureIDs.push(capture_id);
-        allSelectedTopics.push(currSelectedTopic);
+        ////Add current active capture ID to list of all capture IDs
+        //allCaptureIDs.push(capture_id);
+        //allSelectedTopics.push(currSelectedTopic);
 
-        this.allExperiences = await getDocs(
-            query(
+        //this.allExperiences = await getDocs(
+        //    query(
+        //        collection(this.firestore, "NewExperiences"),
+        //        where("capture", "in", allCaptureIDs),
+        //        where("show_to_teacher", "==", true)
+        //    )
+        //).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
+
+        //let index: number = 0;
+
+        //this.allExperiences.forEach((exp: any) => {
+        //    let date = exp["creation_date"];
+        //    exp["creation_date"] = new Date(
+        //        date.seconds * 1000 + date.nanoseconds / 1000000
+        //    ).toLocaleDateString();
+        //    exp["name"] = this.students[exp["device_id"]]["name"];
+        //    exp["grade"] = this.students[exp["device_id"]]["grade"];
+        //    exp["gender"] = this.students[exp["device_id"]]["gender"];
+        //    if (exp["capture"] !== capture_id) {
+        //        exp["title"] = previous_captures[exp["capture"]]["name"];
+        //    } else {
+        //        exp["title"] = currSelectedTopic;
+        //    }
+        //    exp["id"] = index++;
+        //    exp["show_translation"] = false;
+        //    exp["is_playing"] = false;
+        //});
+
+        //this.prevCaptureName = "";
+
+        const studentDeviceIds = Object.keys(this.students);
+        if (studentDeviceIds.length > 0) {
+            const allExpQuery = query(
                 collection(this.firestore, "NewExperiences"),
-                where("capture", "in", allCaptureIDs),
+                where("device_id", "in", studentDeviceIds),
                 where("show_to_teacher", "==", true)
-            )
-        ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
+            );
 
-        let index: number = 0;
-
-        this.allExperiences.forEach((exp: any) => {
-            let date = exp["creation_date"];
-            exp["creation_date"] = new Date(
-                date.seconds * 1000 + date.nanoseconds / 1000000
-            ).toLocaleDateString();
-            exp["name"] = this.students[exp["device_id"]]["name"];
-            exp["grade"] = this.students[exp["device_id"]]["grade"];
-            exp["gender"] = this.students[exp["device_id"]]["gender"];
-            if (exp["capture"] !== capture_id) {
-                exp["title"] = previous_captures[exp["capture"]]["name"];
-            } else {
-                exp["title"] = currSelectedTopic;
-            }
-            exp["id"] = index++;
-            exp["show_translation"] = false;
-            exp["is_playing"] = false;
-        });
+            const allExpSnapshot = await getDocs(allExpQuery);
+            this.allExperiences = [];
+            let allIndex = 0;
+            allExpSnapshot.forEach((doc) => {
+                const exp = doc.data();
+                let date = exp["creation_date"];
+                exp["creation_date"] = new Date(
+                    date.seconds * 1000 + date.nanoseconds / 1000000
+                ).toLocaleDateString();
+                exp["name"] = this.students[exp["device_id"]]["name"];
+                exp["grade"] = this.students[exp["device_id"]]["grade"];
+                exp["gender"] = this.students[exp["device_id"]]["gender"];
+                exp["title"] = exp["topic"] || "No Topic"; // Use topic field here as well
+                exp["id"] = allIndex++;
+                exp["show_translation"] = false;
+                exp["is_playing"] = false;
+                this.allExperiences.push(exp);
+            });
+        }
 
         this.prevCaptureName = "";
     }
@@ -561,7 +590,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.endDateSearchTerm = "";
         this.startDateTerm = "";
         this.endDateTerm = "";
-        const capture_id = this.prevCaptureName.slice(10);
+        //const capture_id = this.prevCaptureName.slice(10);
+        const capture_id = this.prevCaptureName;
 
         const classroom = sessionStorage.getItem("classroom") || "";
         const currClassroomDocRef = doc(this.firestore, classroom);
@@ -598,7 +628,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             exp["name"] = this.students[exp["device_id"]]["name"];
             exp["grade"] = this.students[exp["device_id"]]["grade"];
             exp["gender"] = this.students[exp["device_id"]]["gender"];
-            exp["title"] = previous_captures[capture_id]["name"];
+            //exp["title"] = previous_captures[capture_id]["name"];
+            exp["title"] = exp["topic"] || "No Topic";
             exp["id"] = index++;
             exp["show_translation"] = false;
             exp["is_playing"] = false;
@@ -1299,6 +1330,18 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     }
 
     playPauseAudio(exp: any) {
+        if (
+            exp.recording_path === null ||
+            exp.recording_path === "" ||
+            !exp.recording_path
+        ) {
+            this.openAlertDialog(
+                "Warning: No Audio",
+                "No audio was detected for this experience."
+            );
+            return;
+        }
+
         const audioRef = ref(this.storage, exp.recording_path);
 
         if (this.currentPlayingExpId === exp.id) {
@@ -1307,32 +1350,59 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             exp.is_playing = !this.currentAudio?.paused;
         } else {
             // New audio track
-            getDownloadURL(audioRef).then((url) => {
-                if (this.currentAudio) {
-                    this.currentAudio.pause();
-                    const prevExp = this.experiences.find(
-                        (e: any) => e.id === this.currentPlayingExpId
+            getDownloadURL(audioRef)
+                .then((url) => {
+                    if (this.currentAudio) {
+                        this.currentAudio.pause();
+                        const prevExp = this.experiences.find(
+                            (e: any) => e.id === this.currentPlayingExpId
+                        );
+
+                        if (prevExp) {
+                            prevExp.is_playing = false;
+                        }
+                    }
+
+                    this.currentAudio = new Audio(url);
+                    this.currentAudio.play();
+                    exp.is_playing = true;
+                    this.currentPlayingExpId = exp.id;
+
+                    this.currentAudio.onended = () => {
+                        exp.is_playing = false;
+                        this.currentPlayingExpId = null;
+                    };
+                })
+                .catch((error) => {
+                    this.openAlertDialog(
+                        "Warning: No Audio File",
+                        "No audio file was found for this experience."
+                    );
+                    console.error(
+                        "Error fetching audio file from Firebase Storage:",
+                        error
                     );
 
-                    if (prevExp) {
-                        prevExp.is_playing = false;
-                    }
-                }
-
-                this.currentAudio = new Audio(url);
-                this.currentAudio.play();
-                exp.is_playing = true;
-                this.currentPlayingExpId = exp.id;
-
-                this.currentAudio.onended = () => {
+                    // Ensure the UI state is reset
                     exp.is_playing = false;
-                    this.currentPlayingExpId = null;
-                };
-            });
+                    if (this.currentPlayingExpId === exp.id) {
+                        this.currentPlayingExpId = null;
+                        this.currentAudio = null;
+                    }
+                    this.cdr.detectChanges();
+                });
         }
     }
 
-    stopAudio() {
+    stopAudio(exp: any) {
+        if (
+            exp.recording_path === null ||
+            exp.recording_path === "" ||
+            !exp.recording_path
+        ) {
+            return;
+        }
+
         if (this.currentAudio) {
             this.currentAudio.pause();
             this.currentAudio.currentTime = 0;
