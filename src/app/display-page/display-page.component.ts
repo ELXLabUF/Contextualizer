@@ -380,9 +380,11 @@ export class DisplayPageComponent implements OnInit, OnDestroy {
             Action: "Clicked",
             Target: "'Previous Page' button",
             Result:
-                "Navigate to '" + this.startNavigationFromExperiences
+                "Navigate to '" +
+                (this.startNavigationFromExperiences
                     ? "Upload Lesson Plan"
-                    : "Browse Experiences" + "' page",
+                    : "Browse Experiences") +
+                "' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(

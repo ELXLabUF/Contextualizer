@@ -134,9 +134,11 @@ export class LessonPageComponent implements OnInit, OnDestroy {
             Action: "Clicked",
             Target: "'Next Page' button",
             Result:
-                "Navigate to '" + this.startNavigationFromExperiences
+                "Navigate to '" +
+                (this.startNavigationFromExperiences
                     ? "Customize Lesson Plan"
-                    : "Browse Experiences" + "' page",
+                    : "Browse Experiences") +
+                "' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(

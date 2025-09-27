@@ -976,13 +976,13 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target:
-                "'" + this.specificSelected
-                    ? "Specific"
-                    : "General" + "'radio button",
+                "'" +
+                (this.specificSelected ? "Specific" : "General") +
+                "'radio button",
             Result:
-                "Select '" + this.specificSelected
-                    ? "Specific"
-                    : "General" + "' as the capture type",
+                "Select '" +
+                (this.specificSelected ? "Specific" : "General") +
+                "' as the capture type",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1299,6 +1299,22 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
     }
 
     async getAllCaptures() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Lesson Plans Library' button",
+            Result: "Get the list of all the lessons plans",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         this.allCaptures = [];
         const classroom = sessionStorage.getItem("classroom") || "";
         const currClassroomDocRef = doc(this.angularFireStore, classroom);
@@ -2217,14 +2233,13 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target:
-                "'" + this.futureCaptureSpecificSelected
-                    ? "Specific"
-                    : "General" + "'radio button",
+                "'" +
+                (this.futureCaptureSpecificSelected ? "Specific" : "General") +
+                "'radio button",
             Result:
-                "Select '" + this.futureCaptureSpecificSelected
-                    ? "Specific"
-                    : "General" +
-                      "' as the capture type for the upcoming capture",
+                "Select '" +
+                (this.futureCaptureSpecificSelected ? "Specific" : "General") +
+                "' as the capture type for the upcoming capture",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(

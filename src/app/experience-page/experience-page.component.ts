@@ -318,9 +318,11 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             Action: "Clicked",
             Target: "'Next Page' button",
             Result:
-                "Navigate to '" + this.startNavigationFromExperiences
+                "Navigate to '" +
+                (this.startNavigationFromExperiences
                     ? "Create Lesson Plan"
-                    : "Customize Lesson Plan" + "' page",
+                    : "Customize Lesson Plan") +
+                "' page",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -491,13 +493,16 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target:
-                "'" + this.toggleAllExp
+                "'" +
+                (this.toggleAllExp
                     ? "View Current Capture Experiences"
-                    : "View All Experiences" + "' button",
+                    : "View All Experiences") +
+                "' button",
             Result:
-                "Show " + this.toggleAllExp
+                "Show " +
+                (this.toggleAllExp
                     ? "experiences only from the current capture"
-                    : "all the experiences from all the captures",
+                    : "all the experiences from all the captures"),
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1260,9 +1265,9 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 " and date " +
                 exp.creation_date,
             Result:
-                "View the " + exp.show_translation
-                    ? "original"
-                    : "translated" + " version of that experience",
+                "View the " +
+                (exp.show_translation ? "original" : "translated") +
+                " version of that experience",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1342,6 +1347,29 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             return;
         }
 
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                (exp.is_playing ? "Pause" : "Play") +
+                " audio button for experience with title " +
+                exp.title +
+                ", student name " +
+                exp.name +
+                " and date " +
+                exp.creation_date,
+            Result: (exp.is_playing ? "Pause" : "Play") + " the audio",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         const audioRef = ref(this.storage, exp.recording_path);
 
         if (this.currentPlayingExpId === exp.id) {
@@ -1403,6 +1431,28 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             return;
         }
 
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target:
+                "Stop audio button for experience with title " +
+                exp.title +
+                ", student name " +
+                exp.name +
+                " and date " +
+                exp.creation_date,
+            Result: "Stop the audio",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         if (this.currentAudio) {
             this.currentAudio.pause();
             this.currentAudio.currentTime = 0;
@@ -1410,6 +1460,22 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     }
 
     async exportAllExperiences() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Download All Experiences' button",
+            Result: "Download all the experiences",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
         const rows = [];
 
         // Store the text data for rows (excluding header)
@@ -1646,13 +1712,13 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target:
-                "'View " + this.toggleTranslations
-                    ? "Translated"
-                    : "Original" + " Experiences' button",
+                "'View " +
+                (this.toggleTranslations ? "Translated" : "Original") +
+                " Experiences' button",
             Result:
-                "Show the " + this.toggleTranslations
-                    ? "translated"
-                    : "original" + " versions of all the experiences",
+                "Show the " +
+                (this.toggleTranslations ? "translated" : "original") +
+                " versions of all the experiences",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(

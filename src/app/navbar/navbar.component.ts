@@ -255,9 +255,8 @@ export class NavbarComponent {
         userIntData.push({
             Action: "Clicked",
             Target: "Profile icon on navbar",
-            Result: this.isDropdownOpen
-                ? "Open"
-                : "Close" + " profile dropdown",
+            Result:
+                (this.isDropdownOpen ? "Open" : "Close") + " profile dropdown",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
