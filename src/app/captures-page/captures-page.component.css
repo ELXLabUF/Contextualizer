@@ -8,7 +8,7 @@ body {
     flex-direction: column;
     align-items: center; /* Center children horizontally */
     justify-content: center; /* Center children vertically */
-    margin: 50px 0px;
+    margin: 20px 0px;
 }
 
 .title-container {
@@ -31,7 +31,6 @@ body {
     align-items: center;
     justify-content: center;
     margin: auto;
-    margin-bottom: 10px;
     gap: 40px;
 }
 
@@ -208,6 +207,83 @@ body {
     line-height: 35px;
 }
 
+.section-title {
+    font-family: "Nova Square", sans-serif;
+    color: #ff8800;
+    font-size: 32px;
+    width: 80%;
+    max-width: 95%;
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.upcoming-captures-container {
+    background-color: #ffffff;
+    border: 4px solid #ff8800;
+    border-radius: 20px;
+    padding: 10px 20px;
+}
+
+.upcoming-capture-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 10px;
+    border-bottom: 2px solid #ffaa00;
+}
+
+.upcoming-captures-container .upcoming-capture-item:last-child {
+    border-bottom: none; /* Remove border from the last item */
+}
+
+.capture-item-info {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+
+.capture-item-topic {
+    font-family: "Barlow", sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.capture-item-prompt {
+    font-family: "Barlow", sans-serif;
+    font-size: 18px;
+    font-style: italic;
+    color: #555;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 27px;
+}
+
+.capture-item-dates {
+    font-family: "Barlow", sans-serif;
+    font-size: 22px;
+    flex: 2; /* Takes up medium space */
+    text-align: center;
+}
+
+.capture-item-action {
+    flex: 1; /* Takes up least space */
+    text-align: right;
+}
+
+.no-captures-text {
+    font-family: "Barlow", sans-serif;
+    font-size: 24px;
+    text-align: center;
+    padding: 20px;
+    color: #555;
+}
+
 .modal-header h1 {
     font-family: "Nova Square", sans-serif;
     font-size: 35px;
@@ -216,12 +292,12 @@ body {
     font-weight: bold;
 }
 
-.set-capture-type {
+/*.set-capture-type {
     display: flex;
     flex-direction: row;
-}
+}*/
 
-.set-capture-type p {
+/*.set-capture-type p {
     font-family: "Barlow", sans-serif;
     font-size: 25px;
     line-height: 30px;
@@ -229,32 +305,32 @@ body {
     margin: 10px 10px;
     margin-left: 0px;
     width: 25%;
-}
+}*/
 
-.set-capture-data {
+/*.set-capture-data {
     display: flex;
     flex-direction: column;
     margin: auto;
     width: 60%;
-}
+}*/
 
-.capture-radio {
+/*.capture-radio {
     display: flex;
     flex-direction: row;
     margin-bottom: 20px;
     padding-left: 10px;
-}
+}*/
 
-.capture-radio label {
+/*.capture-radio label {
     display: block;
     font-family: "Barlow", sans-serif;
     font-size: 25px;
     line-height: 30px;
     font-weight: 400;
     margin: 10px 15px 0px 0px;
-}
+}*/
 
-.capture-radio input {
+/*.capture-radio input {
     font-family: "Barlow", sans-serif;
     font-size: 25px;
     line-height: 30px;
@@ -263,53 +339,60 @@ body {
     border: 2px solid #3f3734;
     border-radius: 20px;
     height: fit-content;
-}
+}*/
 
-.capture-radio input[type="radio"] {
+/*.capture-radio input[type="radio"] {
     transform: scale(2);
     margin: 20px 15px 0px 0px;
-}
+}*/
 
-.bi.bi-info-circle-fill {
-    position: relative; /* Ensure the tooltip is positioned relative to the icon */
+/*.bi.bi-info-circle-fill {
+    position: relative;
     width: auto;
     height: auto;
     font-size: 1.5rem;
     cursor: pointer;
     margin-top: 15px;
     margin-right: 30px;
-}
+}*/
 
-.specific-capture-tooltip-text,
+/*.specific-capture-tooltip-text,
 .general-capture-tooltip-text {
     font-family: "Barlow", sans-serif;
     font-size: 20px;
     line-height: 25px;
     font-weight: 400;
-    visibility: hidden; /* Initially hidden */
+    visibility: hidden;
     background-color: #ffffff;
     color: #000000;
     text-align: center;
-    padding: 8px 12px; /* Adjust padding for better readability */
+    padding: 8px 12px;
     border: 5px solid #ff8800;
     border-radius: 20px;
-    position: absolute; /* Position relative to the icon */
-    z-index: 999; /* Ensure it appears above everything else */
-    top: 125%; /* Position below the icon */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Adjust centering */
-    opacity: 0; /* Initial opacity set to 0 for smooth transition */
-    transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
-    white-space: nowrap; /* Prevent text from wrapping */
+    position: absolute;
+    z-index: 999;
+    top: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    white-space: nowrap;
     min-width: 500px;
     max-width: 500px;
     white-space: normal;
-}
+}*/
 
-.bi.bi-info-circle-fill:hover .specific-capture-tooltip-text,
+/*.bi.bi-info-circle-fill:hover .specific-capture-tooltip-text,
 .bi.bi-info-circle-fill:hover .general-capture-tooltip-text {
-    visibility: visible; /* Make tooltip visible on hover */
-    opacity: 1; /* Set opacity to fully visible */
+    visibility: visible;
+    opacity: 1;
+}*/
+
+.modal-instruction-text {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #888280;
 }
 
 .set-capture-topic {

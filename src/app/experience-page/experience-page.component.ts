@@ -165,7 +165,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     selectedExperiences: number = 0;
     totalExperiencesLength: number = 0;
 
-    startNavigationFromExperiences: boolean = false;
+    //startNavigationFromExperiences: boolean = false;
 
     timeStart!: Date;
     timeEnd!: Date;
@@ -238,7 +238,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Visited",
-            Target: "'Browse Experiences' page",
+            Target: "'Browse Student Stories' page",
             Result: "",
             Time: this.timeStart.toLocaleString(),
         });
@@ -251,15 +251,15 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.getCurrentCaptureExperiences();
         this.getPreviousCaptures();
 
-        if (
-            sessionStorage.getItem("altNavigation") === "false" ||
-            (sessionStorage.getItem("fileUploadSuccess") !== null &&
-                sessionStorage.getItem("fileUploadSuccess") === "true")
-        ) {
-            this.startNavigationFromExperiences = false;
-        } else if (sessionStorage.getItem("altNavigation") === "true") {
-            this.startNavigationFromExperiences = true;
-        }
+        //if (
+        //    sessionStorage.getItem("altNavigation") === "false" ||
+        //    (sessionStorage.getItem("fileUploadSuccess") !== null &&
+        //        sessionStorage.getItem("fileUploadSuccess") === "true")
+        //) {
+        //    this.startNavigationFromExperiences = false;
+        //} else if (sessionStorage.getItem("altNavigation") === "true") {
+        //    this.startNavigationFromExperiences = true;
+        //}
     }
 
     ngOnDestroy() {
@@ -272,13 +272,13 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Left",
-            Target: "'Browse Experiences' page",
+            Target: "'Browse Student Stories' page",
             Result: "",
             Time: this.timeEnd.toLocaleString(),
         });
         userIntData.push({
             Action: "Time spent",
-            Target: "'Browse Experiences' page",
+            Target: "'Browse Student Stories' page",
             Result: "",
             Time: duration + " seconds",
         });
@@ -288,7 +288,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
     }
 
-    onPreviousPageButtonClick() {
+    /*onPreviousPageButtonClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -306,9 +306,9 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
 
         this.router.navigate(["/lesson"]);
-    }
+    }*/
 
-    onNextPageButtonClick() {
+    /*onNextPageButtonClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -335,7 +335,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         } else {
             this.router.navigate(["/instructions"]);
         }
-    }
+    }*/
 
     async getCurrentCaptureExperiences() {
         //this.experience_service
@@ -595,6 +595,56 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         this.endDateSearchTerm = "";
         this.startDateTerm = "";
         this.endDateTerm = "";
+
+        if (this.prevCaptureName === "current") {
+            this.experiences = [...this.currCapExperiences];
+            this.selectedExperiences = Object.keys(this.experiences).length;
+            this.totalExperiencesLength = Object.keys(this.experiences).length;
+            this.togglePrevCap = false; // Ensure this is false
+            this.cdr.detectChanges();
+
+            let userIntData: any = [];
+            let time = new Date();
+            userIntData = JSON.parse(
+                sessionStorage.getItem("userInteractionData") || "[]"
+            );
+            userIntData.push({
+                Action: "Selected",
+                Target: "'Current Capture' option",
+                Result: "Set view to current capture stories",
+                Time: time.toLocaleString(),
+            });
+            sessionStorage.setItem(
+                "userInteractionData",
+                JSON.stringify(userIntData)
+            );
+            return;
+        }
+
+        if (this.prevCaptureName === "all") {
+            this.experiences = [...this.allExperiences];
+            this.selectedExperiences = Object.keys(this.experiences).length;
+            this.totalExperiencesLength = Object.keys(this.experiences).length;
+            this.cdr.detectChanges();
+
+            let userIntData: any = [];
+            let time = new Date();
+            userIntData = JSON.parse(
+                sessionStorage.getItem("userInteractionData") || "[]"
+            );
+            userIntData.push({
+                Action: "Selected",
+                Target: "'All Stories' option",
+                Result: "Set view to all stories",
+                Time: time.toLocaleString(),
+            });
+            sessionStorage.setItem(
+                "userInteractionData",
+                JSON.stringify(userIntData)
+            );
+            return;
+        }
+
         //const capture_id = this.prevCaptureName.slice(10);
         const capture_id = this.prevCaptureName;
 
@@ -660,7 +710,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 previous_captures[capture_id]["due_date"] +
                 ")" +
                 "' option",
-            Result: "Set the past capture to view experiences from",
+            Result: "Set the past capture to view stories from",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1050,13 +1100,13 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             userIntData.push({
                 Action: "Clicked",
                 Target:
-                    "Checkbox for experience with title " +
+                    "Checkbox for story with title " +
                     exp.title +
                     ", student name " +
                     exp.name +
                     " and date " +
                     exp.creation_date,
-                Result: "De-select the experience",
+                Result: "De-select the story",
                 Time: time.toLocaleString(),
             });
             sessionStorage.setItem(
@@ -1075,13 +1125,13 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             userIntData.push({
                 Action: "Clicked",
                 Target:
-                    "Checkbox for experience with title " +
+                    "Checkbox for story with title " +
                     exp.title +
                     ", student name " +
                     exp.name +
                     " and date " +
                     exp.creation_date,
-                Result: "Select the experience",
+                Result: "Select the story",
                 Time: time.toLocaleString(),
             });
             sessionStorage.setItem(
@@ -1103,7 +1153,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     }
 
     // Integrate multiple experiences
-    integrateMultipleExp() {
+    /*integrateMultipleExp() {
         if (!this.multipleIntegrate || this.multipleIntegrate.length === 0) {
             this.openAlertDialog(
                 "Integration Error",
@@ -1247,7 +1297,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 );
             }
         });
-    }
+    }*/
 
     onToggleTranslationClick(exp: any) {
         let userIntData: any = [];
@@ -1258,7 +1308,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target:
-                "'Toggle translation' button for experience with title " +
+                "'Toggle translation' button for story with title " +
                 exp.title +
                 ", student name " +
                 exp.name +
@@ -1267,7 +1317,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             Result:
                 "View the " +
                 (exp.show_translation ? "original" : "translated") +
-                " version of that experience",
+                " version of that story",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1342,7 +1392,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         ) {
             this.openAlertDialog(
                 "Warning: No Audio",
-                "No audio was detected for this experience."
+                "No audio was detected for this story."
             );
             return;
         }
@@ -1356,7 +1406,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             Action: "Clicked",
             Target:
                 (exp.is_playing ? "Pause" : "Play") +
-                " audio button for experience with title " +
+                " audio button for story with title " +
                 exp.title +
                 ", student name " +
                 exp.name +
@@ -1404,7 +1454,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 .catch((error) => {
                     this.openAlertDialog(
                         "Warning: No Audio File",
-                        "No audio file was found for this experience."
+                        "No audio file was found for this story."
                     );
                     console.error(
                         "Error fetching audio file from Firebase Storage:",
@@ -1439,7 +1489,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target:
-                "Stop audio button for experience with title " +
+                "Stop audio button for story with title " +
                 exp.title +
                 ", student name " +
                 exp.name +
@@ -1467,8 +1517,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Clicked",
-            Target: "'Download All Experiences' button",
-            Result: "Download all the experiences",
+            Target: "'Download All Stories' button",
+            Result: "Download all the stories",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1508,7 +1558,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                             new Paragraph({
                                 children: [
                                     new TextRun({
-                                        text: "Experience",
+                                        text: "Story",
                                         bold: true,
                                         font: "Arial",
                                     }),
@@ -1677,7 +1727,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             alignment: AlignmentType.CENTER,
             children: [
                 new TextRun({
-                    text: "Student Experiences",
+                    text: "Student Stories",
                     font: "Arial",
                     bold: true,
                     size: 48,
@@ -1694,7 +1744,245 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         });
 
         const blob = await Packer.toBlob(doc);
-        saveAs(blob, "Student_Experiences.docx");
+        saveAs(blob, "Student_Stories.docx");
+    }
+
+    async exportSelectedExperiences() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Download Selected Stories' button",
+            Result: "Download the selected stories",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+
+        if (this.multipleIntegrate.length === 0) {
+            this.openAlertDialog(
+                "No Stories Selected",
+                "Please select one or more stories by clicking the checkbox next to them before downloading."
+            );
+            return;
+        }
+
+        const rows = [];
+        const dataRowsText: {
+            title: string;
+            transcript: string;
+            name: string;
+        }[] = [];
+
+        // Header row
+        rows.push(
+            new TableRow({
+                children: [
+                    new TableCell({
+                        children: [
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "Title",
+                                        bold: true,
+                                        font: "Arial",
+                                    }),
+                                ],
+                            }),
+                        ],
+                        width: { size: 20, type: WidthType.PERCENTAGE },
+                    }),
+                    new TableCell({
+                        children: [
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "Story",
+                                        bold: true,
+                                        font: "Arial",
+                                    }),
+                                ],
+                            }),
+                        ],
+                        width: { size: 60, type: WidthType.PERCENTAGE },
+                    }),
+                    new TableCell({
+                        children: [
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "Student Name",
+                                        bold: true,
+                                        font: "Arial",
+                                    }),
+                                ],
+                            }),
+                        ],
+                        width: { size: 20, type: WidthType.PERCENTAGE },
+                    }),
+                ],
+            })
+        );
+
+        // Use multipleIntegrate array instead of allExperiences
+        for (const exp of this.multipleIntegrate) {
+            const title = exp.title || "";
+            const transcript = exp.translation || exp.transcript || "";
+            const name = exp.name || "";
+
+            dataRowsText.push({ title, transcript, name });
+
+            rows.push(
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: title,
+                                            font: "Arial",
+                                        }),
+                                    ],
+                                }),
+                            ],
+                            width: { size: 20, type: WidthType.PERCENTAGE },
+                        }),
+                        new TableCell({
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: transcript,
+                                            font: "Arial",
+                                        }),
+                                    ],
+                                }),
+                            ],
+                            width: { size: 60, type: WidthType.PERCENTAGE },
+                        }),
+                        new TableCell({
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: name,
+                                            font: "Arial",
+                                        }),
+                                    ],
+                                }),
+                            ],
+                            width: { size: 20, type: WidthType.PERCENTAGE },
+                        }),
+                    ],
+                })
+            );
+        }
+
+        if (rows.length > 1) {
+            const lastTexts = dataRowsText[dataRowsText.length - 1];
+            const widths = [
+                { size: 20, type: WidthType.PERCENTAGE },
+                { size: 60, type: WidthType.PERCENTAGE },
+                { size: 20, type: WidthType.PERCENTAGE },
+            ];
+
+            const borderedCells = [
+                new TableCell({
+                    children: [
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: lastTexts.title,
+                                    font: "Arial",
+                                }),
+                            ],
+                        }),
+                    ],
+                    width: widths[0],
+                    borders: {
+                        bottom: {
+                            style: BorderStyle.SINGLE,
+                            size: 2,
+                            color: "000000",
+                        },
+                    },
+                }),
+                new TableCell({
+                    children: [
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: lastTexts.transcript,
+                                    font: "Arial",
+                                }),
+                            ],
+                        }),
+                    ],
+                    width: widths[1],
+                    borders: {
+                        bottom: {
+                            style: BorderStyle.SINGLE,
+                            size: 2,
+                            color: "000000",
+                        },
+                    },
+                }),
+                new TableCell({
+                    children: [
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: lastTexts.name,
+                                    font: "Arial",
+                                }),
+                            ],
+                        }),
+                    ],
+                    width: widths[2],
+                    borders: {
+                        bottom: {
+                            style: BorderStyle.SINGLE,
+                            size: 2,
+                            color: "000000",
+                        },
+                    },
+                }),
+            ];
+
+            rows[rows.length - 1] = new TableRow({ children: borderedCells });
+        }
+
+        const table = new Table({
+            rows: rows,
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            alignment: "center",
+        });
+
+        const docTitle = new Paragraph({
+            spacing: { after: 300 },
+            alignment: AlignmentType.CENTER,
+            children: [
+                new TextRun({
+                    text: "Student Stories",
+                    font: "Arial",
+                    bold: true,
+                    size: 48,
+                }),
+            ],
+        });
+
+        const doc = new Document({
+            sections: [{ children: [docTitle, table] }],
+        });
+
+        const blob = await Packer.toBlob(doc);
+        saveAs(blob, "Selected_Student_Stories.docx");
     }
 
     toggleAllTranslations() {
@@ -1711,14 +1999,13 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
         userIntData.push({
             Action: "Clicked",
-            Target:
-                "'View " +
-                (this.toggleTranslations ? "Translated" : "Original") +
-                " Experiences' button",
+            Target: this.toggleTranslations
+                ? "'Translate All Stories' button"
+                : "'View Original Stories' button",
             Result:
                 "Show the " +
                 (this.toggleTranslations ? "translated" : "original") +
-                " versions of all the experiences",
+                " versions of all the stories",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1742,7 +2029,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Search Keyword' filter",
-            Result: "Filter experiences",
+            Result: "Filter stories",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -1880,7 +2167,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Search Date' filter",
-            Result: "Filter experiences",
+            Result: "Filter stories",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -2057,7 +2344,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         userIntData.push({
             Action: "Clicked",
             Target: "'Name' filter",
-            Result: "Filter experiences by students' names",
+            Result: "Filter stories by students' names",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -3479,8 +3766,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                     : "Radio button for filter 'Newest to Oldest'",
             Result:
                 event.target.value === "oldToNew"
-                    ? "Filter experiences by date from oldest to newest"
-                    : "Filter experiences by date from newest to oldest",
+                    ? "Filter stories by date from oldest to newest"
+                    : "Filter stories by date from newest to oldest",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(

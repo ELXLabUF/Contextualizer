@@ -9,12 +9,12 @@ import {
     setDoc,
     where,
 } from "@angular/fire/firestore";
-
 import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 import { AlertDialogComponent } from "../alert-dialog/alert-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
-
 import { Observable } from "rxjs";
+
+declare var bootstrap: any;
 
 @Component({
     selector: "app-captures-page",
@@ -38,7 +38,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
 
     buttonText: string = "Show";
 
-    specificSelected: boolean | null = null;
+    //specificSelected: boolean | null = null;
     specificTopic!: string;
     maxTopicCharacters: number = 40;
     topicCharactersLeft: number = this.maxTopicCharacters;
@@ -48,19 +48,19 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
     dateRangeStartDate!: string;
     dateRangeEndDate!: string;
 
-    allCaptures: any = [];
-    selectedCapture: string = "";
-    selectedCaptureLessonPlans: any = {};
-    activeSortColumnLessonPlans: number = 0;
-    displayedColumnsLessonPlans: string[] = [
-        "No.",
-        "Science Topic",
-        "Creation Date",
-    ];
-    columnSortStateLessonPlans: string[] = ["asc", "asc", "asc"];
+    //allCaptures: any = [];
+    //selectedCapture: string = "";
+    //selectedCaptureLessonPlans: any = {};
+    //activeSortColumnLessonPlans: number = 0;
+    //displayedColumnsLessonPlans: string[] = [
+    //    "No.",
+    //    "Science Topic",
+    //    "Creation Date",
+    //];
+    //columnSortStateLessonPlans: string[] = ["asc", "asc", "asc"];
 
-    lessonPlanData: any = null;
-    fields = [
+    //lessonPlanData: any = null;
+    /*fields = [
         {
             name: "Grade",
             key: "Grade",
@@ -97,7 +97,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             name: "Wrap-Up Closure",
             key: "Wrap-Up Closure",
         },
-    ];
+    ];*/
 
     previousCaptures: any[] = [];
     activeSortColumnPastCaptures: number = 0;
@@ -136,7 +136,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
     ];
 
     futureCaptureKey!: string;
-    futureCaptureSpecificSelected: boolean | null = null;
+    //futureCaptureSpecificSelected: boolean | null = null;
     futureCaptureSpecificTopic: string = "";
     futureCaptureTopicCharactersLeft: number =
         this.maxTopicCharacters -
@@ -176,6 +176,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         await this.getCurrentCapture();
         await this.setSubmissionOpen();
         await this.getCaptureStories();
+        await this.getFutureCaptures();
 
         //Check if current capture has ended and set the correct values in Firestore
         if (
@@ -661,7 +662,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                 " Stories (" +
                 this.experiencesLength.toString() +
                 ")' button",
-            Result: this.buttonText + " all the experiences for the capture",
+            Result: this.buttonText + " all the stories for the capture",
             Time: time.toLocaleString(),
         });
         sessionStorage.setItem(
@@ -755,7 +756,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         startDate: Date,
         endDate: Date,
         activeCapture: boolean
-    ) {
+    ): Promise<boolean> {
         //Get classroom data
         const classroom = sessionStorage.getItem("classroom") || "";
         const currClassroomDocRef = doc(this.angularFireStore, classroom);
@@ -846,6 +847,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             });
 
             this.noActiveCapture = false;
+            return true;
         } else {
             const futureCaptureID =
                 classroom.slice(10) +
@@ -901,7 +903,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                     "Warning: Capture Date Overlap",
                     "The dates you have entered for this capture overlap with another capture. Please re-enter the dates."
                 );
-                return;
+                return false;
             } else {
                 //const futureCapturesLength =
                 //    Object.keys(future_captures).length || 0;
@@ -927,6 +929,8 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                     teacher: teacher,
                     students: students,
                 });
+
+                return true;
             }
         }
     }
@@ -967,7 +971,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         );
     }
 
-    onCaptureTypeClick() {
+    /*onCaptureTypeClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -989,9 +993,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-    }
+    }*/
 
-    onSpecificCaptureInfoHover() {
+    /*onSpecificCaptureInfoHover() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -1007,9 +1011,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-    }
+    }*/
 
-    onGeneralCaptureInfoHover() {
+    /*onGeneralCaptureInfoHover() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -1025,26 +1029,26 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-    }
+    }*/
 
     onSpecificCaptureTopicClick() {
-        if (this.specificSelected) {
-            let userIntData: any = [];
-            let time = new Date();
-            userIntData = JSON.parse(
-                sessionStorage.getItem("userInteractionData") || "[]"
-            );
-            userIntData.push({
-                Action: "Clicked",
-                Target: "'Topic Name' input",
-                Result: "Enter topic name for the capture",
-                Time: time.toLocaleString(),
-            });
-            sessionStorage.setItem(
-                "userInteractionData",
-                JSON.stringify(userIntData)
-            );
-        }
+        //if (this.specificSelected) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Topic Name' input",
+            Result: "Enter topic name for the capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+        //}
     }
 
     updateTopicCharacterCounter() {
@@ -1209,21 +1213,13 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         );
 
         if (
-            this.specificSelected === null ||
-            this.specificSelected === undefined ||
-            (this.specificSelected === true &&
-                (this.specificTopic === null ||
-                    this.specificTopic === undefined)) ||
-            this.dateRangeStartDate === null ||
-            this.dateRangeStartDate === undefined ||
-            this.dateRangeStartDate === "" ||
-            this.dateRangeEndDate === null ||
-            this.dateRangeEndDate === undefined ||
-            this.dateRangeEndDate === ""
+            !this.specificTopic ||
+            !this.dateRangeStartDate ||
+            !this.dateRangeEndDate
         ) {
             this.openAlertDialog(
                 "Warning: Incomplete Data",
-                "Please enter the appropriate data in all the fields of the form before continuing."
+                "Please enter a topic and select both a start and end date for the capture."
             );
             return;
         }
@@ -1248,57 +1244,33 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             true
         );
 
-        if (!this.isCaptureActive) {
-            this.currCaptureName = this.specificSelected
-                ? this.specificTopic
-                : "General";
-            this.currCapturePrompt = this.capturePrompt;
-            this.currCaptureStartDate =
-                new Date(this.dateRangeStartDate) || new Date();
-            this.currCaptureEndDate =
-                new Date(this.dateRangeEndDate) || new Date();
+        const success = await this.setCaptureDataInFirestore(
+            this.specificTopic,
+            this.capturePrompt,
+            new Date(this.dateRangeStartDate),
+            new Date(this.dateRangeEndDate),
+            this.isCaptureActive
+        );
 
-            await this.setCaptureDataInFirestore(
-                this.currCaptureName,
-                this.currCapturePrompt,
-                this.currCaptureStartDate,
-                this.currCaptureEndDate,
-                this.isCaptureActive
-            );
+        // Only reset and close if the data was successfully saved
+        if (success) {
+            this.specificTopic = "";
+            this.capturePrompt = "";
+            this.dateRangeStartDate = "";
+            this.dateRangeEndDate = "";
+            this.isCaptureActive = true;
+            this.showRecentCapture = false;
 
-            this.toggleCaptureStories = false;
-            this.buttonText = "Show";
-
-            await this.getCaptureStories();
-        } else {
-            const futureCaptureName = this.specificSelected
-                ? this.specificTopic
-                : "General";
-            const futureCapturePrompt = this.capturePrompt;
-            const futureCaptureStartDate =
-                new Date(this.dateRangeStartDate) || new Date();
-            const futureCaptureEndDate =
-                new Date(this.dateRangeEndDate) || new Date();
-
-            await this.setCaptureDataInFirestore(
-                futureCaptureName,
-                futureCapturePrompt,
-                futureCaptureStartDate,
-                futureCaptureEndDate,
-                this.isCaptureActive
-            );
+            // Manually close the modal on success
+            const modalElement = document.getElementById("newCaptureModal");
+            if (modalElement) {
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                modal?.hide();
+            }
         }
-
-        this.specificSelected = null;
-        this.specificTopic = "";
-        this.capturePrompt = "";
-        this.dateRangeStartDate = "";
-        this.dateRangeEndDate = "";
-        this.isCaptureActive = true;
-        this.showRecentCapture = false;
     }
 
-    async getAllCaptures() {
+    /*async getAllCaptures() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -1406,9 +1378,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
 
             this.allCaptures.push(captureObject);
         }
-    }
+    }*/
 
-    onSelectCaptureDropdownClick() {
+    /*onSelectCaptureDropdownClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -1424,9 +1396,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-    }
+    }*/
 
-    async selectCapture() {
+    /*async selectCapture() {
         let selectedCaptureName: string = "";
         let captureStartDate: string = "";
         let captureDueDate: string = "";
@@ -1465,9 +1437,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         );
 
         await this.getLessonPlans();
-    }
+    }*/
 
-    async getLessonPlans() {
+    /*async getLessonPlans() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -1505,9 +1477,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         this.columnSortStateLessonPlans[0] =
             this.columnSortStateLessonPlans[0] === "desc" ? "asc" : "desc";
         this.sortLessonPlansTable("No.");
-    }
+    }*/
 
-    sortLessonPlansTable(column: string) {
+    /*sortLessonPlansTable(column: string) {
         if (column === "No.") {
             this.columnSortStateLessonPlans[0] =
                 this.columnSortStateLessonPlans[0] === "desc" ? "asc" : "desc";
@@ -1580,9 +1552,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-    }
+    }*/
 
-    onLessonPlansXClick() {
+    /*onLessonPlansXClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -1598,9 +1570,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-    }
+    }*/
 
-    onLessonPlansCloseClick() {
+    /*onLessonPlansCloseClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -1616,9 +1588,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-    }
+    }*/
 
-    viewLessonPlan(lessonPlan: any) {
+    /*viewLessonPlan(lessonPlan: any) {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -1641,9 +1613,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         this.lessonPlanData = lessonPlan;
         const fieldOrder = (this.lessonPlanData.fieldOrder as string[]) || [];
         this.updateFieldOrder(fieldOrder);
-    }
+    }*/
 
-    private updateFieldOrder(fieldOrder: string[]) {
+    /*private updateFieldOrder(fieldOrder: string[]) {
         if (fieldOrder.length > 0) {
             // Map the order to existing fields
             this.fields = fieldOrder.map((key) => ({
@@ -1651,9 +1623,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                 key: key,
             }));
         }
-    }
+    }*/
 
-    private getFieldName(fieldKey: string): string {
+    /*private getFieldName(fieldKey: string): string {
         switch (fieldKey) {
             case "Grade":
                 return "Grade";
@@ -1676,10 +1648,10 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             default:
                 return "Unknown";
         }
-    }
+    }*/
 
     // Function to get additional container keys
-    getAdditionalContainerKeysForField(field: any): string[] {
+    /*getAdditionalContainerKeysForField(field: any): string[] {
         const defaultKeys = ["content", "integrated_experiences", "title"];
         const fieldData = this.lessonPlanData[field.key] || {};
 
@@ -1693,9 +1665,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                 // Sort in ascending order based on the timestamps
                 return dateA - dateB;
             });
-    }
+    }*/
 
-    onViewLessonPlanXClick() {
+    /*onViewLessonPlanXClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -1711,9 +1683,9 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-    }
+    }*/
 
-    onViewLessonPlanCloseClick() {
+    /*onViewLessonPlanCloseClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -1729,7 +1701,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-    }
+    }*/
 
     async getPastCaptures() {
         let userIntData: any = [];
@@ -1999,6 +1971,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             );
 
             this.futureCaptures[index] = {
+                key: key,
                 id: index++,
                 capture_name: future_captures[key]["name"],
                 prompt: future_captures[key]["prompt"],
@@ -2188,12 +2161,13 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         );
 
         this.futureCaptureKey = capture["key"];
-        this.futureCaptureSpecificSelected =
-            capture["capture_name"] === "General" ? false : true;
-        this.futureCaptureSpecificTopic =
-            capture["capture_name"] !== "General"
-                ? capture["capture_name"]
-                : "";
+        //this.futureCaptureSpecificSelected =
+        //    capture["capture_name"] === "General" ? false : true;
+        //this.futureCaptureSpecificTopic =
+        //    capture["capture_name"] !== "General"
+        //        ? capture["capture_name"]
+        //        : "";
+        this.futureCaptureSpecificTopic = capture["capture_name"];
         this.futureCapturePrompt = capture["prompt"];
         this.futureCaptureStartDate = this.convertDateFormat(
             capture["start_date"].toLocaleDateString()
@@ -2224,7 +2198,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         );
     }
 
-    onFutureCaptureTypeClick() {
+    /*onFutureCaptureTypeClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -2246,26 +2220,26 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             "userInteractionData",
             JSON.stringify(userIntData)
         );
-    }
+    }*/
 
     onFutureSpecificCaptureTopicClick() {
-        if (this.futureCaptureSpecificSelected) {
-            let userIntData: any = [];
-            let time = new Date();
-            userIntData = JSON.parse(
-                sessionStorage.getItem("userInteractionData") || "[]"
-            );
-            userIntData.push({
-                Action: "Clicked",
-                Target: "'Topic Name' input",
-                Result: "Enter topic name for the upcoming capture",
-                Time: time.toLocaleString(),
-            });
-            sessionStorage.setItem(
-                "userInteractionData",
-                JSON.stringify(userIntData)
-            );
-        }
+        //if (this.futureCaptureSpecificSelected) {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Topic Name' input",
+            Result: "Enter topic name for the upcoming capture",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+        //}
     }
 
     updateFutureCaptureTopicCharacterCounter() {
@@ -2460,16 +2434,61 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             console.log("No such document!");
         }
 
+        const newStartDate = new Date(
+            this.removeTimeZoneOffset(this.futureCaptureStartDate, true)
+        );
+        const newEndDate = new Date(
+            this.removeTimeZoneOffset(this.futureCaptureEndDate, true)
+        );
+
+        let captureOverlap = false;
+
+        for (const key in future_captures) {
+            if (key === this.futureCaptureKey) {
+                continue;
+            }
+
+            const existingStartDate = new Date(
+                future_captures[key]["start_date"].seconds * 1000 +
+                    future_captures[key]["start_date"].nanoseconds / 1000000
+            );
+            const existingEndDate = new Date(
+                future_captures[key]["due_date"].seconds * 1000 +
+                    future_captures[key]["due_date"].nanoseconds / 1000000
+            );
+
+            if (
+                newStartDate.getTime() <= existingEndDate.getTime() &&
+                existingStartDate.getTime() <= newEndDate.getTime()
+            ) {
+                captureOverlap = true;
+                break;
+            }
+        }
+
+        if (!captureOverlap && this.isCaptureActive) {
+            if (
+                newStartDate.getTime() <= this.currCaptureEndDate.getTime() &&
+                this.currCaptureStartDate.getTime() <= newEndDate.getTime()
+            ) {
+                captureOverlap = true;
+            }
+        }
+
+        if (captureOverlap) {
+            this.openAlertDialog(
+                "Warning: Capture Date Overlap",
+                "The dates you have entered overlap with an existing capture. Please choose different dates."
+            );
+            return;
+        }
+
         for (const key in future_captures) {
             if (this.futureCaptureKey === key.toString()) {
                 future_captures[key]["name"] = this.futureCaptureSpecificTopic;
                 future_captures[key]["prompt"] = this.futureCapturePrompt;
-                future_captures[key]["start_date"] = new Date(
-                    this.removeTimeZoneOffset(this.futureCaptureStartDate, true)
-                );
-                future_captures[key]["due_date"] = new Date(
-                    this.removeTimeZoneOffset(this.futureCaptureEndDate, true)
-                );
+                future_captures[key]["start_date"] = newStartDate;
+                future_captures[key]["due_date"] = newEndDate;
             }
         }
 
@@ -2503,7 +2522,7 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
         }
 
         this.futureCaptureKey = "";
-        this.futureCaptureSpecificSelected = null;
+        //this.futureCaptureSpecificSelected = null;
         this.futureCaptureSpecificTopic = "";
         this.futureCapturePrompt = "";
         this.futureCaptureStartDate = "";

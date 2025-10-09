@@ -115,6 +115,38 @@ body {
     /* flex: 1; */
 }
 
+.experience-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-left: 5%;
+}
+
+.experience-header p {
+    font-family: "Barlow", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    color: #000000;
+    margin: 0;
+}
+
+.translate-button-small {
+    height: max-content;
+    width: auto;
+    background-color: #ff8800;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-family: "Nova Square", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    cursor: pointer;
+    word-wrap: break-word;
+    margin: 0;
+}
+
 .exp-display-container h1 {
     font-family: "Nova Square", sans-serif;
     font-size: 40px;
@@ -412,7 +444,7 @@ option {
     line-height: 25px;
 }
 
-.view-all-translations-button {
+/*.view-all-translations-button {
     height: max-content;
     width: 100%;
     background-color: #ff8800;
@@ -426,7 +458,7 @@ option {
     cursor: pointer;
     word-wrap: break-word;
     margin: 0px auto 20px;
-}
+}*/
 
 .search-keyword label {
     display: block;
@@ -480,7 +512,7 @@ option {
     padding-left: 5px;
 }
 
-.view-all-exp-button {
+/*.view-all-exp-button {
     height: max-content;
     width: 100%;
     background-color: #ff8800;
@@ -494,7 +526,7 @@ option {
     cursor: pointer;
     word-wrap: break-word;
     margin: 0px auto 20px;
-}
+}*/
 
 .student-search-filter button {
     height: 60px;
@@ -669,7 +701,7 @@ option {
     margin: 20px 15px 0px 0px;
 }
 
-.integrate-all-button {
+/*.integrate-all-button {
     background-color: #ff8800;
     color: #ffffff;
     border: none;
@@ -682,7 +714,7 @@ option {
     width: 100%;
     word-wrap: break-word;
     margin-top: 30px;
-}
+}*/
 
 button {
     background-color: #47141c;
@@ -700,31 +732,31 @@ button {
     z-index: 2000;
 }
 
-.navigation-container {
+/*.navigation-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    position: relative; /* Ensure positioning context for absolute children */
+    position: relative;
     margin-right: 10px;
     width: 100%;
-}
+}*/
 
-.exp-nav-start {
+/*.exp-nav-start {
     margin: none;
     padding: none;
     display: flex;
     flex-direction: row;
-}
+}*/
 
-.lesson-nav-start {
+/*.lesson-nav-start {
     margin: none;
     padding: none;
     display: flex;
     flex-direction: row;
-}
+}*/
 
-.navigation-container button {
+/*.navigation-container button {
     background-color: #ff8800;
     color: #ffffff;
     border: none;
@@ -732,6 +764,6 @@ button {
     padding: 10px 15px;
     font-size: 40px;
     cursor: pointer;
-    transform: translateY(20%); /* Center vertically */
+    transform: translateY(20%);
     margin: 10px 0;
-}
+}*/

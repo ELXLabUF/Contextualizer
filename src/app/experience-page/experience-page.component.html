@@ -38,7 +38,7 @@
     </div> -->
     <!-- DO NOT DELETE! -->
 
-    <div class="navigation-container">
+    <!--<div class="navigation-container">
         <div
             *ngIf="!startNavigationFromExperiences; else alt_nav"
             class="lesson-nav-start"
@@ -65,16 +65,16 @@
                 </button>
             </ng-template>
         </div>
-    </div>
+    </div>-->
 
     <div class="parent-container flex-parent">
         <div class="page-header-container">
-            <div class="title-container"><h1>Browse Experiences</h1></div>
+            <div class="title-container"><h1>Browse Student Stories</h1></div>
 
             <div class="instruction-container">
                 <p>
-                    Select students’ experiences to integrate into your lesson
-                    plan. Use the filters on the right to update the list below.
+                    View and select students’ stories to integrate into your
+                    teaching.
                 </p>
             </div>
 
@@ -84,6 +84,28 @@
         <div class="content-container">
             <div class="exp-display-container flex-child">
                 <span *ngIf="experiences.length > 0; else noActiveCapture">
+                    <div class="experience-header">
+                        <p>
+                            Showing {{ selectedExperiences }} of
+                            {{ totalExperiencesLength }} stories
+                        </p>
+                        <button
+                            class="translate-button-small"
+                            (click)="toggleAllTranslations()"
+                        >
+                            <span
+                                *ngIf="
+                                    !toggleTranslations;
+                                    else viewTranslations
+                                "
+                            >
+                                Translate All Stories
+                            </span>
+                            <ng-template #viewTranslations>
+                                View Original Stories
+                            </ng-template>
+                        </button>
+                    </div>
                     <div
                         style="margin-bottom: 15px"
                         *ngFor="let experience of experiences"
@@ -107,7 +129,17 @@
                                             <!--{{ experience.experience_title }}-->
                                             {{ experience.title }}
                                         </h3>
-                                        <div class="translation-toggle">
+                                        <div
+                                            class="translation-toggle"
+                                            *ngIf="
+                                                experience.transcript
+                                                    ?.trim()
+                                                    .toLowerCase() !==
+                                                experience.translation
+                                                    ?.trim()
+                                                    .toLowerCase()
+                                            "
+                                        >
                                             <input
                                                 type="checkbox"
                                                 class="translation-toggle-checkbox"
@@ -204,40 +236,51 @@
                     </div>
                 </span>
                 <ng-template #noActiveCapture>
-                    <h1>
+                    <!--<h1>
                         There is no capture active currently or there are no
                         experiences recorded for the current capture. Create a
                         new capture to allow students to collect experiences.
+                    </h1>-->
+                    <h1>
+                        There is no currently active capture. Select a capture
+                        on the right to view stories.
                     </h1>
                 </ng-template>
             </div>
 
             <div class="options-container flex-child">
-                <p>
+                <!--<p>
                     Showing {{ selectedExperiences }} of
-                    {{ totalExperiencesLength }} entries
-                </p>
+                    {{ totalExperiencesLength }}
+                </p>-->
 
                 <button
                     class="export-all-exp-button"
                     (click)="exportAllExperiences()"
                 >
-                    Download All Experiences
+                    Download All Stories
                 </button>
 
                 <button
+                    class="export-all-exp-button"
+                    (click)="exportSelectedExperiences()"
+                >
+                    Download Selected Stories
+                </button>
+
+                <!--<button
                     class="view-all-translations-button"
                     (click)="toggleAllTranslations()"
                 >
                     <span *ngIf="!toggleTranslations; else viewTranslations">
-                        View Translated Experiences
+                        Translate All Stories
                     </span>
                     <ng-template #viewTranslations>
-                        View Original Experiences
+                        View Original Stories
                     </ng-template>
-                </button>
+                </button>-->
 
-                <button
+                <!--<button
                     class="view-all-exp-button"
                     (click)="getAllExperiences()"
                 >
@@ -247,7 +290,7 @@
                     <ng-template #viewCurrentCaptureExp>
                         View Current Capture Experiences
                     </ng-template>
-                </button>
+                </button>-->
 
                 <!--<mat-form-field appearance="outline" style="width: 100%">
                     <mat-label>Get Previous Capture Experiences</mat-label>
@@ -268,7 +311,7 @@
                 </mat-form-field>-->
 
                 <div class="view-previous-capture">
-                    <label>View Past Capture Experiences</label>
+                    <label>View Past or All Stories</label>
                     <select
                         class="dropdown-select"
                         (click)="onViewPreviousCaptureExpDropdownClick()"
@@ -276,6 +319,8 @@
                         [(ngModel)]="prevCaptureName"
                     >
                         <option value="" disabled>Select A Past Capture</option>
+                        <option value="current">Current Capture</option>
+                        <option value="all">All Stories</option>
                         <option
                             *ngFor="let capture of previousCaptures"
                             [value]="capture.capture"
@@ -584,7 +629,7 @@
                 </mat-form-field>
             </div> -->
 
-                <div>
+                <!--<div>
                     <button
                         class="integrate-all-button"
                         *ngIf="!this.startNavigationFromExperiences"
@@ -599,7 +644,7 @@
                     >
                         Upload lesson plan to Integrate all selected
                     </button>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>
@@ -1330,7 +1375,7 @@
                         </div>
 
                         <div class="sort-experiences">
-                            <label>Sort Experiences</label>
+                            <label>Sort Stories</label>
                             <div class="sort-radio">
                                 <input
                                     type="radio"

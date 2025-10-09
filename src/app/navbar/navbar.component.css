@@ -73,11 +73,13 @@ nav {
 .dropdown-menu {
     position: absolute; /* Position relative to parent */
     top: 64px; /* Adjust distance from the icon */
-    right: -16px; /* Align to the right of the icon */
+    right: -14px; /* Align to the right of the icon */
     background-color: #ffaa00;
     border: 2px solid #ff8800;
-    border-radius: 0;
+    border-radius: 8px;
     display: none; /* Hidden by default */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
 }
 
 .dropdown-menu.show {
@@ -91,4 +93,11 @@ nav {
     text-decoration: none;
     font-family: "Nova Square", sans-serif;
     font-size: 30px;
+}
+
+.dropdown-divider {
+    height: 2px;
+    margin: 4px 0;
+    background-color: #ff8800;
+    border: 0;
 }

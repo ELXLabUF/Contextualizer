@@ -1,6 +1,6 @@
 <div class="parent-container">
     <div class="title-container">
-        <h1>Current Capture</h1>
+        <h1>Create Story Captures</h1>
         <div class="buttons-container">
             <button
                 data-bs-toggle="modal"
@@ -9,29 +9,31 @@
             >
                 Start New Capture
             </button>
-            <button
+            <!--<button
                 data-bs-toggle="modal"
                 data-bs-target="#lessonPlanModal"
                 (click)="getAllCaptures()"
             >
                 Lesson Plans Library
-            </button>
+            </button>-->
             <button
                 data-bs-toggle="modal"
                 data-bs-target="#pastCapturesModal"
                 (click)="getPastCaptures()"
             >
-                Past Captures Library
+                Past Captures
             </button>
-            <button
+            <!--<button
                 data-bs-toggle="modal"
                 data-bs-target="#futureCapturesModal"
                 (click)="getFutureCaptures()"
             >
                 Upcoming Captures Library
-            </button>
+            </button>-->
         </div>
     </div>
+
+    <h2 class="section-title">Current Capture</h2>
     <div class="data-container">
         <div class="capture-data">
             <span *ngIf="isCaptureActive; else noActiveCapture">
@@ -101,6 +103,44 @@
         </div>
     </div>
 
+    <h2 class="section-title">Upcoming Captures</h2>
+    <div class="data-container">
+        <div class="upcoming-captures-container">
+            <ng-container
+                *ngIf="futureCaptures.length > 0; else noFutureCaptures"
+            >
+                <div
+                    *ngFor="let capture of futureCaptures"
+                    class="upcoming-capture-item"
+                >
+                    <div class="capture-item-info">
+                        <div class="capture-item-topic">
+                            {{ capture?.capture_name }}
+                        </div>
+                        <div class="capture-item-prompt">
+                            {{ capture?.prompt }}
+                        </div>
+                    </div>
+                    <div class="capture-item-dates">
+                        {{ capture?.start_date | date : "MM/dd/yy" }} -
+                        {{ capture?.due_date | date : "MM/dd/yy" }}
+                    </div>
+                    <div class="capture-item-action">
+                        <i
+                            class="bi bi-pencil-fill"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editFutureCaptureModal"
+                            (click)="editFutureCapture(capture)"
+                        ></i>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noFutureCaptures>
+                <p class="no-captures-text">No upcoming captures scheduled.</p>
+            </ng-template>
+        </div>
+    </div>
+
     <div
         class="modal fade"
         id="newCaptureModal"
@@ -126,7 +166,7 @@
                     ></button>
                 </div>
                 <div class="modal-body">
-                    <div class="set-capture-type">
+                    <!--<div class="set-capture-type">
                         <p>Capture Type:</p>
                         <div class="set-capture-data">
                             <div class="capture-radio">
@@ -175,7 +215,10 @@
                                 </i>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
+                    <p class="modal-instruction-text">
+                        Dates for captures cannot overlap.
+                    </p>
 
                     <div class="set-capture-topic">
                         <p>Topic:</p>
@@ -185,7 +228,6 @@
                                     type="text"
                                     placeholder="Topic Name"
                                     maxlength="40"
-                                    [disabled]="!specificSelected"
                                     [(ngModel)]="specificTopic"
                                     (click)="onSpecificCaptureTopicClick()"
                                     (input)="updateTopicCharacterCounter()"
@@ -252,11 +294,7 @@
                     >
                         Close
                     </button>
-                    <button
-                        type="button"
-                        data-bs-dismiss="modal"
-                        (click)="startNewCapture()"
-                    >
+                    <button type="button" (click)="startNewCapture()">
                         Confirm
                     </button>
                 </div>
@@ -264,7 +302,7 @@
         </div>
     </div>
 
-    <div
+    <!--<div
         class="modal fade"
         id="lessonPlanModal"
         tabindex="-1"
@@ -460,9 +498,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
-    <div
+    <!--<div
         class="modal fade"
         id="viewLessonPlanModal"
         tabindex="-1"
@@ -582,7 +620,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <div
         class="modal fade"
@@ -698,7 +736,7 @@
         </div>
     </div>
 
-    <div
+    <!--<div
         class="modal fade"
         id="futureCapturesModal"
         tabindex="-1"
@@ -830,7 +868,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <div
         class="modal fade"
@@ -857,7 +895,7 @@
                     ></button>
                 </div>
                 <div class="modal-body">
-                    <div class="set-capture-type">
+                    <!--<div class="set-capture-type">
                         <p>Capture Type:</p>
                         <div class="set-capture-data">
                             <div class="capture-radio">
@@ -906,7 +944,7 @@
                                 </i>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="set-capture-topic">
                         <p>Topic:</p>
@@ -916,7 +954,6 @@
                                     type="text"
                                     placeholder="Topic Name"
                                     maxlength="40"
-                                    [disabled]="!futureCaptureSpecificSelected"
                                     [(ngModel)]="futureCaptureSpecificTopic"
                                     (click)="
                                         onFutureSpecificCaptureTopicClick()

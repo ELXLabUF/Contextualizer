@@ -14,7 +14,7 @@ import { Observable } from "rxjs";
 export class LandingPageComponent implements OnInit, OnDestroy {
     allClassrooms: string[] = [];
     classroom: string = "";
-    startNavigationFromExperiences: boolean = false;
+    //startNavigationFromExperiences: boolean = false;
     timeStart!: Date;
     timeEnd!: Date;
 
@@ -156,7 +156,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    onPersonalizeLessonClick() {
+    /*onPersonalizeLessonClick() {
         let userIntData: any = [];
         let time = new Date();
         userIntData = JSON.parse(
@@ -246,7 +246,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
                 this.router.navigate(["/instructions"]);
             }
         }
-    }
+    }*/
 
     onBrowseExperiencesClick() {
         let userIntData: any = [];
@@ -265,79 +265,79 @@ export class LandingPageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
 
-        sessionStorage.setItem("altNavigation", "true");
+        //sessionStorage.setItem("altNavigation", "true");
 
+        //if (
+        //    sessionStorage.getItem("instructionsDot") !== null ||
+        //    sessionStorage.getItem("uploadFileDot") !== null ||
+        //    sessionStorage.getItem("experiencesDot") !== null ||
+        //    sessionStorage.getItem("displayPageDot") !== null ||
+        //    sessionStorage.getItem("finalizePageDot") !== null ||
+        //    sessionStorage.getItem("fileUploadSuccess") !== null
+        //) {
+        //    this.openConfirmDialog(
+        //        "New Lesson Plan Confirmation",
+        //        "Are you sure you want to contextualize a new lesson plan? All your previous data will be lost."
+        //    ).subscribe((decision: boolean) => {
+        //        if (decision) {
+        //            sessionStorage.removeItem("instructionsDot");
+        //            sessionStorage.removeItem("uploadFileDot");
+        //            sessionStorage.removeItem("experiencesDot");
+        //            sessionStorage.removeItem("displayPageDot");
+        //            sessionStorage.removeItem("finalizePageDot");
+        //            sessionStorage.removeItem("fileUploadSuccess");
+        //            sessionStorage.removeItem("fileURL");
+        //            sessionStorage.removeItem("documentId");
+
+        //            userIntData = [];
+        //            time = new Date();
+        //            userIntData = JSON.parse(
+        //                sessionStorage.getItem("userInteractionData") || "[]"
+        //            );
+        //            userIntData.push({
+        //                Action: "Clicked",
+        //                Target: "'Yes, Confirm' button on dialog box",
+        //                Result: "Navigate to 'Browse Experiences' page",
+        //                Time: time.toLocaleString(),
+        //            });
+        //            sessionStorage.setItem(
+        //                "userInteractionData",
+        //                JSON.stringify(userIntData)
+        //            );
+        //            this.router.navigate(["/experience"]);
+        //        } else {
+        //            userIntData = [];
+        //            time = new Date();
+        //            userIntData = JSON.parse(
+        //                sessionStorage.getItem("userInteractionData") || "[]"
+        //            );
+        //            userIntData.push({
+        //                Action: "Clicked",
+        //                Target: "'No, Go Back' button on dialog box",
+        //                Result: "Deny start of new lesson plan contextualization",
+        //                Time: time.toLocaleString(),
+        //            });
+        //            sessionStorage.setItem(
+        //                "userInteractionData",
+        //                JSON.stringify(userIntData)
+        //            );
+        //        }
+        //    });
+        //} else {
         if (
-            sessionStorage.getItem("instructionsDot") !== null ||
-            sessionStorage.getItem("uploadFileDot") !== null ||
-            sessionStorage.getItem("experiencesDot") !== null ||
-            sessionStorage.getItem("displayPageDot") !== null ||
-            sessionStorage.getItem("finalizePageDot") !== null ||
-            sessionStorage.getItem("fileUploadSuccess") !== null
+            !sessionStorage.getItem("classroom") ||
+            sessionStorage.getItem("classroom") === "" ||
+            sessionStorage.getItem("classroom") === null ||
+            sessionStorage.getItem("classroom") === undefined
         ) {
-            this.openConfirmDialog(
-                "New Lesson Plan Confirmation",
-                "Are you sure you want to contextualize a new lesson plan? All your previous data will be lost."
-            ).subscribe((decision: boolean) => {
-                if (decision) {
-                    sessionStorage.removeItem("instructionsDot");
-                    sessionStorage.removeItem("uploadFileDot");
-                    sessionStorage.removeItem("experiencesDot");
-                    sessionStorage.removeItem("displayPageDot");
-                    sessionStorage.removeItem("finalizePageDot");
-                    sessionStorage.removeItem("fileUploadSuccess");
-                    sessionStorage.removeItem("fileURL");
-                    sessionStorage.removeItem("documentId");
-
-                    userIntData = [];
-                    time = new Date();
-                    userIntData = JSON.parse(
-                        sessionStorage.getItem("userInteractionData") || "[]"
-                    );
-                    userIntData.push({
-                        Action: "Clicked",
-                        Target: "'Yes, Confirm' button on dialog box",
-                        Result: "Navigate to 'Browse Experiences' page",
-                        Time: time.toLocaleString(),
-                    });
-                    sessionStorage.setItem(
-                        "userInteractionData",
-                        JSON.stringify(userIntData)
-                    );
-                    this.router.navigate(["/experience"]);
-                } else {
-                    userIntData = [];
-                    time = new Date();
-                    userIntData = JSON.parse(
-                        sessionStorage.getItem("userInteractionData") || "[]"
-                    );
-                    userIntData.push({
-                        Action: "Clicked",
-                        Target: "'No, Go Back' button on dialog box",
-                        Result: "Deny start of new lesson plan contextualization",
-                        Time: time.toLocaleString(),
-                    });
-                    sessionStorage.setItem(
-                        "userInteractionData",
-                        JSON.stringify(userIntData)
-                    );
-                }
-            });
+            this.openAlertDialog(
+                "Warning: No Classroom Selected",
+                "Please select a classroom to proceed further."
+            );
         } else {
-            if (
-                !sessionStorage.getItem("classroom") ||
-                sessionStorage.getItem("classroom") === "" ||
-                sessionStorage.getItem("classroom") === null ||
-                sessionStorage.getItem("classroom") === undefined
-            ) {
-                this.openAlertDialog(
-                    "Warning: No Classroom Selected",
-                    "Please select a classroom to proceed further."
-                );
-            } else {
-                this.router.navigate(["/experience"]);
-            }
+            this.router.navigate(["/experience"]);
         }
+        //}
     }
 
     openAlertDialog(title: string, message: string): void {

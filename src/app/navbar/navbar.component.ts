@@ -1,5 +1,5 @@
 import { Component, HostListener } from "@angular/core";
-import { Router } from "@angular/router";
+import { NavigationEnd, Router } from "@angular/router";
 import { AuthService } from "../auth-service/auth.service";
 import { UserInteractionCsvService } from "../user-interaction-csv-service/user-interaction-csv.service";
 import { first } from "rxjs/operators";
@@ -16,6 +16,8 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 })
 export class NavbarComponent {
     isDropdownOpen: boolean = false;
+    showBrowseStoriesLink: boolean = false;
+    showCreateCaptureLink: boolean = false;
     //currentUser$ = this.authService.currentUser.subscribe((user) => {
     //    console.log(user);
     //});
@@ -24,7 +26,22 @@ export class NavbarComponent {
         private router: Router,
         public authService: AuthService,
         private userIntCSVService: UserInteractionCsvService
-    ) {}
+    ) {
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url === "/captures") {
+                    this.showBrowseStoriesLink = true;
+                    this.showCreateCaptureLink = false;
+                } else if (event.url === "/experience") {
+                    this.showBrowseStoriesLink = false;
+                    this.showCreateCaptureLink = true;
+                } else {
+                    this.showBrowseStoriesLink = false;
+                    this.showCreateCaptureLink = false;
+                }
+            }
+        });
+    }
 
     onLogoClick() {
         let userIntData: any = [];
@@ -186,15 +203,15 @@ export class NavbarComponent {
     async onLogout() {
         //if (sessionStorage.getItem("passwordReset") === "true") {
         try {
-            sessionStorage.removeItem("instructionsDot");
-            sessionStorage.removeItem("uploadFileDot");
-            sessionStorage.removeItem("experiencesDot");
-            sessionStorage.removeItem("displayPageDot");
-            sessionStorage.removeItem("finalizePageDot");
-            sessionStorage.removeItem("altNavigation");
-            sessionStorage.removeItem("fileUploadSuccess");
-            sessionStorage.removeItem("documentId");
-            sessionStorage.removeItem("fileURL");
+            //sessionStorage.removeItem("instructionsDot");
+            //sessionStorage.removeItem("uploadFileDot");
+            //sessionStorage.removeItem("experiencesDot");
+            //sessionStorage.removeItem("displayPageDot");
+            //sessionStorage.removeItem("finalizePageDot");
+            //sessionStorage.removeItem("altNavigation");
+            //sessionStorage.removeItem("fileUploadSuccess");
+            //sessionStorage.removeItem("documentId");
+            //sessionStorage.removeItem("fileURL");
             sessionStorage.removeItem("userID");
             sessionStorage.removeItem("allClassrooms");
             sessionStorage.removeItem("classroom");
@@ -269,6 +286,44 @@ export class NavbarComponent {
     @HostListener("document:click", ["$event"])
     onClickOutside() {
         this.isDropdownOpen = false; // Close dropdown when clicking outside
+    }
+
+    onBrowseStoriesClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Stories' on navbar",
+            Result: "Navigate to 'Browse Stories' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+        this.router.navigate(["/experience"]);
+    }
+
+    onCreateCaptureClick() {
+        let userIntData: any = [];
+        let time = new Date();
+        userIntData = JSON.parse(
+            sessionStorage.getItem("userInteractionData") || "[]"
+        );
+        userIntData.push({
+            Action: "Clicked",
+            Target: "'Captures' on navbar",
+            Result: "Navigate to 'Create Story Captures' page",
+            Time: time.toLocaleString(),
+        });
+        sessionStorage.setItem(
+            "userInteractionData",
+            JSON.stringify(userIntData)
+        );
+        this.router.navigate(["/captures"]);
     }
 
     onAboutClick() {

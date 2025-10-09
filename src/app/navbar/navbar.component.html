@@ -9,6 +9,12 @@
         <!-- Nav links on the right -->
         <div class="nav-links">
             <a (click)="onAboutClick()"> About </a>
+            <a *ngIf="showBrowseStoriesLink" (click)="onBrowseStoriesClick()">
+                Browse Stories
+            </a>
+            <a *ngIf="showCreateCaptureLink" (click)="onCreateCaptureClick()">
+                Create Capture
+            </a>
             <!-- Profile Dropdown -->
             <div
                 class="profile-dropdown"
@@ -20,6 +26,7 @@
                 ></i>
                 <div class="dropdown-menu" [class.show]="isDropdownOpen">
                     <a (click)="onAccountClick()"> Account </a>
+                    <hr class="dropdown-divider" />
                     <a (click)="onLogout()"> Log Out </a>
                 </div>
             </div>
