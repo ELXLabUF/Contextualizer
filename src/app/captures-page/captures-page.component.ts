@@ -257,7 +257,19 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             this.currCaptureEndDate = new Date(
                 end_date.seconds * 1000 + end_date.nanoseconds / 1000000
             );
-            this.isCaptureActive = true;
+
+            // Check if the loaded data indicates an active capture
+            if (
+                this.currCaptureEndDate.getTime().toString().slice(0, 9) ===
+                new Date("January 02, 2020 00:00:00")
+                    .getTime()
+                    .toString()
+                    .slice(0, 9)
+            ) {
+                this.isCaptureActive = false;
+            } else {
+                this.isCaptureActive = true;
+            }
         } else {
             console.log("No such document!");
         }
@@ -503,6 +515,14 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                 );
 
                 await this.setEndCaptureDataInFirestore();
+
+                // After ending, check if a future capture can become active
+                await this.setCurrentCaptureFromFutureCaptures();
+
+                // Refresh all component data to reflect changes
+                await this.getCurrentCapture();
+                await this.getCaptureStories();
+                await this.getFutureCaptures();
             } else {
                 let userIntData: any = [];
                 let time = new Date();
@@ -1254,11 +1274,15 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
 
         // Only reset and close if the data was successfully saved
         if (success) {
+            // Refresh component data from Firestore
+            await this.getCurrentCapture();
+            await this.getCaptureStories();
+            await this.getFutureCaptures();
+
             this.specificTopic = "";
             this.capturePrompt = "";
             this.dateRangeStartDate = "";
             this.dateRangeEndDate = "";
-            this.isCaptureActive = true;
             this.showRecentCapture = false;
 
             // Manually close the modal on success

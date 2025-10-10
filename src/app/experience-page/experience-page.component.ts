@@ -1526,6 +1526,14 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             JSON.stringify(userIntData)
         );
 
+        if (this.experiences.length === 0) {
+            this.openAlertDialog(
+                "No Stories to Download",
+                "There are no stories in the currently selected capture. Please select a different capture."
+            );
+            return;
+        }
+
         const rows = [];
 
         // Store the text data for rows (excluding header)
@@ -1586,7 +1594,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
 
         // Add data rows and store texts
-        for (const exp of this.allExperiences) {
+        for (const exp of this.experiences) {
             const title = exp.title || "";
             const transcript = exp.translation || exp.transcript || "";
             const name = exp.name || "";
