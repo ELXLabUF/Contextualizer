@@ -391,6 +391,7 @@ body {
 .modal-instruction-text {
     text-align: center;
     font-size: 20px;
+    line-height: 25px;
     margin-bottom: 20px;
     color: #888280;
 }
