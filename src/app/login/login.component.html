@@ -22,12 +22,24 @@
                     />
 
                     <label>Password:</label>
-                    <input
-                        type="password"
-                        [(ngModel)]="password"
-                        name="password"
-                        required
-                    />
+                    <div class="input-with-icon">
+                        <input
+                            [type]="passwordVisible ? 'text' : 'password'"
+                            [(ngModel)]="password"
+                            name="password"
+                            required
+                        />
+                        <i
+                            class="material-icons"
+                            (click)="togglePasswordVisibility()"
+                        >
+                            {{
+                                passwordVisible
+                                    ? "visibility_off"
+                                    : "visibility"
+                            }}
+                        </i>
+                    </div>
                 </div>
                 <button type="submit">Log In</button>
             </form>

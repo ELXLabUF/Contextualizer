@@ -380,7 +380,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 query(
                     collection(this.firestore, "NewExperiences"),
                     where("capture", "==", capture_id),
-                    where("show_to_teacher", "==", true)
+                    where("show_to_teacher", "==", true),
+                    where("is_deleted", "!=", true)
                 )
             ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
 
@@ -458,7 +459,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             const allExpQuery = query(
                 collection(this.firestore, "NewExperiences"),
                 where("device_id", "in", studentDeviceIds),
-                where("show_to_teacher", "==", true)
+                where("show_to_teacher", "==", true),
+                where("is_deleted", "!=", true)
             );
 
             const allExpSnapshot = await getDocs(allExpQuery);
@@ -666,7 +668,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             query(
                 collection(this.firestore, "NewExperiences"),
                 where("capture", "==", capture_id),
-                where("show_to_teacher", "==", true)
+                where("show_to_teacher", "==", true),
+                where("is_deleted", "!=", true)
             )
         ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
 

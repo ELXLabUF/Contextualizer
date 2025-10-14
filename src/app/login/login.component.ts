@@ -11,6 +11,7 @@ import { AuthService } from "../auth-service/auth.service";
 export class LoginComponent {
     username: string = "";
     password: string = "";
+    passwordVisible: boolean = false;
     errorMessage: string = "";
 
     constructor(
@@ -134,5 +135,9 @@ export class LoginComponent {
             this.errorMessage = "";
         }, 3000);
         // No need to reset errorMessage here because it's set when errors occur.
+    }
+
+    togglePasswordVisibility(): void {
+        this.passwordVisible = !this.passwordVisible;
     }
 }

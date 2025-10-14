@@ -304,7 +304,8 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                 query(
                     collection(this.angularFireStore, "NewExperiences"),
                     where("capture", "==", capture_id),
-                    where("show_to_teacher", "==", true)
+                    where("show_to_teacher", "==", true),
+                    where("is_deleted", "!=", true)
                 )
             ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
 
@@ -641,7 +642,8 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                     query(
                         collection(this.angularFireStore, "NewExperiences"),
                         where("capture", "==", captureID),
-                        where("show_to_teacher", "==", true)
+                        where("show_to_teacher", "==", true),
+                        where("is_deleted", "!=", true)
                     )
                 ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
 
@@ -750,7 +752,8 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
             query(
                 collection(this.angularFireStore, "NewExperiences"),
                 where("capture", "==", key),
-                where("show_to_teacher", "==", true)
+                where("show_to_teacher", "==", true),
+                where("is_deleted", "!=", true)
             )
         ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
 
@@ -1778,7 +1781,8 @@ export class CapturesPageComponent implements OnInit, OnDestroy {
                 query(
                     collection(this.angularFireStore, "NewExperiences"),
                     where("capture", "==", key),
-                    where("show_to_teacher", "==", true)
+                    where("show_to_teacher", "==", true),
+                    where("is_deleted", "!=", true)
                 )
             ).then((qDoc: any) => qDoc.docs.map((doc: any) => doc.data()));
 
