@@ -13,11 +13,16 @@ import { AboutComponent } from "./about/about.component";
 import { AccountComponent } from "./account/account.component";
 import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
 import { authGuard } from "./auth-guard/auth.guard";
+import { loginGuard } from "./login-guard/login.guard";
 
 const routes: Routes = [
     { path: "", redirectTo: "/login", pathMatch: "full" },
-    { path: "login", component: LoginComponent },
-    { path: "register", component: RegisterComponent },
+    { path: "login", component: LoginComponent, canActivate: [loginGuard] },
+    {
+        path: "register",
+        component: RegisterComponent,
+        canActivate: [loginGuard],
+    },
     {
         path: "landing",
         component: LandingPageComponent,
