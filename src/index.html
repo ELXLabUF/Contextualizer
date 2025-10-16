@@ -7,6 +7,48 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
+        <style>
+            .initial-spinner-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                flex-direction: column;
+            }
+
+            .initial-spinner {
+                border: 8px solid #f3f3f3;
+                border-top: 8px solid #ff8800;
+                border-radius: 50%;
+                width: 60px;
+                height: 60px;
+                animation: spin 1.5s linear infinite;
+            }
+
+            .initial-loading-text {
+                color: #000000;
+                font-family: "Barlow", sans-serif;
+                font-size: 2.5rem;
+                font-weight: 500;
+                margin-top: 25px;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -36,7 +78,12 @@
         />
     </head>
     <body class="mat-typography">
-        <app-root></app-root>
+        <app-root>
+            <div class="initial-spinner-overlay">
+                <div class="initial-spinner"></div>
+                <div class="initial-loading-text">Loading...</div>
+            </div>
+        </app-root>
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

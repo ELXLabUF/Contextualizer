@@ -1,0 +1,36 @@
+.not-found-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    text-align: center;
+    font-family: "Barlow", sans-serif;
+}
+
+.not-found-container h1 {
+    font-size: 6rem;
+    font-family: "Nova Square", sans-serif;
+    color: #ff8800;
+}
+
+.not-found-container h2 {
+    font-size: 2.75rem;
+    margin-top: 35px;
+}
+
+.not-found-container p {
+    font-size: 2rem;
+    margin-top: 25px;
+}
+
+.not-found-container a {
+    margin-top: 20px;
+    padding: 25px;
+    background-color: #ff8800;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 20px;
+    font-family: "Nova Square", sans-serif;
+    font-size: 2rem;
+}

@@ -18,6 +18,7 @@ import { DisplayPageComponent } from "./display-page/display-page.component";
 import { FinalizeLpPageComponent } from "./finalize-lp-page/finalize-lp-page.component";
 import { AboutComponent } from "./about/about.component";
 import { AccountComponent } from "./account/account.component";
+import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
 
 import { environment } from "../environments/environment";
 import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
@@ -97,6 +98,7 @@ import { InputDialogComponent } from "./input-dialog/input-dialog.component";
         DisplayPageComponent,
         FinalizeLpPageComponent,
         AboutComponent,
+        PageNotFoundComponent,
         PasswordPatternPipe,
         AccountComponent,
         ConfirmationDialogComponent,

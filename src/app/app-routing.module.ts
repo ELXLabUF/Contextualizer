@@ -11,20 +11,56 @@ import { DisplayPageComponent } from "./display-page/display-page.component";
 import { FinalizeLpPageComponent } from "./finalize-lp-page/finalize-lp-page.component";
 import { AboutComponent } from "./about/about.component";
 import { AccountComponent } from "./account/account.component";
+import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
+import { authGuard } from "./auth-guard/auth.guard";
 
 const routes: Routes = [
     { path: "", redirectTo: "/login", pathMatch: "full" },
     { path: "login", component: LoginComponent },
     { path: "register", component: RegisterComponent },
-    { path: "landing", component: LandingPageComponent },
-    { path: "captures", component: CapturesPageComponent },
-    { path: "instructions", component: LessonPlanInstructionsComponent },
-    { path: "lesson", component: LessonPageComponent },
-    { path: "experience", component: ExperiencePageComponent },
-    { path: "display", component: DisplayPageComponent },
-    { path: "finalize", component: FinalizeLpPageComponent },
+    {
+        path: "landing",
+        component: LandingPageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: "captures",
+        component: CapturesPageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: "instructions",
+        component: LessonPlanInstructionsComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: "lesson",
+        component: LessonPageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: "experience",
+        component: ExperiencePageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: "display",
+        component: DisplayPageComponent,
+        canActivate: [authGuard],
+    },
+    {
+        path: "finalize",
+        component: FinalizeLpPageComponent,
+        canActivate: [authGuard],
+    },
     { path: "about", component: AboutComponent },
-    { path: "account", component: AccountComponent },
+    { path: "account", component: AccountComponent, canActivate: [authGuard] },
+    {
+        path: "not-found",
+        component: PageNotFoundComponent,
+        canActivate: [authGuard],
+    },
+    { path: "**", redirectTo: "/not-found" },
 ];
 
 @NgModule({

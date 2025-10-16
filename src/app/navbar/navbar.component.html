@@ -8,13 +8,13 @@
 
         <!-- Nav links on the right -->
         <div class="nav-links">
-            <a (click)="onAboutClick()"> About </a>
             <a *ngIf="showBrowseStoriesLink" (click)="onBrowseStoriesClick()">
                 Browse Stories
             </a>
             <a *ngIf="showCreateCaptureLink" (click)="onCreateCaptureClick()">
                 Create Capture
             </a>
+            <a (click)="onAboutClick()"> About </a>
             <!-- Profile Dropdown -->
             <div
                 class="profile-dropdown"
