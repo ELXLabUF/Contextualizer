@@ -549,13 +549,15 @@ option {
     flex-direction: row;
     margin: 5px;
     padding: 10px;
+    justify-content: center;
 }
 
 .search-student-name {
     display: flex;
     flex-direction: column;
-    width: 45%;
+    width: 60%;
     gap: 15px;
+    align-items: center;
 }
 
 .search-student-name label {
@@ -574,7 +576,7 @@ option {
     background-color: #e2dedc;
     border: 2px solid #3f3734;
     border-radius: 20px;
-    width: 75%;
+    width: 80%;
     height: 60px;
     padding-left: 10px;
 }
