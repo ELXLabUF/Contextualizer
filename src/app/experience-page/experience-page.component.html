@@ -83,6 +83,10 @@
 
         <div class="content-container">
             <div class="exp-display-container flex-child">
+                <div class="topic-header" *ngIf="currentTopicName">
+                    <h2><strong>Topic:</strong> {{ currentTopicName }}</h2>
+                    <p><strong>Prompt:</strong> {{ currentTopicPrompt }}</p>
+                </div>
                 <span *ngIf="experiences.length > 0; else noActiveCapture">
                     <div class="experience-header">
                         <p>
@@ -241,9 +245,12 @@
                         experiences recorded for the current capture. Create a
                         new capture to allow students to collect experiences.
                     </h1>-->
-                    <h1>
+                    <h1 *ngIf="prevCaptureName === '' && noActiveCapture">
                         There is no currently active capture. Select a capture
                         on the right to view stories.
+                    </h1>
+                    <h1 *ngIf="prevCaptureName !== '' || !noActiveCapture">
+                        There are no stories for the selected capture.
                     </h1>
                 </ng-template>
             </div>

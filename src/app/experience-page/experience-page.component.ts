@@ -94,6 +94,11 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
     prevCaptureName: string = "";
     previousCaptures: any = [];
 
+    currentTopicName: string = "";
+    currentTopicPrompt: string = "";
+    activeCaptureTopic: string = "";
+    activeCapturePrompt: string = "";
+
     currentAudio: HTMLAudioElement | null = null;
     currentPlayingExpId: string | null = null;
     toggleTranslations: boolean = false;
@@ -230,7 +235,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         //});
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.timeStart = new Date();
         let userIntData: any = [];
         userIntData = JSON.parse(
@@ -248,8 +253,31 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
         );
         sessionStorage.setItem("timeStart", this.timeStart.toString());
 
-        this.getCurrentCaptureExperiences();
-        this.getPreviousCaptures();
+        await this.getPreviousCaptures();
+        await this.getCurrentCaptureExperiences();
+
+        if (this.previousCaptures.length > 0) {
+            this.previousCaptures.sort(
+                (a: any, b: any) =>
+                    b.due_date_obj.getTime() - a.due_date_obj.getTime()
+            );
+
+            const defaultCapture = this.previousCaptures[0];
+            this.prevCaptureName = defaultCapture.capture;
+
+            this.currentTopicName = defaultCapture.name;
+            this.currentTopicPrompt = defaultCapture.prompt;
+
+            await this.getPreviousCaptureExperiences();
+        } else if (!this.noActiveCapture) {
+            this.prevCaptureName = "current";
+            this.currentTopicName = this.activeCaptureTopic;
+            this.currentTopicPrompt = this.activeCapturePrompt;
+        } else {
+            this.currentTopicName = "No Active Capture";
+            this.currentTopicPrompt =
+                "Please select a capture to view stories.";
+        }
 
         //if (
         //    sessionStorage.getItem("altNavigation") === "false" ||
@@ -363,8 +391,17 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             //currSelectedTopic = classroomDocSnap.data()["selected_topic"] || "";
             if (classroomDocSnap.data()["capture"] !== undefined) {
                 capture_id = classroomDocSnap.data()["capture"];
+                this.activeCaptureTopic =
+                    classroomDocSnap.data()["selected_topic"] ||
+                    "Current Capture";
+                this.activeCapturePrompt =
+                    classroomDocSnap.data()["capture_prompt"] ||
+                    "No prompt available for this capture.";
             } else {
                 this.noActiveCapture = true;
+                this.activeCaptureTopic = "No Active Capture";
+                this.activeCapturePrompt =
+                    "Please select a capture to view stories.";
             }
         } else {
             console.log("No such document!");
@@ -399,6 +436,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 exp["grade"] = this.students[exp["device_id"]]["grade"];
                 exp["gender"] = this.students[exp["device_id"]]["gender"];
                 exp["title"] = exp["topic"] || "No Topic";
+                exp["prompt"] = this.activeCapturePrompt;
                 exp["id"] = index++;
                 exp["show_translation"] = false;
                 exp["is_playing"] = false;
@@ -454,6 +492,22 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
         //this.prevCaptureName = "";
 
+        const promptMap = new Map<string, { topic: string; prompt: string }>();
+
+        for (const cap of this.previousCaptures) {
+            promptMap.set(cap.capture, {
+                topic: cap.name,
+                prompt: cap.prompt,
+            });
+        }
+
+        if (!this.noActiveCapture) {
+            promptMap.set(capture_id, {
+                topic: this.activeCaptureTopic,
+                prompt: this.activeCapturePrompt,
+            });
+        }
+
         const studentDeviceIds = Object.keys(this.students);
         if (studentDeviceIds.length > 0) {
             const allExpQuery = query(
@@ -475,7 +529,13 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 exp["name"] = this.students[exp["device_id"]]["name"];
                 exp["grade"] = this.students[exp["device_id"]]["grade"];
                 exp["gender"] = this.students[exp["device_id"]]["gender"];
-                exp["title"] = exp["topic"] || "No Topic"; // Use topic field here as well
+                const captureData = promptMap.get(exp["capture"]);
+                exp["title"] = captureData
+                    ? captureData.topic
+                    : exp["topic"] || "No Topic";
+                exp["prompt"] = captureData
+                    ? captureData.prompt
+                    : "No prompt available for this capture.";
                 exp["id"] = allIndex++;
                 exp["show_translation"] = false;
                 exp["is_playing"] = false;
@@ -557,15 +617,20 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                 previous_captures[key]["start_date"].seconds * 1000 +
                     previous_captures[key]["start_date"].nanoseconds / 1000000
             ).toLocaleDateString();
-            let endDate = new Date(
+            let endDateObj = new Date(
                 previous_captures[key]["due_date"].seconds * 1000 +
                     previous_captures[key]["due_date"].nanoseconds / 1000000
-            ).toLocaleDateString();
+            );
+            let endDate = endDateObj.toLocaleDateString();
             const captureObject = {
-                capture: classroom + idx.toString(),
+                capture: key,
                 name: previous_captures[key]["name"],
                 start_date: startDate,
                 due_date: endDate,
+                due_date_obj: endDateObj,
+                prompt:
+                    previous_captures[key]["prompt"] ||
+                    "No prompt available for this capture.",
             };
             this.previousCaptures.push(captureObject);
         }
@@ -604,6 +669,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             this.totalExperiencesLength = Object.keys(this.experiences).length;
             this.togglePrevCap = false; // Ensure this is false
             this.cdr.detectChanges();
+            this.currentTopicName = this.activeCaptureTopic;
+            this.currentTopicPrompt = this.activeCapturePrompt;
 
             let userIntData: any = [];
             let time = new Date();
@@ -628,6 +695,8 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             this.selectedExperiences = Object.keys(this.experiences).length;
             this.totalExperiencesLength = Object.keys(this.experiences).length;
             this.cdr.detectChanges();
+            this.currentTopicName = "All Stories";
+            this.currentTopicPrompt = "Showing all stories from all captures.";
 
             let userIntData: any = [];
             let time = new Date();
@@ -649,6 +718,18 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
 
         //const capture_id = this.prevCaptureName.slice(10);
         const capture_id = this.prevCaptureName;
+        const selectedCaptureData = this.previousCaptures.find(
+            (c: any) => c.capture === capture_id
+        );
+
+        if (selectedCaptureData) {
+            this.currentTopicName = selectedCaptureData.name;
+            this.currentTopicPrompt = selectedCaptureData.prompt;
+        } else {
+            // Fallback just in case (e.g., if array isn't populated yet)
+            this.currentTopicName = "Past Capture";
+            this.currentTopicPrompt = "Loading prompt...";
+        }
 
         const classroom = sessionStorage.getItem("classroom") || "";
         const currClassroomDocRef = doc(this.firestore, classroom);
@@ -688,6 +769,7 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             exp["gender"] = this.students[exp["device_id"]]["gender"];
             //exp["title"] = previous_captures[capture_id]["name"];
             exp["title"] = exp["topic"] || "No Topic";
+            exp["prompt"] = this.currentTopicPrompt;
             exp["id"] = index++;
             exp["show_translation"] = false;
             exp["is_playing"] = false;
@@ -1746,10 +1828,42 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             ],
         });
 
+        const topicName = new Paragraph({
+            spacing: { after: 100 },
+            alignment: AlignmentType.CENTER,
+            children: [
+                new TextRun({
+                    text:
+                        this.prevCaptureName === "all"
+                            ? ""
+                            : `Topic: ${this.currentTopicName}`,
+                    font: "Arial",
+                    bold: true,
+                    size: 28,
+                }),
+            ],
+        });
+
+        const topicPrompt = new Paragraph({
+            spacing: { after: 300 },
+            alignment: AlignmentType.CENTER,
+            children: [
+                new TextRun({
+                    text:
+                        this.prevCaptureName === "all"
+                            ? "Showing all stories from all captures."
+                            : `Prompt: ${this.currentTopicPrompt}`,
+                    font: "Arial",
+                    italics: true,
+                    size: 24,
+                }),
+            ],
+        });
+
         const doc = new Document({
             sections: [
                 {
-                    children: [docTitle, table],
+                    children: [docTitle, topicName, topicPrompt, table],
                 },
             ],
         });
@@ -1783,70 +1897,71 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const rows = [];
-        const dataRowsText: {
-            title: string;
-            transcript: string;
-            name: string;
-        }[] = [];
+        const storiesByTopic = new Map<
+            string,
+            { prompt: string; experiences: any[] }
+        >();
 
-        // Header row
-        rows.push(
-            new TableRow({
+        for (const exp of this.multipleIntegrate) {
+            const topic = exp.title || "Uncategorized";
+            const prompt = exp.prompt || "No prompt available.";
+
+            if (!storiesByTopic.has(topic)) {
+                storiesByTopic.set(topic, { prompt: prompt, experiences: [] });
+            }
+            storiesByTopic.get(topic)!.experiences.push(exp);
+        }
+
+        const docChildren: (Paragraph | Table)[] = [];
+
+        docChildren.push(
+            new Paragraph({
+                spacing: { after: 300 },
+                alignment: AlignmentType.CENTER,
                 children: [
-                    new TableCell({
-                        children: [
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: "Title",
-                                        bold: true,
-                                        font: "Arial",
-                                    }),
-                                ],
-                            }),
-                        ],
-                        width: { size: 20, type: WidthType.PERCENTAGE },
-                    }),
-                    new TableCell({
-                        children: [
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: "Story",
-                                        bold: true,
-                                        font: "Arial",
-                                    }),
-                                ],
-                            }),
-                        ],
-                        width: { size: 60, type: WidthType.PERCENTAGE },
-                    }),
-                    new TableCell({
-                        children: [
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: "Student Name",
-                                        bold: true,
-                                        font: "Arial",
-                                    }),
-                                ],
-                            }),
-                        ],
-                        width: { size: 20, type: WidthType.PERCENTAGE },
+                    new TextRun({
+                        text: "Selected Student Stories",
+                        font: "Arial",
+                        bold: true,
+                        size: 48,
                     }),
                 ],
             })
         );
 
-        // Use multipleIntegrate array instead of allExperiences
-        for (const exp of this.multipleIntegrate) {
-            const title = exp.title || "";
-            const transcript = exp.translation || exp.transcript || "";
-            const name = exp.name || "";
+        for (const [topic, data] of storiesByTopic.entries()) {
+            docChildren.push(
+                new Paragraph({
+                    spacing: { before: 400, after: 100 },
+                    alignment: AlignmentType.LEFT,
+                    children: [
+                        new TextRun({
+                            text: `Topic: ${topic}`,
+                            font: "Arial",
+                            bold: true,
+                            size: 28,
+                        }),
+                    ],
+                })
+            );
 
-            dataRowsText.push({ title, transcript, name });
+            docChildren.push(
+                new Paragraph({
+                    spacing: { after: 300 },
+                    alignment: AlignmentType.LEFT,
+                    children: [
+                        new TextRun({
+                            text: `Prompt: ${data.prompt}`,
+                            font: "Arial",
+                            italics: true,
+                            size: 24,
+                        }),
+                    ],
+                })
+            );
+
+            const rows = [];
+            const dataRowsText: { transcript: string; name: string }[] = [];
 
             rows.push(
                 new TableRow({
@@ -1856,33 +1971,22 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: title,
+                                            text: "Story",
+                                            bold: true,
                                             font: "Arial",
                                         }),
                                     ],
                                 }),
                             ],
-                            width: { size: 20, type: WidthType.PERCENTAGE },
+                            width: { size: 80, type: WidthType.PERCENTAGE },
                         }),
                         new TableCell({
                             children: [
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: transcript,
-                                            font: "Arial",
-                                        }),
-                                    ],
-                                }),
-                            ],
-                            width: { size: 60, type: WidthType.PERCENTAGE },
-                        }),
-                        new TableCell({
-                            children: [
-                                new Paragraph({
-                                    children: [
-                                        new TextRun({
-                                            text: name,
+                                            text: "Student Name",
+                                            bold: true,
                                             font: "Arial",
                                         }),
                                     ],
@@ -1893,103 +1997,108 @@ export class ExperiencePageComponent implements OnInit, OnDestroy {
                     ],
                 })
             );
+
+            for (const exp of data.experiences) {
+                const transcript = exp.translation || exp.transcript || "";
+                const name = exp.name || "";
+                dataRowsText.push({ transcript, name });
+
+                rows.push(
+                    new TableRow({
+                        children: [
+                            new TableCell({
+                                children: [
+                                    new Paragraph({
+                                        children: [
+                                            new TextRun({
+                                                text: transcript,
+                                                font: "Arial",
+                                            }),
+                                        ],
+                                    }),
+                                ],
+                            }),
+                            new TableCell({
+                                children: [
+                                    new Paragraph({
+                                        children: [
+                                            new TextRun({
+                                                text: name,
+                                                font: "Arial",
+                                            }),
+                                        ],
+                                    }),
+                                ],
+                            }),
+                        ],
+                    })
+                );
+            }
+
+            if (rows.length > 1) {
+                const lastTexts = dataRowsText[dataRowsText.length - 1];
+                const borderedCells = [
+                    new TableCell({
+                        children: [
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: lastTexts.transcript,
+                                        font: "Arial",
+                                    }),
+                                ],
+                            }),
+                        ],
+                        width: { size: 80, type: WidthType.PERCENTAGE },
+                        borders: {
+                            bottom: {
+                                style: BorderStyle.SINGLE,
+                                size: 2,
+                                color: "000000",
+                            },
+                        },
+                    }),
+                    new TableCell({
+                        children: [
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: lastTexts.name,
+                                        font: "Arial",
+                                    }),
+                                ],
+                            }),
+                        ],
+                        width: { size: 20, type: WidthType.PERCENTAGE },
+                        borders: {
+                            bottom: {
+                                style: BorderStyle.SINGLE,
+                                size: 2,
+                                color: "000000",
+                            },
+                        },
+                    }),
+                ];
+                rows[rows.length - 1] = new TableRow({
+                    children: borderedCells,
+                });
+            }
+
+            const table = new Table({
+                rows: rows,
+                width: { size: 100, type: WidthType.PERCENTAGE },
+                alignment: "center",
+            });
+
+            docChildren.push(table);
         }
-
-        if (rows.length > 1) {
-            const lastTexts = dataRowsText[dataRowsText.length - 1];
-            const widths = [
-                { size: 20, type: WidthType.PERCENTAGE },
-                { size: 60, type: WidthType.PERCENTAGE },
-                { size: 20, type: WidthType.PERCENTAGE },
-            ];
-
-            const borderedCells = [
-                new TableCell({
-                    children: [
-                        new Paragraph({
-                            children: [
-                                new TextRun({
-                                    text: lastTexts.title,
-                                    font: "Arial",
-                                }),
-                            ],
-                        }),
-                    ],
-                    width: widths[0],
-                    borders: {
-                        bottom: {
-                            style: BorderStyle.SINGLE,
-                            size: 2,
-                            color: "000000",
-                        },
-                    },
-                }),
-                new TableCell({
-                    children: [
-                        new Paragraph({
-                            children: [
-                                new TextRun({
-                                    text: lastTexts.transcript,
-                                    font: "Arial",
-                                }),
-                            ],
-                        }),
-                    ],
-                    width: widths[1],
-                    borders: {
-                        bottom: {
-                            style: BorderStyle.SINGLE,
-                            size: 2,
-                            color: "000000",
-                        },
-                    },
-                }),
-                new TableCell({
-                    children: [
-                        new Paragraph({
-                            children: [
-                                new TextRun({
-                                    text: lastTexts.name,
-                                    font: "Arial",
-                                }),
-                            ],
-                        }),
-                    ],
-                    width: widths[2],
-                    borders: {
-                        bottom: {
-                            style: BorderStyle.SINGLE,
-                            size: 2,
-                            color: "000000",
-                        },
-                    },
-                }),
-            ];
-
-            rows[rows.length - 1] = new TableRow({ children: borderedCells });
-        }
-
-        const table = new Table({
-            rows: rows,
-            width: { size: 100, type: WidthType.PERCENTAGE },
-            alignment: "center",
-        });
-
-        const docTitle = new Paragraph({
-            spacing: { after: 300 },
-            alignment: AlignmentType.CENTER,
-            children: [
-                new TextRun({
-                    text: "Student Stories",
-                    font: "Arial",
-                    bold: true,
-                    size: 48,
-                }),
-            ],
-        });
 
         const doc = new Document({
-            sections: [{ children: [docTitle, table] }],
+            sections: [
+                {
+                    children: docChildren,
+                },
+            ],
         });
 
         const blob = await Packer.toBlob(doc);
